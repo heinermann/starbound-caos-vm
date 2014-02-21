@@ -6,6 +6,9 @@
 CAOS = {}
 CAOS.__index = CAOS
 
+CAOS.engine = { caos_vars = {} }
+CAOS.game = { caos_vars = {} }
+
 CAOS.name_of_hand = "hand"
 CAOS.world_search_size = 100000
 CAOS.name_of_game = "Starbound"
@@ -104,7 +107,7 @@ CAOS.PERMISSIONS = {
   PICK_UP = 32
 }
 
-CAOS.TIME_OF_DAY {
+CAOS.TIME_OF_DAY = {
   DAWN = 0,
   MORNING = 1,
   AFTERNOON = 2,
@@ -338,14 +341,14 @@ function __v(variable)
   return variable
 end
 
-function CAOS.Machine.begin()
+function CAOS.Machine.m_begin()
   for i = 0, 99 do
     self.caos_vars[string.format("VA%02d", i)] = { value = 0 }
   end
   
 end
 
-function CAOS.Machine.end()
+function CAOS.Machine.m_end()
 end
 
 -- VAxx
@@ -2426,7 +2429,7 @@ CAOS.Machine.commands = {
       command = "TRCK",
       rtype = "command",
       params = {
-        { "agent", "agent" },  { "x%", "integer" },  { "y%", "integer" },  { "style", "integer" },  { "transition", "integer" } },
+        { "agent", "agent" },  { "x_percent", "integer" },  { "y_percent", "integer" },  { "style", "integer" },  { "transition", "integer" } },
       description = [[
         Camera follows the given agent.  Set to @NULL@ to stop tracking. x% and y% are percentages (0-100) of the screen size.  They describe a rectangle centred on the screen which the target stays within. 
          Style 0 is brittle - if you move the camera so the target is out of the rectangle, then the tracking is broken.
@@ -2435,7 +2438,7 @@ CAOS.Machine.commands = {
          The transition is the sort of fade to use if the tracking causes a change in meta room.  The values are the same as for the transition in the @META@ command.
       ]],
       callback =
-        function(self, agent, x%, y%, style, transition )
+        function(self, agent, x_percent, y_percent, style, transition )
         end
     },
 
@@ -3997,7 +4000,7 @@ CAOS.Machine.commands = {
       sync with Palm).
     ]],
     callback =
-      function(self, tract_index,, filename )
+      function(self, tract_index, filename )
       end
   },
 
@@ -4012,7 +4015,7 @@ CAOS.Machine.commands = {
       with Palm).
     ]],
     callback =
-      function(self, tract_index,, filename )
+      function(self, tract_index, filename )
       end
   },
 
@@ -5379,13 +5382,13 @@ CAOS.Machine.commands = {
     command = "GENE CROS",
     rtype = "command",
     params = {
-      { "child_agent", "agent" },  { "child_slot", "integer" },  { "mum_agent", "agent" },  { "mum_slot", "integer" },  { "dad_agent", "agent" },  { "dad_slot", "integer" },  { "mum_chance_of_mutation", "integer" },  { "mum_degree_of_mutation", "integer" },  { "dad_chance_of_mutation", "integer" },  { "dad_degree_of_mutation.", "integer" } },
+      { "child_agent", "agent" },  { "child_slot", "integer" },  { "mum_agent", "agent" },  { "mum_slot", "integer" },  { "dad_agent", "agent" },  { "dad_slot", "integer" },  { "mum_chance_of_mutation", "integer" },  { "mum_degree_of_mutation", "integer" },  { "dad_chance_of_mutation", "integer" },  { "dad_degree_of_mutation", "integer" } },
     description = [[
       Crosses two genomes with mutation, and fills in a child geneme slot.  Mutation variables may be in the 
       range of 0 to 255.
     ]],
     callback =
-      function(self, child_agent, child_slot, mum_agent, mum_slot, dad_agent, dad_slot, mum_chance_of_mutation, mum_degree_of_mutation, dad_chance_of_mutation, dad_degree_of_mutation. )
+      function(self, child_agent, child_slot, mum_agent, mum_slot, dad_agent, dad_slot, mum_chance_of_mutation, mum_degree_of_mutation, dad_chance_of_mutation, dad_degree_of_mutation )
       end
   },
 
@@ -7198,8 +7201,8 @@ CAOS.Machine.commands = {
         local pos = { screen_x, screen_y }
         if ( self.target.caos_float_relative ~= nil ) then
           local targp = self.target.caos_float_relative.position()
-          pos[1] += targp[1]
-          pos[2] += targp[2]
+          pos[1] = pos[1] + targp[1]
+          pos[2] = pos[2] + targp[2]
         end
         
         -- teleport to pos
@@ -10530,9 +10533,9 @@ CAOS.Machine.commands = {
           return 0
         elseif ( t == "player" or t == "npc" ) then
           return 7
-        elseif ( t == "monster" or t == "object" )
+        elseif ( t == "monster" or t == "object" ) then
           return 3
-        elseif ( t == "itemDrop" or t == "projectile" or t == "plantDrop" or t == "effect" or t == "plant" )
+        elseif ( t == "itemDrop" or t == "projectile" or t == "plantDrop" or t == "effect" or t == "plant" ) then
           return -2
         else
           return -2

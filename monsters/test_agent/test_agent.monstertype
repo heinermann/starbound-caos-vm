@@ -1,0 +1,32 @@
+{
+  "type" : "test_agent",
+
+  "categories" : [ "agent" ],
+  "parts" : [ "body" ],
+  
+  "animation" : "test_agent.animation",
+  "colors" : "/monsters/colors.config",
+  
+  "baseParameters" : {
+    "scripts" : [
+      "/scripts/CAOS.lua",
+      "/scripts/CAOS_monster.lua"
+    ],
+    "scriptDelta" : 1,
+    
+    "metaBoundBox" : [-2.5, -2.5, 2.5, 2.5],
+    "scale" : 1.0,
+    
+    "mouthOffset" : [0, 0],
+    "feetOffset" : [0, -8],
+    
+    "statusParameters" : {
+      "baseMaxHealth" : 0,
+      "damageConfig" : "/damage/damageresponse/ignore.config"
+    },
+    
+    "persistent" : true
+  }
+
+
+}

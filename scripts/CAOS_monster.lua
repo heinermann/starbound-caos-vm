@@ -4,7 +4,20 @@
 --
 -- Note that the monster's position may not yet be valid.
 function init() 
-
+  -- Start with common (safe) properties
+  entity.setAggressive(false)
+  entity.setDamageOnTouch(false)
+  entity.setFlipped(false)
+  entity.setDropPool(nil)
+  
+  -- temporary unless I decide not to write its own internal gravity engine
+  entity.setGravityEnabled(true)
+  
+  entity.setVelocity({0,0})
+  entity.setRunning(false)
+  entity.setActiveSkillName(nil)
+  
+  world.logInfo("Spawned an agent!")
 end
 
 --- Update loop handler, called once every scriptDelta (defined in *.monstertype) ticks
@@ -39,5 +52,5 @@ end
 --
 -- @treturn bool true if the monster can die, false to keep the monster alive
 function shouldDie() 
-
+  return false
 end

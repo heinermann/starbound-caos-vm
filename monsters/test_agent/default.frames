@@ -8,5 +8,7 @@
     ]
   },
   "aliases" : {
+    "default" : "idle.1",
+    "idle" : "idle.1"
   }
 }

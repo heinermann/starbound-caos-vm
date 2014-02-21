@@ -1,0 +1,39 @@
+{
+  "input" : [
+    { 
+      "item" : "money", 
+      "count" : 1 
+    }
+  ],
+  "output" : {
+    "item" : "filledcapturepod",
+    "shortdescription" : "Balloonplant",
+    "description" : "This plant originates from windy grasslands where flying fruits are an advantage.",
+    "count" : 1,
+    "data" : {
+      "itemName" : "agent_spawner_pod",
+      "rarity" : "Common",
+      
+      "inventoryIcon" : "DS.png",
+      "shortdescription" : "Balloonplant",
+      "description" : "This plant originates from windy grasslands where flying fruits are an advantage.",
+      
+      "ammoUsage" : 1,
+
+      "edgeTrigger" : true,
+      "windupTime" : 0.0,
+      "cooldown" : 0.4,
+
+      "projectileType" : "capturepod",
+      "projectileConfig" : {
+        "speed" : 30,
+        "level" : 7,
+        "actionOnReap" : [{
+          "action" : "spawnmonster",
+          "type" : "test_agent"
+        }]
+      }
+    }
+  },
+  "groups" : [ "mod", "caos_vm", "all" ]
+}

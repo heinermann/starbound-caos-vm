@@ -2,7 +2,7 @@
   "name" : "Creatures Virtual Machine",
   "version" : "Beta v. Enraged Koala",
   "path" : ".",
-  "dependencies" : [ ],
+  "dependencies" : [ "tabularasa2.1" ],
   "metadata": {
     "author" : "Heinermann",
     "description" : "An emulator for user-created Agents (COBs) from the games Creatures, Creatures 2, Creatures 3, and Docking Station. Hundreds of user-created agents from old games are just waiting to be brought back to life in Starbound! Agents include vendors, animals, plants, gadgets, machinery, tools, food, toys, and more!",
