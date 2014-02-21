@@ -1,0 +1,19 @@
+{
+  "type" : "CAOS_base",
+
+  "categories" : [ "agent" ],
+  "parts" : [ "body" ],
+  
+  "animation" : "CAOS_base.animation",
+  "colors" : "/monsters/colors.config",
+  
+  "baseParameters" : {
+    "scripts" : [
+      "/scripts/CAOS.lua",
+      "/scripts/CAOS_monster.lua"
+    ],
+    "scriptDelta" : 1
+  }
+
+
+}

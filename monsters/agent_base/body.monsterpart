@@ -1,0 +1,9 @@
+{
+  "name" : "body",
+  "category" : "agent",
+  "type" : "body",
+
+  "frames" : {
+    "body" : "agent.png"
+  }
+}
