@@ -1,5 +1,5 @@
 ## What is the Creatures VM Starbound mod?
-The Creatures VM mod is a Creatures Agent Object Script (CAOS) virtual machine is an attempt to migrate
+The Starbound Creatures VM mod is a CAOS virtual machine that attempts to migrate
 Creatures Objects (COBs) and agents from an old game series to Starbound.
 
 ## What is Creatures?
@@ -20,10 +20,9 @@ Some examples:
  - A piece of equipment that can be wired to other pieces of equipment
  - A new meta-room (w/ background) for agents to live in
 
-## What is a CAOS script?
-A Creatures Agent Object Script (CAOS) script is a proprietary scripting
+## What is CAOS?
+A Creatures Agent Object Script (CAOS) is a proprietary scripting
 language for the Creatures engine. All agents contain a script.
-
  
 ## What are the challenges?
 The Starbound scripting API is extremely limited compared to CAOS script.
