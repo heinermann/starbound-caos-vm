@@ -4,8 +4,8 @@
   // demonstrates how to add a mod filter button to the Tabula Rasa
   "filterButtons" : [
     {
-      //"baseImage" : "/path/to/mybutton.png",
-      //"baseImageChecked" : "/path/to/mybuttonchecked.png",
+      "baseImage" : "/caos_vm_graphics/button_off.png",
+      "baseImageChecked" : "/caos_vm_graphics/button_on.png",
       "filter" : "caos_vm"
     }
   ]
