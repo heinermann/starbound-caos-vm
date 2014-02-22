@@ -2,7 +2,7 @@
   "itemName" : "agent_bottle",
   "rarity" : "Common",
   "inventoryIcon" : "DS.png",
-  "image" : "filledcapturepodicon.png",
+  "image" : "/items/throwables/filledcapturepodicon.png",
 
   "shortdescription" : "Balloonplant",
   "description" : "This plant originates from windy grasslands where flying fruits are an advantage.",

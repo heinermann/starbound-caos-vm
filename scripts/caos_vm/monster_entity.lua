@@ -18,16 +18,25 @@ function init()
   entity.setActiveSkillName(nil)
   
   world.logInfo("Spawned an agent!")
+  
+  if ( CAOS ~= nil and CAOS.Machine ~= nil ) then
+    self.caos_vm = CAOS.Machine.create(entity)
+  end
 end
 
 --- Update loop handler, called once every scriptDelta (defined in *.monstertype) ticks
 function main() 
+  if ( self.caos_vm ~= nil ) then
+    self.caos_vm:update()
+  end
 
 end
 
 --- Called when shouldDie has returned true and the monster and is about to be removed from the world
 function die() 
-
+  if ( self.caos_vm ~= nil ) then
+    self.caos_vm:killed()
+  end
 end
 
 --- Called after the NPC has taken damage
@@ -41,8 +50,10 @@ end
 --    }
 -- Note that "sourceDamage" can be higher than "damage" if - for
 -- instance - some damage was blocked by a shield.
-function damage(args) 
-
+function damage(args)
+  -- N/A? Might use args.sourceKind for activate1/activate2/deactivate/hit/etc
+  
+  entity.heal(args.damage)
 end
 
 --- Called each update to determine if the monster should die.
@@ -51,6 +62,16 @@ end
 -- the monster's health has been depleted.
 --
 -- @treturn bool true if the monster can die, false to keep the monster alive
-function shouldDie() 
-  return false
+function shouldDie()
+  return self.caos_killed == true
+end
+
+
+-- Get and set functions so that CAOS can interact with external entities' local variables
+function setVar(name, value)
+  self[name] = value
+  return true
+end
+function getVar(name)
+  return self[name]
 end

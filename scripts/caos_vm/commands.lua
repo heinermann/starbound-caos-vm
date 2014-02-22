@@ -1,405 +1,3 @@
--- CAOS scripting emulator
--- SOURCE: http://creaturesdev.webs.com/caoscategoricalds.htm
--- SOURCE: http://creatures.wikia.com/wiki/Cellular_Automata
--- SOURCE: http://www.gamewaredevelopment.com/downloads/cdn/C2CAOSGuide.pdf
-
-CAOS = {}
-CAOS.__index = CAOS
-
-CAOS.engine = { caos_vars = {} }
-CAOS.game = { caos_vars = {} }
-
-CAOS.name_of_hand = "hand"
-CAOS.world_search_size = 100000
-CAOS.name_of_game = "Starbound"
-
-CAOS.engine.caos_vars["engine_clone_upon_import"] = { value = 1 }
-CAOS.engine.caos_vars["engine_no_auxiliary_bootstrap_1"] = { value = 1 }
-
-CAOS.game.caos_vars["breeding_limit"] = { value = 6 }
-CAOS.game.caos_vars["total_population"] = { value = 6 }
-CAOS.game.caos_vars["extra_eggs_allowed"] = { value = 6 }
-CAOS.game.caos_vars["Grettin"] = { value = 1 }
-CAOS.game.caos_vars["status"] = { value = "offline" }
-CAOS.game.caos_vars["user_of_this_world"] = { value = "" }
-
-CAOS.game.caos_vars["chat_plane"] = { value = 8500 }
-CAOS.game.caos_vars["chat_plane_max"] = { value = 8800 }
-CAOS.game.caos_vars["chat_plane_highest"] = { value = 8810 }
-CAOS.game.caos_vars["user_has_been_welcomed"] = { value = 0 }
-
-CAOS.game.caos_vars["engine_debug_keys"] = { value = 0 }
-CAOS.game.caos_vars["engine_full_screen_toggle"] = { value = 1 }
-CAOS.game.caos_vars["engine_SkeletonUpdateDoubleSpeed"] = { value = 0 }
-CAOS.game.caos_vars["engine_creature_pickup_status"] = { value = 3 }
-CAOS.game.caos_vars["engine_dumb_creatures"] = { value = 0 }
-CAOS.game.caos_vars["engine_pointerCanCarryObjectsBetweenMetaRooms"] = { value = 0 }
-CAOS.game.caos_vars["engine_password"] = { value = "" }
-CAOS.game.caos_vars["engine_creature_template_size_in_mb"] = { value = 2 }
-CAOS.game.caos_vars["engine_near_death_track_name"] = { value = "" }
-CAOS.game.caos_vars["engine_plane_for_lines"] = { value = 8500 }
-CAOS.game.caos_vars["engine_synchronous_learning"] = { value = 0 }
-CAOS.game.caos_vars["engine_zlib_compression"] = { value = 5 }
-CAOS.game.caos_vars["engine_other_world"] = { value = "" }
-CAOS.game.caos_vars["engine_netbabel_save_passwords"] = { value = 0 }
-CAOS.game.caos_vars["engine_multiple_birth_first_chance"] = { value = 0.04 }
-CAOS.game.caos_vars["engine_multiple_birth_subsequent_chance"] = { value = 0.01 }
-CAOS.game.caos_vars["engine_multiple_birth_maximum"] = { value = 6 }
-CAOS.game.caos_vars["engine_multiple_birth_identical_chance"] = { value = 0.5 }
-CAOS.game.caos_vars["engine_LengthOfDayInMinutes"] = { value = 20 }   -- ignored due to obvious reasons
-CAOS.game.caos_vars["engine_LengthOfSeasonInDays"] = { value = 4 }
-CAOS.game.caos_vars["engine_NumberOfSeasons"] = { value = 4 }
-CAOS.game.caos_vars["engine_mute"] = { value = 0 }
-CAOS.game.caos_vars["engine_playAllSoundsAtMaximumLevel"] = { value = 0 }
-CAOS.game.caos_vars["engine_usemidimusicsystem"] = { value = 0 }
-CAOS.game.caos_vars["engine_distance_before_port_line_warns"] = { value = 600.0 }
-CAOS.game.caos_vars["engine_distance_before_port_line_snaps"] = { value = 800.0 }
---engine_mirror_creature_body_parts
-
-CAOS.game.caos_vars["cav_birthdate"] = { value = "" }
-CAOS.game.caos_vars["cav_quittime"] = { value = "" }
-CAOS.game.caos_vars["cav_gamelengthIsPerDay"] = { value = "" }
-CAOS.game.caos_vars["cav_useparentmenu"] = { value = 0 }
-CAOS.game.caos_vars["cav_CountdownClockAgent"] = { value = nil }
-CAOS.game.caos_vars["cav_BirthdayBannerAgent"] = { value = nil }
-
-CAOS.game.caos_vars["c3_creature_accg"] = { value = 5 }
-CAOS.game.caos_vars["c3_creature_bhvr"] = { value = 15 }
-CAOS.game.caos_vars["c3_creature_attr"] = { value = 198 }
-CAOS.game.caos_vars["c3_creature_perm"] = { value = 100 }
-CAOS.game.caos_vars["c3_meta_transition"] = { value = 0 }
-
-CAOS.game.caos_vars["ds_game_type"] = { value = "undocked" }
-CAOS.game.caos_vars["ds_number_of_life_events"] = { value = 10 }
-
-
--- Direction constants
-CAOS.DIRECTIONS = {
-  LEFT = 0,
-  RIGHT = 1,
-  UP = 2,
-  DOWN = 3
-}
-
--- Agent attributes
-CAOS.ATTRIBUTES = {
-  CARRYABLE = 1,
-  MOUSEABLE = 2,
-  ACTIVATEABLE = 4,
-  GREEDY_CABIN = 8,
-  INVISIBLE = 16,
-  FLOATABLE = 32,
-  SUFFER_COLLISIONS = 64,
-  SUFFER_PHYSICS = 128,
-  CAMERA_SHY = 256,
-  OPEN_AIR_CABIN = 512,
-  ROTATABLE = 1024,
-  PRESENCE = 2048
-}
-
--- Agent permissions
-CAOS.PERMISSIONS = {
-  ACTIVATE_1 = 1,
-  ACTIVATE_2 = 2,
-  DEACTIVATE = 4,
-  HIT = 8,
-  EAT = 16,
-  PICK_UP = 32
-}
-
-CAOS.TIME_OF_DAY = {
-  DAWN = 0,
-  MORNING = 1,
-  AFTERNOON = 2,
-  EVENING = 3,
-  NIGHT = 4
-}
-
--- Cellular automata
-CAOS.CA_INDEX = {
-  SOUND = 0,
-  LIGHT = 1,
-  HEAT = 2,
-  PRECIPITATION = 3,
-  NUTRIENT = 4,
-  WATER = 5,
-  PROTEIN = 6,            -- Fruit
-  CARBOHYDRATE = 7,       -- Seeds
-  FAT = 8,                -- Food
-  FLOWERS = 9,
-  MACHINERY = 10,
-  EGGS = 11,
-  NORN = 12,
-  GRENDEL = 13,
-  ETTIN = 14,
-  NORN_HOME = 15,
-  GRENDEL_HOME = 16,
-  ETTIN_HOME = 17,
-  GADGET = 18
-}
-
-CAOS.FAMILY = {
-  UI = 1,
-  OBJECT = 2,
-  EXTENDED = 3,
-  CREATURE = 4
-}
-
-CAOS.OBJECT_GENUS = {
-  SELF = 0,
-  HAND = 1,
-  DOOR = 2,
-  SEED = 3,
-  PLANT = 4,
-  WEED = 5,
-  LEAF = 6,
-  FLOWER = 7,
-  FRUIT = 8,
-  MANKY = 9,          -- bad fruit
-  DETRITUS = 10,      -- waste matter
-  FOOD = 11,
-  BUTTON = 12,
-  BUG = 13,
-  PEST = 14,
-  CRITTER = 15,
-  BEAST = 16,
-  NEST = 17,
-  ANIMAL_EGG = 18,
-  WEATHER = 19,
-  BAD = 20,
-  TOY = 21,
-  INCUBATOR = 22,
-  DISPENSER = 23,
-  TOOL = 24,
-  POTION = 25
-}
-
-CAOS.EXTENDED_GENUS = {
-  ELEVATOR = 1,
-  TELEPORTER = 2,
-  MACHINERY = 3,
-  CREATURE_EGG = 4,
-  NORN_HOME = 5,
-  GRENDEL_HOME = 6,
-  ETTIN_HOME = 7,
-  GADGET = 8,
-  PORTAL = 9,
-  VEHICLE = 10
-}
-
-CAOS.CREATURE_GENUS = {
-  NORN = 1,
-  GRENDEL = 2,
-  ETTIN = 3,
-  SOMETHING = 4
-}
-
-CAOS.Machine = {}
-CAOS.Machine.__index = CAOS.Machine
-
-function CAOS.Machine.create(agent)
-  local o = {}
-  setmetatable(o, CAOS.Machine)
-  
-  o.owner       = agent
-  o.target      = agent
-  
-  o.message_from = nil
-  o.message_param_1 = nil
-  o.message_param_2 = nil
-  
-  o.timer_interval = 0
-  o.timer_step = 0
-  
-  o.update_interval = 50
-  o.instant_execution = false
-  o.no_interrupt = false
-  o.wait_time = 0
-  o.stopped = false
-  o.paused = false
-  
-  -- scriptorium entry:
-  -- [family][genus][species][event] =
-  -- {
-  --   source = ""
-  -- }
-  o.scriptorium = {}
-  
-  agent.caos_family         = agent.configParameter("caos_family", 0)
-  agent.caos_genus          = agent.configParameter("caos_genus", 0)
-  agent.caos_species        = agent.configParameter("caos_species", 0)   -- species = unique object id
-  agent.caos_sprite_file    = agent.configParameter("caos_sprite_file", "")
-  agent.caos_image_count    = agent.configParameter("caos_image_count", 1)
-  agent.caos_first_image    = agent.configParameter("caos_first_image", 1)
-  agent.caos_plane          = agent.configParameter("caos_plane", 500)
-  agent.caos_image_base     = 0
-    
-  agent.caos_attributes     = 0
-  agent.caos_permissions    = 0
-  agent.caos_permiability   = 50
-  agent.caos_carried_by     = nil
-  agent.caos_carrying       = nil
-  agent.caos_flipped        = 0 
-  
-  agent.caos_clack_msg      = 1
-  agent.caos_click_msg_1    = -2
-  agent.caos_click_msg_2    = -2
-  agent.caos_click_msg_3    = -2
-  agent.caos_current_click  = 0
-  
-  agent.caos_paused         = false
-  agent.caos_debug_core     = false
-  agent.caos_killed         = false
-  agent.caos_distance_check = 100
-  agent.caos_float_relative = nil
-  agent.caos_voice          = nil
-  
-  agent.caos_bounds_left = agent.position()[1] - 4
-  agent.caos_bounds_top = agent.position()[2] - 4
-  agent.caos_bounds_right = agent.position()[1] + 4
-  agent.caos_bounds_bottom = agent.position()[2] + 4
-  
-  -- variables
-  for i = 0, 99 do
-    self.caos_vars[string.format("VA%02d", i)] = { value = 0 }
-    agent.caos_vars[string.format("MV%02d", i)] = { value = 0 }
-    agent.caos_vars[string.format("OV%02d", i)] = { value = 0 }
-  end
-  
-  agent.caos_vm = o
-  return o
-end
-
-function CAOS.Machine.add_to_scriptorium(self, family, genus, species, event, source)
-  if ( self.scriptorium[family] == nil ) then
-    self.scriptorium[family] = {}
-  end
-  if ( self.scriptorium[family][genus] == nil ) then
-    self.scriptorium[family][genus] = {}
-  end
-  if ( self.scriptorium[family][genus][species] == nil ) then
-    self.scriptorium[family][genus][species] = {}
-  end
-  if ( self.scriptorium[family][genus][species][event] == nil ) then
-    self.scriptorium[family][genus][species][event] = {}
-  end
-
-  self.scriptorium[family][genus][species][event]["source"] = source
-end
-
-function CAOS.Machine.script_exists(self, family, genus, species, event)
-  local exists = true
-  if ( exists and family ~= nil ) then
-    exists = exists and self.scriptorium[family] ~= nil
-  end
-  
-  if ( exists and genus ~= nil ) then
-    exists = exists and self.scriptorium[family][genus] ~= nil
-  end
-  
-  if ( exists and species ~= nil ) then
-    exists = exists and self.scriptorium[family][genus][species] ~= nil
-  end
-
-  if ( exists and event ~= nil ) then
-    exists = exists and self.scriptorium[family][genus][species][event] ~= nil
-  end
-
-  return exists
-end
-
-function CAOS.script_to_message(script_no)
-  if ( script_no == 0 ) then 
-    script_no = 2
-  elseif ( script_no == 1 ) then 
-    script_no = 0
-  elseif ( script_no == 2 ) then 
-    script_no = 1
-  end
-  return script_no
-end
-
-function CAOS.message_to_script(message_no)
-  if ( message_no == 0 ) then 
-    message_no = 1
-  elseif ( message_no == 1 ) then 
-    message_no = 2
-  elseif ( message_no == 2 ) then 
-    message_no = 0
-  end
-  return message_no
-end
-
-function CAOS.get_cob_name(family, genus, species)
-  return "COB_" .. family .. "_" .. genus .. "_" .. species
-end
-
-function __v(variable)
-  if ( type(variable) == "table" ) then
-    return variable.value
-  end
-  return variable
-end
-
-function CAOS.Machine.m_begin()
-  for i = 0, 99 do
-    self.caos_vars[string.format("VA%02d", i)] = { value = 0 }
-  end
-  
-end
-
-function CAOS.Machine.m_end()
-end
-
--- VAxx
-function CAOS.Machine.get_local_var(var_name)
-  var_name = __v(var_name)
-  if ( self.caos_vars[var_name] == nil ) then
-    self.caos_vars[var_name] = { value = nil }
-  end
-
-  return self.caos_vars[var_name]
-end
-
--- MAME, MVxx
-function CAOS.Machine.get_owner_var(var_name)
-  var_name = __v(var_name)
-  if ( self.owner.caos_vars[var_name] == nil ) then
-    self.owner.caos_vars[var_name] = { value = nil }
-  end
-
-  return self.owner.caos_vars[var_name]
-end
-
--- DELN, NAME, OVxx, NAMN
-function CAOS.Machine.get_target_var(var_name)
-  var_name = __v(var_name)
-  if ( self.target.caos_vars[var_name] == nil ) then
-    self.target.caos_vars[var_name] = { value = nil }
-  end
-  
-  return self.target.caos_vars[var_name]
-end
-
--- DELG, GAME, GAMN
-function CAOS.Machine.get_game_var(var_name)
-  var_name = __v(var_name)
-  if ( CAOS.game.caos_vars[var_name] == nil ) then
-    CAOS.game.caos_vars[var_name] = { value = nil }
-  end
-  
-  return CAOS.game.caos_vars[var_name]
-end
-
--- DELE, EAME, EAMN
-function CAOS.Machine.get_engine_var(var_name)
-  var_name = __v(var_name)
-  if ( CAOS.engine.caos_vars[var_name] == nil ) then
-    CAOS.engine.caos_vars[var_name] = { value = nil }
-  end
-  
-  return CAOS.engine.caos_vars[var_name]
-end
 
 CAOS.Machine.commands = {
   ["ABBA"] = {
@@ -478,7 +76,7 @@ CAOS.Machine.commands = {
       description = "Set attributes of target.  Sum the values in the @Attribute Flags@ table to get the attribute value to pass into this command.",
       callback =
         function(self, attributes)
-          self.target.caos_attributes = attributes
+          CAOS.setVar(self.target, "caos_attributes", attributes)
           
           if ( bit32.band(attributes, CAOS.ATTRIBUTES.CARRYABLE) ~= 0 ) then
           end
@@ -528,7 +126,7 @@ CAOS.Machine.commands = {
       description = "Return attributes of target.",
       callback =
         function(self)
-          return self.target.caos_attributes or 0
+          return CAOS.getVar(self.target, "caos_attributes") or 0
         end
     }
   },
@@ -546,7 +144,7 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self, index)
-          self.owner.caos_image_base = index
+          CAOS.setVar(self.owner, "caos_image_base", index)
         end
     },
 
@@ -559,7 +157,7 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self)
-          return self.owner.caos_image_base or 0
+          return CAOS.getVar(self.owner, "caos_image_base") or 0
         end
     }
   },
@@ -577,7 +175,7 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self, permissions)
-          self.target.caos_permissions = permissions
+          CAOS.setVar(self.target, "caos_permissions", permissions)
         end
     },
 
@@ -590,7 +188,7 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self)
-          return self.target.caos_permissions or 0
+          return CAOS.getVar(self.target, "caos_permissions") or 0
         end
     }
   },
@@ -627,7 +225,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self)
-        return self.target.caos_carried_by
+        return CAOS.getVar(self.target, "caos_carried_by")
       end
   },
 
@@ -706,10 +304,11 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self, topY, bottomY, leftX, rightX)
-        self.target.caos_bounds_left = leftx
-        self.target.caos_bounds_top = topy
-        self.target.caos_bounds_right = rightx
-        self.target.caos_bounds_bottom = bottomy
+        CAOS.setVar(self.target, "caos_bounds", { left = leftx,
+                                                  top = topy,
+                                                  right = rightx,
+                                                  bottom = bottomy
+                                                })
       end
   },
 
@@ -724,7 +323,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self, core_on)
-        self.target.caos_debug_core = core_on
+        CAOS.setVar(self.target, "caos_debug_core", core_on)
       end
   },
 
@@ -861,7 +460,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self)
-        return self.target.caos_family or 0
+        return CAOS.getVar(self.target, "caos_family") or 0
       end
   },
 
@@ -953,7 +552,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self)
-        return self.target.caos_genus or 0
+        return CAOS.getVar(self.target, "caos_genus") or 0
       end
   },
 
@@ -998,7 +597,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self)
-        return self.target.caos_carrying
+        return CAOS.getVar(self.target, "caos_carrying")
       end
   },
 
@@ -1012,7 +611,8 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self)
-        return math.abs(self.target.caos_bounds_bottom - self.target.caos_bounds_top) or 0
+        local bounds = CAOS.getVar(self.target, bounds)
+        return bounds and math.abs(bounds.bottom - bounds.top) or 0
       end
   },
 
@@ -1079,7 +679,7 @@ CAOS.Machine.commands = {
     callback =
       function(self, agent, message_id)
         -- TODO
-        self.owner.sendNotificationTo("CAOS_" .. CAOS.message_to_script(message_id), {_P1_ = 0, _P2_ = 0}, agent)
+        --self.owner.sendNotificationTo("CAOS_" .. CAOS.message_to_script(message_id), {_P1_ = 0, _P2_ = 0}, agent)
       end
   },
 
@@ -1111,7 +711,7 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self, on_off)
-          self.owner.caos_flipped = on_off
+          CAOS.setVar(self.owner, "caos_flipped", on_off)
           
           if ( self.owner.setFlipped ~= nil ) then
             self.owner.setFlipped(on_off == 1)
@@ -1131,7 +731,12 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self)
-          return self.owner.caos_flipped or 0
+          local result = CAOS.getVar(self.owner, "caos_flipped", on_off)
+          
+          if ( result == nil and self.owner.facingDirection ~= nil ) then
+            result = (self.owner.facingDirection() < 0 ) and 1 or 0
+          end
+          return result or 0
         end
     }
   },
@@ -1220,9 +825,9 @@ CAOS.Machine.commands = {
         
         -- no idea what will happen if everything is called
         -- placeObject would be nice, however difficult to manage
-        spawnItem(agent_name, self.owner.position(), 1, agent_params)
+        --spawnItem(agent_name, self.owner.position(), 1, agent_params)
         spawnMonster(agent_name, self.owner.position(), agent_params)
-        spawnNpc(self.owner.position(), "", agent_name, 1, 0, agent_params)
+        --spawnNpc(self.owner.position(), "", agent_name, 1, 0, agent_params)
 
         --spawnProjectile
       end
@@ -1311,7 +916,7 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self, paused)
-          self.target.caos_paused = paused
+          CAOS.setVar(self.target, "caos_paused", paused)
         end
     },
 
@@ -1324,7 +929,7 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self)
-          return self.target.caos_paused or 0
+          return CAOS.getVar(self.target, "caos_paused") or 0
         end
     }
   },
@@ -1358,7 +963,7 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self, plane)
-          self.target.caos_plane = plane
+          CAOS.setVar(self.target, "caos_plane", plane)
         end
     },
 
@@ -1371,7 +976,7 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self)
-          return self.target.caos_plane or 0
+          return CAOS.getVar(self.target, "caos_plane") or 0
         end
     }
   },
@@ -1400,7 +1005,8 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self)
-        return self.target.caos_bounds_bottom or (self.target.position()[2] + 1.0) or 0.0
+        local bounds = CAOS.getVar(self.target, "caos_bounds")
+        return bounds.bottom or (self.target.position()[2] + 1.0) or 0.0
       end
   },
 
@@ -1444,7 +1050,8 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self)
-        return self.target.caos_bounds_left or (self.target.position()[1] - 1.0) or 0.0
+        local bounds = CAOS.getVar(self.target, "caos_bounds")
+        return bounds.left or (self.target.position()[1] - 1.0) or 0.0
       end
   },
 
@@ -1458,7 +1065,8 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self)
-        return self.target.caos_bounds_right or (self.target.position()[1] + 1.0) or 0.0
+        local bounds = CAOS.getVar(self.target, "caos_bounds")
+        return bounds.right or (self.target.position()[1] + 1.0) or 0.0
       end
   },
 
@@ -1472,7 +1080,8 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self)
-        return self.target.caos_bounds_top or (self.target.position()[2] - 1.0) or 0.0
+        local bounds = CAOS.getVar(self.target, "caos_bounds")
+        return bounds.top or (self.target.position()[2] - 1.0) or 0.0
       end
   },
 
@@ -1586,7 +1195,7 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self, distance)
-          self.target.caos_distance_check = distance
+          CAOS.setVar(self.target, "caos_distance_check", distance)
         end
     },
 
@@ -1599,7 +1208,7 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self)
-          return self.target.caos_distance_check or 100.0
+          return CAOS.getVar(self.target, "caos_distance_check") or 100.0
         end
     }
   },
@@ -1664,7 +1273,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self)
-        return self.target.caos_species or 0
+        return CAOS.getVar(self.target, "caos_species") or 0
       end
   },
 
@@ -1707,7 +1316,7 @@ CAOS.Machine.commands = {
         This sets the TARG variable to the agent specified.
       ]],
       callback =
-        function(self, agent )
+        function(self, agent)
           self.target = agent
         end
     }
@@ -1961,11 +1570,12 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self, checkAllCameras)
+        local bounds = CAOS.getVar(self.owner, "caos_bounds")
         return world.isVisibleToPlayer({
-                minX = self.owner.caos_bounds_left,
-                minY = self.owner.caos_bounds_top,
-                maxX = self.owner.caos_bounds_right,
-                maxY = self.owner.caos_bounds_bottom
+                minX = bounds.left,
+                minY = bounds.top,
+                maxX = bounds.right,
+                maxY = bounds.bottom
               }) and 1 or 0
       end
   },
@@ -1980,7 +1590,8 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self)
-        return math.abs(self.target.caos_bounds_right - self.target.caos_bounds_left)
+        local bounds = CAOS.getVar(self.target, bounds)
+        return bounds and math.abs(bounds.right - bounds.left) or 0
       end
   },
 
@@ -3163,8 +2774,7 @@ CAOS.Machine.commands = {
     rtype = "command",
     params = {},
     description = [[
-      Signals the target creature as having been born - this sends a birth event, and sets the @TAGE@ ticking.
-      
+      Signals the target creature as having been born - this sends a birth event, and sets the @TAGE@ ticking.      
     ]],
     callback =
       function(self)
@@ -3255,7 +2865,6 @@ CAOS.Machine.commands = {
         { "chemical", "integer" },  { "adjustment", "float" } },
       description = [[
         Adjusts chemical (0 to 255) by concentration -1.0 to +1.0 in the target creature's bloodstream.
-        
       ]],
       callback =
         function(self, chemical, adjustment )
@@ -3269,7 +2878,6 @@ CAOS.Machine.commands = {
         { "chemical", "integer" } },
       description = [[
         Returns concentration (0.0 to 1.0) of chemical (1 to 255) in the target creature's bloodstream.
-        
       ]],
       callback =
         function(self, chemical )
@@ -6018,10 +5626,10 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self, message )
-          self.target.caos_clack_msg = CAOS.message_to_script(message)
-          self.target.caos_click_msg_1 = -2
-          self.target.caos_click_msg_2 = -2
-          self.target.caos_click_msg_3 = -2
+          CAOS.setVar(self.target, "caos_clack_msg", CAOS.message_to_script(message))
+          CAOS.setVar(self.target, "caos_click_msg_1", -2)
+          CAOS.setVar(self.target, "caos_click_msg_2", -2)
+          CAOS.setVar(self.target, "caos_click_msg_3", -2)
         end
     },
 
@@ -6035,7 +5643,7 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self)
-          return CAOS.script_to_message(self.target.caos_clack_msg) or -1
+          return CAOS.script_to_message( CAOS.getVar(self.target, "caos_clack_msg") ) or -1
         end
     }
   },
@@ -6053,10 +5661,10 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self, message_1, message_2, message_3 )
-          self.target.caos_clack_msg = -2
-          self.target.caos_click_msg_1 = CAOS.message_to_script(which_value_or_msg1)
-          self.target.caos_click_msg_2 = CAOS.message_to_script(message_2)
-          self.target.caos_click_msg_3 = CAOS.message_to_script(message_3)
+          CAOS.setVar(self.target, "caos_clack_msg", -2)
+          CAOS.setVar(self.target, "caos_click_msg_1", CAOS.message_to_script(which_value_or_msg1))
+          CAOS.setVar(self.target, "caos_click_msg_2", CAOS.message_to_script(message_2))
+          CAOS.setVar(self.target, "caos_click_msg_3", CAOS.message_to_script(message_3))
         end
     },
 
@@ -6077,11 +5685,11 @@ CAOS.Machine.commands = {
           if ( which_value == 0 ) then
             return 1  -- TODO
           elseif ( which_value == 1 ) then
-            return self.target.caos_click_msg_1 or -1
+            return CAOS.getVar(self.target, "caos_click_msg_1") or -1
           elseif ( which_value == 2 ) then
-            return self.target.caos_click_msg_2 or -1
+            return CAOS.getVar(self.target, "caos_click_msg_2") or -1
           elseif ( which_value == 3 ) then
-            return self.target.caos_click_msg_3 or -1
+            return CAOS.getVar(self.target, "caos_click_msg_3") or -1
           end
           return 0
         end
@@ -6724,7 +6332,7 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self, permiability )
-          self.target.caos_permiability = permiability
+          CAOS.setVar(self.target, "caos_permiability", permiability)
         end
     },
 
@@ -6737,7 +6345,7 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self)
-          return self.target.caos_permiability or 50
+          return CAOS.getVar(self.target, "caos_permiability") or 50
         end
     }
   },
@@ -7140,7 +6748,7 @@ CAOS.Machine.commands = {
       function(self)
         -- check for world gravity or the physics flag
         if ( math.abs(world.gravity(self.target.position())) < 1 
-            or bit32.band(self.target.caos_attributes, CAOS.ATTRIBUTES.SUFFER_PHYSICS) == 0 ) then
+            or bit32.band( CAOS.getVar(self.target, "caos_attributes"), CAOS.ATTRIBUTES.SUFFER_PHYSICS) == 0 ) then
           return 0
         end
         
@@ -7199,8 +6807,9 @@ CAOS.Machine.commands = {
       function(self, screen_x, screen_y )
         -- float to
         local pos = { screen_x, screen_y }
-        if ( self.target.caos_float_relative ~= nil ) then
-          local targp = self.target.caos_float_relative.position()
+        local rel = CAOS.getVar(self.target, "caos_float_relative")
+        if ( rel ~= nil ) then
+          local targp = rel.position()
           pos[1] = pos[1] + targp[1]
           pos[2] = pos[2] + targp[2]
         end
@@ -7223,7 +6832,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self, relative )
-        self.target.caos_float_relative = relative
+        CAOS.setVar(self.target, "caos_float_relative")
       end
   },
 
@@ -7456,7 +7065,9 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self, amount_in_fraction_of_whole_circle )
-          self.owner.rotateGroup("all", amount_in_fraction_of_whole_circle*2*math.pi)
+          if ( self.owner.rotateGroup ~= nil ) then
+            self.owner.rotateGroup("all", amount_in_fraction_of_whole_circle*2*math.pi)
+          end
         end
     },
 
@@ -7469,7 +7080,7 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self)
-          return self.owner.currentRotationAngle("all")
+          return self.owner.currentRotationAngle("all") or 0
         end
     }
   },
@@ -8245,7 +7856,7 @@ CAOS.Machine.commands = {
     callback =
       function(self, id, data )
         if ( self.owner.setOutboundNodeLevel ~= nil ) then
-          self.owner.setOutboundNodeLevel(id, (data > 0) and true or false)
+          self.owner.setOutboundNodeLevel(id, (data > 0))
         end
       end
   },
@@ -8631,7 +8242,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self, family )
-        if ( self.script_exists(family) ) then
+        if ( self:script_exists(family) ) then
         
           local keyset = {}
           local n = 0
@@ -8658,7 +8269,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self, family, genus )
-        if ( self.script_exists(family, genus) ) then
+        if ( self:script_exists(family, genus) ) then
         
           local keyset = {}
           local n = 0
@@ -8683,7 +8294,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self)
-        if ( self.script_exists() ) then
+        if ( self:script_exists() ) then
         
           local keyset = {}
           local n = 0
@@ -8709,7 +8320,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self, family, genus, species )
-        if ( self.script_exists(family, genus, species) ) then
+        if ( self:script_exists(family, genus, species) ) then
         
           local keyset = {}
           local n = 0
@@ -8788,7 +8399,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self, family, genus, species, event )
-        if ( self.script_exists(family, genus, species, event) ) then
+        if ( self:script_exists(family, genus, species, event) ) then
           self.scriptorium[family][genus][species][event] = nil
         end
       end
@@ -8819,7 +8430,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self, family, genus, species, event )
-        if ( self.script_exists(family, genus, species, event) ) then
+        if ( self:script_exists(family, genus, species, event) ) then
           return self.scriptorium[family][genus][species][event]["source"]
         end
         return ""
@@ -8838,9 +8449,9 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self, family, genus, species, event )
-        if ( self.script_exists(family, genus, species, event)
-              or self.script_exists(family, genus, 0, event)
-              or self.script_exists(family, 0, 0, event) ) then
+        if ( self:script_exists(family, genus, species, event)
+              or self:script_exists(family, genus, 0, event)
+              or self:script_exists(family, 0, 0, event) ) then
           return 1
         end
         return 0
@@ -8871,7 +8482,8 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self)
-        self.target.caos_vm.stopped = true
+        local vm = CAOS.getVar(self.target, "caos_vm")
+        vm.stopped = true
       end
   },
 
@@ -9054,8 +8666,9 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self, text )
-        if ( self.target.caos_voice ~= nil and self.target.playSound ~= nil ) then
-          self.target.playSound( self.target.randomizeParameter(self.target.caos_voice) )
+        local voice = CAOS.getVar(self.target, "caos_voice")
+        if ( voice ~= nil and self.target.playSound ~= nil ) then
+          self.target.playSound( self.target.randomizeParameter(voice) )
         end
         
         if ( self.target.say ~= nil ) then
@@ -9189,7 +8802,7 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self, voice_name )
-          self.target.caos_voice = voice_name
+          CAOS.setVar(self.target, "caos_voice", voice_name)
         end
     },
 
@@ -9204,7 +8817,7 @@ CAOS.Machine.commands = {
       ]],
       callback =
         function(self)
-          return self.target.caos_voice or ""
+          return CAOS.getVar(self.target, "caos_voice") or ""
         end
     }
   },
@@ -9284,7 +8897,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self)
-        local days_in_season = self.get_game_var("engine_LengthOfSeasonInDays")
+        local days_in_season = self:get_game_var("engine_LengthOfSeasonInDays")
         if ( days_in_season <= 0 ) then
           days_in_season = 4
         end
@@ -9552,12 +9165,12 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self)
-        local days_in_season = self.get_game_var("engine_LengthOfSeasonInDays")
+        local days_in_season = self:get_game_var("engine_LengthOfSeasonInDays")
         if ( days_in_season <= 0 ) then
           days_in_season = 4
         end
         
-        local seasons_in_year = self.get_game_var("engine_NumberOfSeasons")
+        local seasons_in_year = self:get_game_var("engine_NumberOfSeasons")
         if ( seasons_in_year <= 0 ) then
           seasons_in_year = 4
         end
@@ -9674,12 +9287,12 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self)
-        local days_in_season = self.get_game_var("engine_LengthOfSeasonInDays")
+        local days_in_season = self:get_game_var("engine_LengthOfSeasonInDays")
         if ( days_in_season <= 0 ) then
           days_in_season = 4
         end
         
-        local seasons_in_year = self.get_game_var("engine_NumberOfSeasons")
+        local seasons_in_year = self:get_game_var("engine_NumberOfSeasons")
         if ( seasons_in_year <= 0 ) then
           seasons_in_year = 4
         end
@@ -9868,7 +9481,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self, variable_name )
-        self.get_engine_var(variable_name).value = nil
+        self:get_engine_var(variable_name).value = nil
       end
   },
 
@@ -9883,7 +9496,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self, variable_name )
-        self.get_game_var(variable_name).value = nil
+        self:get_game_var(variable_name).value = nil
       end
   },
 
@@ -9898,7 +9511,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self, variable_name )
-        self.get_target_var(variable_name).value = nil
+        self:get_target_var(variable_name).value = nil
       end
   },
 
@@ -9931,7 +9544,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self, variable_name )
-        return self.get_engine_var(variable_name)
+        return self:get_engine_var(variable_name)
       end
   },
 
@@ -9982,7 +9595,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self, variable_name )
-        return self.get_game_var(variable_name)
+        return self:get_game_var(variable_name)
       end
   },
 
@@ -10058,7 +9671,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self, variable_name )
-        return self.get_owner_var(variable_name)
+        return self:get_owner_var(variable_name)
       end
   },
 
@@ -10137,7 +9750,7 @@ CAOS.Machine.commands = {
     ]],
     callback =
       function(self, variable_name )
-        return self.get_target_var(variable_name)
+        return self:get_target_var(variable_name)
       end
   },
 
@@ -11118,6 +10731,9 @@ CAOS.Machine.commands = {
     callback =
       function(self)
         local info = world.info()
+        if ( info == nil ) then
+          return "SHIP"
+        end
         return ""..(info.id or info.handle or info.name or "")
       end
   },
