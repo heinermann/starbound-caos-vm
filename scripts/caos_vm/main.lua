@@ -440,9 +440,6 @@ function CAOS.Machine.Parser.skip_whitespace(self)
     self:next_line()
   end
   
-  world.logInfo(tostring(self:valid()))
-  world.logInfo(tostring(self.column))
-  world.logInfo(tostring(self.str))
   while ( self:valid() and self.column <= #self.str and 
           (self.str[self.column] == " " or self.str[self.column] == "*") ) 
   do
@@ -522,6 +519,17 @@ function CAOS.Machine.Parser.get_command(self, expected_type)
   
   -- Retrieve the command and perform type check
   local cmd = CAOS.get_command(cmdstr, expected_type)
+  if ( cmd == nil and (expected_type == "decimal" or expected_type == "float") ) then
+    cmd = CAOS.get_command(cmdstr, "integer")
+    if ( cmd == nil ) then
+      cmd = CAOS.get_command(cmdstr, "float")
+    end
+  end
+  
+  if ( cmd == nil and expected_type ~= "command" ) then
+    cmd = CAOS.get_command(cmdstr, "variable")
+  end
+    
   if ( cmd == nil ) then
     self:error("The command \"" .. cmdstr .. "\" does not support the expected type \"" .. expected_type .. "\".")
   end
@@ -555,7 +563,7 @@ function CAOS.Machine.Parser.next(self, expected_type)
     local snippet = string.sub(self.str, self.column, endmatch-1)
     local num = tonumber(snippet)
     if ( num ~= nil ) then
-      if ( expected_type ~= nil and expected_type ~= "float" and expected_type ~= "integer" ) then
+      if ( expected_type ~= nil and expected_type ~= "float" and expected_type ~= "integer" and expected_type ~= "decimal" ) then
         self:error("Type mismatch. Expected " .. expected_type .. "; Got " .. (num == math.floor(num) and "integer" or "float") .. ".")
       elseif ( expected_type == "integer" and num ~= math.floor(num) ) then
         self:error("Type mismatch. Expected " .. expected_type .. "; Got float.")
@@ -568,6 +576,43 @@ function CAOS.Machine.Parser.next(self, expected_type)
   end
 end
 
+-- Thing for debugging
+function table.val_to_str ( v )
+  if "string" == type( v ) then
+    v = string.gsub( v, "\n", "\\n" )
+    if string.match( string.gsub(v,"[^'\"]",""), '^"+$' ) then
+      return "'" .. v .. "'"
+    end
+    return '"' .. string.gsub(v,'"', '\\"' ) .. '"'
+  else
+    return "table" == type( v ) and table.tostring( v ) or
+      tostring( v )
+  end
+end
+
+function table.key_to_str ( k )
+  if "string" == type( k ) and string.match( k, "^[_%a][_%a%d]*$" ) then
+    return k
+  else
+    return "[" .. table.val_to_str( k ) .. "]"
+  end
+end
+
+function table.tostring( tbl )
+  local result, done = {}, {}
+  for k, v in ipairs( tbl ) do
+    table.insert( result, table.val_to_str( v ) )
+    done[ k ] = true
+  end
+  for k, v in pairs( tbl ) do
+    if not done[ k ] then
+      table.insert( result,
+        table.key_to_str( k ) .. "=" .. table.val_to_str( v ) )
+    end
+  end
+  return "{" .. table.concat( result, "," ) .. "}"
+end
+
 -- Parses a full source and adds it to the scriptorium
 function CAOS.Machine.parse_full_source(self, raw_source)
   local parser = CAOS.Machine.Parser.create(raw_source)
@@ -577,9 +622,11 @@ function CAOS.Machine.parse_full_source(self, raw_source)
     local next_value = nil
     if ( #parser.call_stack == 0 ) then
       next_value = parser:next("command")
+      print(tostring(next_value))
     else
       current_cmd = parser.call_stack[#parser.call_stack]
       next_value = parser:next( current_cmd.cmd.params[current_cmd.argno][2] )
+      print(tostring(next_value))
       current_cmd.argno = current_cmd.argno + 1
     end
     table.insert(parser.var_stack, next_value)
@@ -588,10 +635,10 @@ function CAOS.Machine.parse_full_source(self, raw_source)
     end
     
     -- Retrieve the most recent command from the call stack and check if all of its arguments have been provided
-    current_cmd = parser.call_stack[#parser.call_stack]
-    local cmd = current_cmd.cmd
-    if ( current_cmd.argno > #cmd.params ) then
-    
+    while ( #parser.call_stack > 0 and parser.call_stack[#parser.call_stack].argno > #parser.call_stack[#parser.call_stack].cmd.params ) do
+      current_cmd = parser.call_stack[#parser.call_stack]
+      local cmd = current_cmd.cmd
+      
       -- Retrieve the arguments from the stack
       local cmd_args = {}
       for i = #cmd.params, 1, -1 do
@@ -616,6 +663,7 @@ function CAOS.Machine.parse_full_source(self, raw_source)
       -- At this point, the command is executed and replaced with the result on the var_stack
       -- table.remove(parser.var_stack)
       -- table.insert(parser.var_stack, make the call )
+      --world.logInfo("[CAOS] made virtual call: " .. cmd.command .. " " .. table.tostring(cmd_args))
       
       table.remove(parser.call_stack)    -- remove the command from the call stack as we do not require the call
       

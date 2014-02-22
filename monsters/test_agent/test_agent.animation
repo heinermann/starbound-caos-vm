@@ -2,15 +2,6 @@
   "animatedParts" : {
     "stateTypes" : {
     
-      //"movement" : {
-      //  "priority" : 0,
-      //  "default" : "idle",
-      //  "states" : {
-      //    "idle" : {
-      //      "frames" : 1
-      //    }
-      //  }
-      //},
       "portrait" : {
         "priority" : -1,
         "default" : "portrait",
@@ -26,21 +17,15 @@
       "body" : {
         "properties" : {
           "zLevel" : 1,
-          "centered" : true
+          "centered" : true,
+          "rotationGroup" : "all"
         },
-
+        
         "partStates" : {
-        //  "movement" : {
-        //    "idle" : {
-        //      "properties" : {
-        //        "image" : "<partImage>:idle.<frame>"
-        //      }
-        //    }
-        //  },
           "portrait" : {
             "portrait" : {
               "properties" : {
-                "image" : "<partImage>:default"
+                "image" : "<partImage>:<frameno>"
               }
             }
           }
@@ -49,6 +34,11 @@
     }
   },
 
+  "rotationGroups" : {
+    "all" : {
+      "angularVelocity" : 1
+    }
+  },
   "particleEmitters" : {
   },
 

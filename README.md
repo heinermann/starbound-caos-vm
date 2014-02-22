@@ -23,7 +23,16 @@ Some examples:
 ## What is CAOS?
 A Creatures Agent Object Script (CAOS) is a proprietary scripting
 language for the Creatures engine. All agents contain a script.
- 
+
+## How to convert a Creatures Docking Station agent to Starbound
+NOTE: A program to automate this process will eventually be released. In its current stage, nothing is final.
+
+1. Extract the creatures `.agent` or `.agents` file with `bin/revelation.exe`
+2. Extract the the image data from the `.c16` or `.s16` file with `bin/c16topng.exe`
+3. Batch resize all image canvases to the largest size, centering those that are too small (Can be done with Irfanview)
+4. Stitch images together horizontally (GIMP)
+5. TODO
+
 ## What are the challenges?
 The Starbound scripting API is extremely limited compared to CAOS script.
 This means serious compromises and workarounds must be made in order to
@@ -31,7 +40,7 @@ accomplish what seems like trivial tasks for the CAOS scripting engine.
 
 Some major issues to consider:
 * General limitations (in order for some agents to have more capabilities than others, we must determine if they will be made into a Starbound object, monster, or ship)
-* Movement (teleporting to different locations generally not possible, and the physics engine is different)
+* Different physics engine
 * No global/engine/world environment for variables (cellular automata, scriptorium)
 * Agents containing multiple objects must be split into multiple files, making it difficult to share resources
 * No file API

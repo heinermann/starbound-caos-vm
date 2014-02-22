@@ -17,6 +17,8 @@ function init()
   entity.setRunning(false)
   entity.setActiveSkillName(nil)
   
+  entity.setGlobalTag("frameno", 0)
+  
   world.logInfo("Spawned an agent!")
   
   if ( CAOS ~= nil and CAOS.Machine ~= nil ) then
