@@ -1,74 +1,91 @@
 
-CAOS.Machine.commands = {
+-- Types:
+--  command
+--  integer
+--  byte-string
+--  string
+--  agent (returned from command)
+--  float
+--  variable (returned from command)
+
+CAOS.commands = {
   ["ABBA"] = {
-    command = "ABBA",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the absolute base for the current agent/part.  Returns -1 if an invalid part.  The absolute base 
-      is the value passed into @NEW: SIMP@ and so on, it is different from the @BASE@.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["command"] = {
+      command = "ABBA",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the absolute base for the current agent/part.  Returns -1 if an invalid part.  The absolute base 
+        is the value passed into @NEW: SIMP@ and so on, it is different from the @BASE@.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["ALPH"] = {
-    command = "ALPH",
-    rtype = "command",
-    params = {
-      { "alpha_value", "integer" },  { "yesOrNo", "integer" } },
-    description = [[
-      The agent will be drawn alpha blended against the background by the given value - from 256 for invisible 
-      to 0 for completely solid.  For compound agents set the @PART@ to affect a particular part or to -
-      1 to affect all parts.  The second parameter switches alpha blending on (1) or off (0).  Alpha graphics 
-      are drawn much slower, so use sparingly and turn it off completely rather than using an intensity value 
-      of 0 or 256.  At the moment alpha channels only work on compressed, non-mirrored, non-zoomed sprites.
-      
-    ]],
-    callback =
-      function(self, alpha_value, yesOrNo)
-      end
+    ["command"] = {
+      command = "ALPH",
+      rtype = "command",
+      params = {
+        { "alpha_value", "integer" },  { "yesOrNo", "integer" } },
+      description = [[
+        The agent will be drawn alpha blended against the background by the given value - from 256 for invisible 
+        to 0 for completely solid.  For compound agents set the @PART@ to affect a particular part or to -
+        1 to affect all parts.  The second parameter switches alpha blending on (1) or off (0).  Alpha graphics 
+        are drawn much slower, so use sparingly and turn it off completely rather than using an intensity value 
+        of 0 or 256.  At the moment alpha channels only work on compressed, non-mirrored, non-zoomed sprites.
+        
+      ]],
+      callback =
+        function(self, alpha_value, yesOrNo)
+        end
+    }
   },
 
 
   ["ANIM"] = {
-    command = "ANIM",
-    rtype = "command",
-    params = {
-      { "pose_list", "byte-string" } },
-    description = [[
-      Specify a list of @POSE@s such as [1 2 3] to animate the current agent/part.  Put 
-      255 at the end to continually loop.  The first number after the 255 is an index into the 
-      animation string where the looping restarts from - this defaults to 0 if not specified.  e.g. [0 1 
-      2 10 11 12 255 3] would loop just the 10, 11, 12 section.
-    ]],
-    callback =
-      function(self, pose_list)
-      end
+    ["command"] = {
+      command = "ANIM",
+      rtype = "command",
+      params = {
+        { "pose_list", "byte-string" } },
+      description = [[
+        Specify a list of @POSE@s such as [1 2 3] to animate the current agent/part.  Put 
+        255 at the end to continually loop.  The first number after the 255 is an index into the 
+        animation string where the looping restarts from - this defaults to 0 if not specified.  e.g. [0 1 
+        2 10 11 12 255 3] would loop just the 10, 11, 12 section.
+      ]],
+      callback =
+        function(self, pose_list)
+        end
+    }
   },
 
 
   ["ANMS"] = {
-    command = "ANMS",
-    rtype = "command",
-    params = {
-      { "anim_string", "string" } },
-    description = [[
-      This is like @ANIM@, only it reads the poses from a string such as "3 4 5 255".  
-      Use this when you need to dynamically construct animations.  Use ANIM in general as it is quicker to 
-      execute, although they are the same speed once the animation is underway.
-    ]],
-    callback =
-      function(self, anim_string)
-      end
+    ["command"] = {
+      command = "ANMS",
+      rtype = "command",
+      params = {
+        { "anim_string", "string" } },
+      description = [[
+        This is like @ANIM@, only it reads the poses from a string such as "3 4 5 255".  
+        Use this when you need to dynamically construct animations.  Use ANIM in general as it is quicker to 
+        execute, although they are the same speed once the animation is underway.
+      ]],
+      callback =
+        function(self, anim_string)
+        end
+    }
   },
 
   -- partial
   ["ATTR"] = {
-    lvalue = {
+    ["command"] = {
       command = "ATTR",
       rtype = "command",
       params = {
@@ -119,7 +136,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "ATTR",
       rtype = "integer",
       params = {},
@@ -133,7 +150,7 @@ CAOS.Machine.commands = {
 
   -- partial/none
   ["BASE"] = {
-    lvalue = {
+    ["command"] = {
       command = "BASE",
       rtype = "command",
       params = {
@@ -148,7 +165,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "BASE",
       rtype = "integer",
       params = {},
@@ -164,7 +181,7 @@ CAOS.Machine.commands = {
 
   -- partial/none
   ["BHVR"] = {
-    lvalue = {
+    ["command"] = {
       command = "BHVR",
       rtype = "command",
       params = {
@@ -179,7 +196,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "BHVR",
       rtype = "integer",
       params = {},
@@ -195,7 +212,8 @@ CAOS.Machine.commands = {
 
 
   ["CALL"] = {
-    command = "CALL",
+    ["command"] = {
+      command = "CALL",
     rtype = "command",
     params = {
       { "event_no", "integer" },  { "param_1", "anything" },  { "param_2", "anything" } },
@@ -213,25 +231,29 @@ CAOS.Machine.commands = {
     callback =
       function(self, event_no, param_1, param_2)
       end
+    }
   },
 
   -- partial/none
   ["CARR"] = {
-    command = "CARR",
-    rtype = "agent",
-    params = {},
-    description = [[
-      Returns the the agent currently holding the target, or @NULL@ if there is none.
-    ]],
-    callback =
-      function(self)
-        return CAOS.getVar(self.target, "caos_carried_by")
-      end
+    ["agent"] = {
+      command = "CARR",
+      rtype = "agent",
+      params = {},
+      description = [[
+        Returns the the agent currently holding the target, or @NULL@ if there is none.
+      ]],
+      callback =
+        function(self)
+          return CAOS.getVar(self.target, "caos_carried_by")
+        end
+    }
   },
 
 
   ["CATA"] = {
-    command = "CATA",
+    ["integer"] = {
+      command = "CATA",
     rtype = "integer",
     params = {},
     description = [[
@@ -242,59 +264,67 @@ CAOS.Machine.commands = {
       function(self)
         return 0
       end
+    }
   },
 
 
   ["CATI"] = {
-    command = "CATI",
-    rtype = "integer",
-    params = {
-      { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
-    description = [[
-      Return the category id for the given classifier.  The catalogue tag "Agent Classifiers" specifies these, and you can 
-      have more than 40.  They are tested in order until the first match is found.  -1 is always 
-      returned if none match.  Agents can override their classifier category with @CATO@.
-    ]],
-    callback =
-      function(self, family, genus, species)
-        return 0
-      end
+    ["integer"] = {
+      command = "CATI",
+      rtype = "integer",
+      params = {
+        { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
+      description = [[
+        Return the category id for the given classifier.  The catalogue tag "Agent Classifiers" specifies these, and you can 
+        have more than 40.  They are tested in order until the first match is found.  -1 is always 
+        returned if none match.  Agents can override their classifier category with @CATO@.
+      ]],
+      callback =
+        function(self, family, genus, species)
+          return 0
+        end
+    }
   },
 
 
   ["CATO"] = {
-    command = "CATO",
-    rtype = "command",
-    params = {
-      { "category", "integer" } },
-    description = [[
-      Change the target's category to the one specified.  The default is -1 which means the category is 
-      based on classifier and the catalogue as described in @CATI@.  See also @CATX@ and @CATA@.
-    ]],
-    callback =
-      function(self, category)
-      end
+    ["command"] = {
+      command = "CATO",
+      rtype = "command",
+      params = {
+        { "category", "integer" } },
+      description = [[
+        Change the target's category to the one specified.  The default is -1 which means the category is 
+        based on classifier and the catalogue as described in @CATI@.  See also @CATX@ and @CATA@.
+      ]],
+      callback =
+        function(self, category)
+        end
+    }
   },
 
 
   ["CATX"] = {
-    command = "CATX",
-    rtype = "string",
-    params = {
-      { "category_id", "integer" } },
-    description = [[
-      Returns the name of the given category.  For example, "toy" or "bad bug".  The catalogue tag "Agent Categories" 
-      stores these.  If the id is out of range, CATX returns an empty string.
-    ]],
-    callback =
-      function(self, category_id)
-        return ""
-      end
+    ["string"] = {
+      command = "CATX",
+      rtype = "string",
+      params = {
+        { "category_id", "integer" } },
+      description = [[
+        Returns the name of the given category.  For example, "toy" or "bad bug".  The catalogue tag "Agent Categories" 
+        stores these.  If the id is out of range, CATX returns an empty string.
+      ]],
+      callback =
+        function(self, category_id)
+          return ""
+        end
+    }
   },
 
   -- partial/none
   ["CORE"] = {
-    command = "CORE",
+    ["command"] = {
+      command = "CORE",
     rtype = "command",
     params = {
       { "topY", "float" },  { "bottomY", "float" },  { "leftX", "float" },  { "rightX", "float" } },
@@ -310,210 +340,237 @@ CAOS.Machine.commands = {
                                                   bottom = bottomy
                                                 })
       end
+    }
   },
 
   -- partial/none
   ["DCOR"] = {
-    command = "DCOR",
-    rtype = "command",
-    params = {
-      { "core_on", "integer" } },
-    description = [[
-      Debug command to show the physical core of the TARG agent graphically.
-    ]],
-    callback =
-      function(self, core_on)
-        CAOS.setVar(self.target, "caos_debug_core", core_on)
-      end
+    ["command"] = {
+      command = "DCOR",
+      rtype = "command",
+      params = {
+        { "core_on", "integer" } },
+      description = [[
+        Debug command to show the physical core of the TARG agent graphically.
+      ]],
+      callback =
+        function(self, core_on)
+          CAOS.setVar(self.target, "caos_debug_core", core_on)
+        end
+    }
   },
 
   -- full
   ["DISQ"] = {
-    command = "DISQ",
-    rtype = "float",
-    params = {
-      { "other", "agent" } },
-    description = [[
-      Returns the square of the distance between the centre points of the target agent, and the other agent.  
-      It is quicker to compare this square against a squared constant directly, or if you need the actual 
-      distance use @SQRT@.
-    ]],
-    callback =
-      function(self, other)
-        local dist = world.distance(self.target.position(), other.position())
-        return dist * dist
-      end
+    ["float"] = {
+      command = "DISQ",
+      rtype = "float",
+      params = {
+        { "other", "agent" } },
+      description = [[
+        Returns the square of the distance between the centre points of the target agent, and the other agent.  
+        It is quicker to compare this square against a squared constant directly, or if you need the actual 
+        distance use @SQRT@.
+      ]],
+      callback =
+        function(self, other)
+          local dist = world.distance(self.target.position(), other.position())
+          return dist * dist
+        end
+    }
   },
 
 
   ["DROP"] = {
-    command = "DROP",
-    rtype = "command",
-    params = {},
-    description = [[
-      Force the @TARG@ to drop what it is carrying.  this will try to find a safe place for 
-      the agent to fall.
-    ]],
-    callback =
-      function(self)
-      end
+    ["command"] = {
+      command = "DROP",
+      rtype = "command",
+      params = {},
+      description = [[
+        Force the @TARG@ to drop what it is carrying.  this will try to find a safe place for 
+        the agent to fall.
+      ]],
+      callback =
+        function(self)
+        end
+    }
   },
 
 
   ["DSEE"] = {
-    command = "DSEE",
-    rtype = "command",
-    params = {
-      { "can_see_on", "integer" } },
-    description = [[
-      Debug command to show all the agents which can be seen by any creature.
-    ]],
-    callback =
-      function(self, can_see_on)
-      end
+    ["command"] = {
+      command = "DSEE",
+      rtype = "command",
+      params = {
+        { "can_see_on", "integer" } },
+      description = [[
+        Debug command to show all the agents which can be seen by any creature.
+      ]],
+      callback =
+        function(self, can_see_on)
+        end
+    }
   },
 
 
   ["ENUM"] = {
-    command = "ENUM",
-    rtype = "command",
-    params = {
-      { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
-    description = [[
-      Iterate through each agent which conforms to the given classification, setting @TARG@ to point to each valid agent 
-      in turn. family, genus and/or species can be zero to act as wildcards.  @NEXT@ terminates the block 
-      of code which is executed with each TARG.  After an ENUM, TARG is set to @OWNR@.
-    ]],
-    callback =
-      function(self, family, genus, species)
-      end
+    ["command"] = {
+      command = "ENUM",
+      rtype = "command",
+      params = {
+        { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
+      description = [[
+        Iterate through each agent which conforms to the given classification, setting @TARG@ to point to each valid agent 
+        in turn. family, genus and/or species can be zero to act as wildcards.  @NEXT@ terminates the block 
+        of code which is executed with each TARG.  After an ENUM, TARG is set to @OWNR@.
+      ]],
+      callback =
+        function(self, family, genus, species)
+        end
+    }
   },
 
 
   ["ESEE"] = {
-    command = "ESEE",
-    rtype = "command",
-    params = {
-      { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
-    description = [[
-      As @ENUM@, except only enumerates through agents which @OWNR@ can see.  An agent can see another if it 
-      is within @RNGE@, its @PERM@ allows it to see through all intervening walls, and for creatures @ATTR@ @Invisible@ 
-      isn't set.  See also @STAR@ and @SEEE@.  In install scripts, when there is no @OWNR@, @TARG@ is 
-      used instead.
-    ]],
-    callback =
-      function(self, family, genus, species)
-      end
+    ["command"] = {
+      command = "ESEE",
+      rtype = "command",
+      params = {
+        { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
+      description = [[
+        As @ENUM@, except only enumerates through agents which @OWNR@ can see.  An agent can see another if it 
+        is within @RNGE@, its @PERM@ allows it to see through all intervening walls, and for creatures @ATTR@ @Invisible@ 
+        isn't set.  See also @STAR@ and @SEEE@.  In install scripts, when there is no @OWNR@, @TARG@ is 
+        used instead.
+      ]],
+      callback =
+        function(self, family, genus, species)
+        end
+    }
   },
 
 
   ["ETCH"] = {
-    command = "ETCH",
-    rtype = "command",
-    params = {
-      { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
-    description = [[
-      As @ENUM@, except only enumerates through agents which @OWNR@ is touching.  Agents are said to be touching if 
-      their bounding rectangles overlap.  See also @TTAR@.  In install scripts, when there is no @OWNR@, @TARG@ is used 
-      instead.
-    ]],
-    callback =
-      function(self, family, genus, species)
-      end
+    ["command"] = {
+      command = "ETCH",
+      rtype = "command",
+      params = {
+        { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
+      description = [[
+        As @ENUM@, except only enumerates through agents which @OWNR@ is touching.  Agents are said to be touching if 
+        their bounding rectangles overlap.  See also @TTAR@.  In install scripts, when there is no @OWNR@, @TARG@ is used 
+        instead.
+      ]],
+      callback =
+        function(self, family, genus, species)
+        end
+    }
   },
 
 
   ["FLTX"] = {
-    command = "FLTX",
-    rtype = "float",
-    params = {},
-    description = [[
-      This returns the X position of the @TARG@ object's floating vector.
-    ]],
-    callback =
-      function(self)
-        return 0.0
-      end
+    ["float"] = {
+      command = "FLTX",
+      rtype = "float",
+      params = {},
+      description = [[
+        This returns the X position of the @TARG@ object's floating vector.
+      ]],
+      callback =
+        function(self)
+          return 0.0
+        end
+    }
   },
 
 
   ["FLTY"] = {
-    command = "FLTY",
-    rtype = "float",
-    params = {},
-    description = [[
-      This returns the Y position of the @TARG@ object's floating vector.
-    ]],
-    callback =
-      function(self)
-        return 0.0
-      end
+    ["float"] = {
+      command = "FLTY",
+      rtype = "float",
+      params = {},
+      description = [[
+        This returns the Y position of the @TARG@ object's floating vector.
+      ]],
+      callback =
+        function(self)
+          return 0.0
+        end
+    }
   },
 
   -- full
   ["FMLY"] = {
-    command = "FMLY",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns family of target.  See also @GNUS@, @SPCS@.
-    ]],
-    callback =
-      function(self)
-        return CAOS.getVar(self.target, "caos_family") or 0
-      end
+    ["integer"] = {
+      command = "FMLY",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns family of target.  See also @GNUS@, @SPCS@.
+      ]],
+      callback =
+        function(self)
+          return CAOS.getVar(self.target, "caos_family") or 0
+        end
+    }
   },
 
 
   ["FRAT"] = {
-    command = "FRAT",
-    rtype = "command",
-    params = {
-      { "FrameRate", "integer" } },
-    description = [[
-      This command sets the frame rate on the @TARG@ agent. If it is a compound agent, then the 
-      part affected can be set with the @PART@ command. Valid rates are from 1 to 255. 1 is 
-      Normal rate, 2 is half speed etc...
-    ]],
-    callback =
-      function(self, FrameRate)
-      end
+    ["command"] = {
+      command = "FRAT",
+      rtype = "command",
+      params = {
+        { "FrameRate", "integer" } },
+      description = [[
+        This command sets the frame rate on the @TARG@ agent. If it is a compound agent, then the 
+        part affected can be set with the @PART@ command. Valid rates are from 1 to 255. 1 is 
+        Normal rate, 2 is half speed etc...
+      ]],
+      callback =
+        function(self, FrameRate)
+        end
+    }
   },
 
   -- partial/none (verify)
   ["FROM"] = {
-    command = "FROM",
-    rtype = "variable",
-    params = {},
-    description = [[
-      If we're processing a message, this is the @OWNR@ who sent the message.  @NULL@ if the message 
-      was sent from an injected script or an install script.  If the message was sent over the network 
-      using @NET: WRIT@, then this contains the user id of the sender, as a string.
-    ]],
-    callback =
-      function(self)
-        return self.message_from
-      end
+    ["variable"] = {
+      command = "FROM",
+      rtype = "variable",
+      params = {},
+      description = [[
+        If we're processing a message, this is the @OWNR@ who sent the message.  @NULL@ if the message 
+        was sent from an injected script or an install script.  If the message was sent over the network 
+        using @NET: WRIT@, then this contains the user id of the sender, as a string.
+      ]],
+      callback =
+        function(self)
+          return self.message_from
+        end
+    }
   },
 
 
   ["GAIT"] = {
-    command = "GAIT",
-    rtype = "command",
-    params = {
-      { "gait_number", "integer" } },
-    description = [[
-      Specifies the current gait for a creature. The gaits are genetically defined. It sets the gait of the 
-      creature agent stored in @TARG@.
-    ]],
-    callback =
-      function(self, gait_number)
-      end
+    ["command"] = {
+      command = "GAIT",
+      rtype = "command",
+      params = {
+        { "gait_number", "integer" } },
+      description = [[
+        Specifies the current gait for a creature. The gaits are genetically defined. It sets the gait of the 
+        creature agent stored in @TARG@.
+      ]],
+      callback =
+        function(self, gait_number)
+        end
+    }
   },
 
 
   ["GALL"] = {
-    lvalue = {
+    ["command"] = {
       command = "GALL",
       rtype = "command",
       params = {
@@ -527,7 +584,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["string"] = {
       command = "GALL",
       rtype = "string",
       params = {},
@@ -544,21 +601,23 @@ CAOS.Machine.commands = {
 
   -- full
   ["GNUS"] = {
-    command = "GNUS",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns genus of target.  See also @FMLY@, @SPCS@.
-    ]],
-    callback =
-      function(self)
-        return CAOS.getVar(self.target, "caos_genus") or 0
-      end
+    ["integer"] = {
+      command = "GNUS",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns genus of target.  See also @FMLY@, @SPCS@.
+      ]],
+      callback =
+        function(self)
+          return CAOS.getVar(self.target, "caos_genus") or 0
+        end
+    }
   },
 
   -- full
   ["HAND"] = {
-    lvalue = {
+    ["command"] = {
       command = "HAND",
       rtype = "command",
       params = {
@@ -572,7 +631,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["string"] = {
       command = "HAND",
       rtype = "string",
       params = {},
@@ -588,119 +647,133 @@ CAOS.Machine.commands = {
 
   -- partial/none
   ["HELD"] = {
-    command = "HELD",
-    rtype = "agent",
-    params = {},
-    description = [[
-      Returns the item currently held by the target.  For vehicles this returns a random carried agent if carrying 
-      more than one.  Consider using @EPAS@ instead.
-    ]],
-    callback =
-      function(self)
-        return CAOS.getVar(self.target, "caos_carrying")
-      end
+    ["agent"] = {
+      command = "HELD",
+      rtype = "agent",
+      params = {},
+      description = [[
+        Returns the item currently held by the target.  For vehicles this returns a random carried agent if carrying 
+        more than one.  Consider using @EPAS@ instead.
+      ]],
+      callback =
+        function(self)
+          return CAOS.getVar(self.target, "caos_carrying")
+        end
+    }
   },
 
   -- partial/none
   ["HGHT"] = {
-    command = "HGHT",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the height of target.
-    ]],
-    callback =
-      function(self)
-        local bounds = CAOS.getVar(self.target, bounds)
-        return bounds and math.abs(bounds.bottom - bounds.top) or 0
-      end
+    ["integer"] = {
+      command = "HGHT",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the height of target.
+      ]],
+      callback =
+        function(self)
+          local bounds = CAOS.getVar(self.target, bounds)
+          return bounds and math.abs(bounds.bottom - bounds.top) or 0
+        end
+    }
   },
 
 
   ["IITT"] = {
-    command = "IITT",
-    rtype = "agent",
-    params = {},
-    description = [[
-      Returns the target creature's current agent of attention.  Compare @_IT_@.
-    ]],
-    callback =
-      function(self)
-        return nil
-      end
+    ["agent"] = {
+      command = "IITT",
+      rtype = "agent",
+      params = {},
+      description = [[
+        Returns the target creature's current agent of attention.  Compare @_IT_@.
+      ]],
+      callback =
+        function(self)
+          return nil
+        end
+    }
   },
 
 
   ["IMSK"] = {
-    command = "IMSK",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the input event mask.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "IMSK",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the input event mask.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
   -- full/partial
   ["KILL"] = {
-    command = "KILL",
-    rtype = "command",
-    params = {
-      { "agent", "agent" } },
-    description = [[
-      Destroys an agent.  The pointer won't be destroyed.  For creatures, you probably want to use @DEAD@ first.
-      
-    ]],
-    callback =
-      function(self, agent)
-        agent.caos_killed = true
-        if ( agent.smash ~= nil ) then
-          agent.smash()
-        elseif ( agent.heal ~= nil ) then
-          agent.heal(-1000000000)
+    ["command"] = {
+      command = "KILL",
+      rtype = "command",
+      params = {
+        { "agent", "agent" } },
+      description = [[
+        Destroys an agent.  The pointer won't be destroyed.  For creatures, you probably want to use @DEAD@ first.
+        
+      ]],
+      callback =
+        function(self, agent)
+          agent.caos_killed = true
+          if ( agent.smash ~= nil ) then
+            agent.smash()
+          elseif ( agent.heal ~= nil ) then
+            agent.heal(-1000000000)
+          end
         end
-      end
+    }
   },
 
   -- partial (compatibility)
   ["MESG WRIT"] = {
-    command = "MESG WRIT",
-    rtype = "command",
-    params = {
-      { "agent", "agent" },  { "message_id", "integer" } },
-    description = [[
-      Send a message to another agent.  The message_id is from the table of @Message Numbers@; remember that early @
-      Message Numbers@ differ slightly from @Script Numbers@.  If used from an install script, then @FROM@ for the message 
-      to @NULL@ rather than @OWNR@.
-    ]],
-    callback =
-      function(self, agent, message_id)
-        -- TODO
-        --self.owner.sendNotificationTo("CAOS_" .. CAOS.message_to_script(message_id), {_P1_ = 0, _P2_ = 0}, agent)
-      end
+    ["command"] = {
+      command = "MESG WRIT",
+      rtype = "command",
+      params = {
+        { "agent", "agent" },  { "message_id", "integer" } },
+      description = [[
+        Send a message to another agent.  The message_id is from the table of @Message Numbers@; remember that early @
+        Message Numbers@ differ slightly from @Script Numbers@.  If used from an install script, then @FROM@ for the message 
+        to @NULL@ rather than @OWNR@.
+      ]],
+      callback =
+        function(self, agent, message_id)
+          -- TODO
+          --self.owner.sendNotificationTo("CAOS_" .. CAOS.message_to_script(message_id), {_P1_ = 0, _P2_ = 0}, agent)
+        end
+    }
   },
 
 
   ["MESG WRT+"] = {
-    command = "MESG WRT+",
-    rtype = "command",
-    params = {
-      { "agent", "agent" },  { "message_id", "integer" },  { "param_1", "anything" },  { "param_2", "anything" },  { "delay", "integer" } },
-    description = [[
-      Send a message with parameters to another agent.  Waits delay ticks before sending the message.  The message_id is 
-      from the table of @Message Numbers@.
-    ]],
-    callback =
-      function(self, agent, message_id, param_1, param_2, delay)
-      end
+    ["command"] = {
+      command = "MESG WRT+",
+      rtype = "command",
+      params = {
+        { "agent", "agent" },  { "message_id", "integer" },  { "param_1", "anything" },  { "param_2", "anything" },  { "delay", "integer" } },
+      description = [[
+        Send a message with parameters to another agent.  Waits delay ticks before sending the message.  The message_id is 
+        from the table of @Message Numbers@.
+      ]],
+      callback =
+        function(self, agent, message_id, param_1, param_2, delay)
+        end
+    }
   },
 
   -- full
   ["MIRA"] = {
-    lvalue = {
+    ["command"] = {
       command = "MIRA",
       rtype = "command",
       params = {
@@ -722,7 +795,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "MIRA",
       rtype = "integer",
       params = {},
@@ -743,66 +816,75 @@ CAOS.Machine.commands = {
 
   -- full
   ["MOWS"] = {
-    command = "MOWS",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns whether the lawn was cut last Sunday or not.
-    ]],
-    callback =
-      function(self)
-        return 1
-      end
+    ["integer"] = {
+      command = "MOWS",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns whether the lawn was cut last Sunday or not.
+      ]],
+      callback =
+        function(self)
+          return 1
+        end
+    }
   },
 
 
   ["MTHX"] = {
-    command = "MTHX",
-    rtype = "float",
-    params = {},
-    description = [[
-      This returns the X position of the @TARG@ creature's mouth attachment point in absolute (map) coordinates.
-    ]],
-    callback =
-      function(self)
-        return 0.0
-      end
+    ["float"] = {
+      command = "MTHX",
+      rtype = "float",
+      params = {},
+      description = [[
+        This returns the X position of the @TARG@ creature's mouth attachment point in absolute (map) coordinates.
+      ]],
+      callback =
+        function(self)
+          return 0.0
+        end
+    }
   },
 
 
   ["MTHY"] = {
-    command = "MTHY",
-    rtype = "float",
-    params = {},
-    description = [[
-      This returns the Y position of the @TARG@ creature's mouth attachment point in absolute (map) coordinates.
-    ]],
-    callback =
-      function(self)
-        return 0.0
-      end
+    ["float"] = {
+      command = "MTHY",
+      rtype = "float",
+      params = {},
+      description = [[
+        This returns the Y position of the @TARG@ creature's mouth attachment point in absolute (map) coordinates.
+      ]],
+      callback =
+        function(self)
+          return 0.0
+        end
+    }
   },
 
 
   ["NCLS"] = {
-    command = "NCLS",
-    rtype = "agent",
-    params = {
-      { "previous", "agent" },  { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
-    description = [[
-      Finds the next agent in the agent list which also matches the given classifier.  If the previous agent 
-      doesn't exist or doesn't match the classifier then the first agent matching it is returned.  If 
-      none match the classifier, then @NULL@ is returned.
-    ]],
-    callback =
-      function(self, previous, family, genus, species)
-        return nil
-      end
+    ["agent"] = {
+      command = "NCLS",
+      rtype = "agent",
+      params = {
+        { "previous", "agent" },  { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
+      description = [[
+        Finds the next agent in the agent list which also matches the given classifier.  If the previous agent 
+        doesn't exist or doesn't match the classifier then the first agent matching it is returned.  If 
+        none match the classifier, then @NULL@ is returned.
+      ]],
+      callback =
+        function(self, previous, family, genus, species)
+          return nil
+        end
+    }
   },
 
   -- unknown/experimental
   ["NEW: SIMP"] = {
-    command = "NEW: SIMP",
+    ["command"] = {
+      command = "NEW: SIMP",
     rtype = "command",
     params = {
       { "family", "integer" },  { "genus", "integer" },  { "species", "integer" },  { "sprite_file", "string" },  { "image_count", "integer" },  { "first_image", "integer" },  { "plane", "integer" } },
@@ -831,11 +913,13 @@ CAOS.Machine.commands = {
 
         --spawnProjectile
       end
+    }
   },
 
 
   ["NEXT"] = {
-    command = "NEXT",
+    ["command"] = {
+      command = "NEXT",
     rtype = "command",
     params = {},
     description = [[
@@ -844,11 +928,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["NOHH"] = {
-    command = "NOHH",
+    ["command"] = {
+      command = "NOHH",
     rtype = "command",
     params = {},
     description = [[
@@ -858,25 +944,29 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
   -- full
   ["NULL"] = {
-    command = "NULL",
-    rtype = "agent",
-    params = {},
-    description = [[
-      Returns a null agent pointer.
-    ]],
-    callback =
-      function(self)
-        return nil
-      end
+    ["agent"] = {
+      command = "NULL",
+      rtype = "agent",
+      params = {},
+      description = [[
+        Returns a null agent pointer.
+      ]],
+      callback =
+        function(self)
+          return nil
+        end
+    }
   },
 
 
   ["OVER"] = {
-    command = "OVER",
+    ["command"] = {
+      command = "OVER",
     rtype = "command",
     params = {},
     description = [[
@@ -886,11 +976,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
   -- full
   ["OWNR"] = {
-    command = "OWNR",
+    ["agent"] = {
+      command = "OWNR",
     rtype = "agent",
     params = {},
     description = [[
@@ -901,11 +993,12 @@ CAOS.Machine.commands = {
       function(self)
         return self.owner
       end
+    }
   },
 
   -- partial/none
   ["PAUS"] = {
-    lvalue = {
+    ["command"] = {
       command = "PAUS",
       rtype = "command",
       params = {
@@ -920,7 +1013,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "PAUS",
       rtype = "integer",
       params = {},
@@ -936,22 +1029,24 @@ CAOS.Machine.commands = {
 
 
   ["PCLS"] = {
-    command = "PCLS",
-    rtype = "agent",
-    params = {
-      { "next", "agent" },  { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
-    description = [[
-      Same as @NCLS@, only cycles the other way.
-    ]],
-    callback =
-      function(self, next, family, genus, species)
-        return nil
-      end
+    ["agent"] = {
+      command = "PCLS",
+      rtype = "agent",
+      params = {
+        { "next", "agent" },  { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
+      description = [[
+        Same as @NCLS@, only cycles the other way.
+      ]],
+      callback =
+        function(self, next, family, genus, species)
+          return nil
+        end
+    }
   },
 
   -- partial
   ["PLNE"] = {
-    lvalue = {
+    ["command"] = {
       command = "PLNE",
       rtype = "command",
       params = {
@@ -967,7 +1062,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "PLNE",
       rtype = "integer",
       params = {},
@@ -983,21 +1078,24 @@ CAOS.Machine.commands = {
 
   -- N/A
   ["PNTR"] = {
-    command = "PNTR",
-    rtype = "agent",
-    params = {},
-    description = [[
-      Returns the mouse pointer, which is also known as the hand.
-    ]],
-    callback =
-      function(self)
-        return nil
-      end
+    ["agent"] = {
+      command = "PNTR",
+      rtype = "agent",
+      params = {},
+      description = [[
+        Returns the mouse pointer, which is also known as the hand.
+      ]],
+      callback =
+        function(self)
+          return nil
+        end
+    }
   },
 
   -- partial
   ["POSB"] = {
-    command = "POSB",
+    ["float"] = {
+      command = "POSB",
     rtype = "float",
     params = {},
     description = [[
@@ -1008,11 +1106,12 @@ CAOS.Machine.commands = {
         local bounds = CAOS.getVar(self.target, "caos_bounds")
         return bounds.bottom or (self.target.position()[2] + 1.0) or 0.0
       end
+    }
   },
 
 
   ["POSE"] = {
-    lvalue = {
+    ["command"] = {
       command = "POSE",
       rtype = "command",
       params = {
@@ -1026,7 +1125,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "POSE",
       rtype = "integer",
       params = {},
@@ -1042,7 +1141,8 @@ CAOS.Machine.commands = {
 
   -- partial
   ["POSL"] = {
-    command = "POSL",
+    ["float"] = {
+      command = "POSL",
     rtype = "float",
     params = {},
     description = [[
@@ -1053,11 +1153,13 @@ CAOS.Machine.commands = {
         local bounds = CAOS.getVar(self.target, "caos_bounds")
         return bounds.left or (self.target.position()[1] - 1.0) or 0.0
       end
+    }
   },
 
   -- partial
   ["POSR"] = {
-    command = "POSR",
+    ["float"] = {
+      command = "POSR",
     rtype = "float",
     params = {},
     description = [[
@@ -1068,11 +1170,13 @@ CAOS.Machine.commands = {
         local bounds = CAOS.getVar(self.target, "caos_bounds")
         return bounds.right or (self.target.position()[1] + 1.0) or 0.0
       end
+    }
   },
 
   -- partial
   ["POST"] = {
-    command = "POST",
+    ["float"] = {
+      command = "POST",
     rtype = "float",
     params = {},
     description = [[
@@ -1083,39 +1187,44 @@ CAOS.Machine.commands = {
         local bounds = CAOS.getVar(self.target, "caos_bounds")
         return bounds.top or (self.target.position()[2] - 1.0) or 0.0
       end
+    }
   },
 
   -- full
   ["POSX"] = {
-    command = "POSX",
-    rtype = "float",
-    params = {},
-    description = [[
-      Returns X position of centre of target.
-    ]],
-    callback =
-      function(self)
-        return self.target.position()[1] or 0.0
-      end
+    ["float"] = {
+      command = "POSX",
+      rtype = "float",
+      params = {},
+      description = [[
+        Returns X position of centre of target.
+      ]],
+      callback =
+        function(self)
+          return self.target.position()[1] or 0.0
+        end
+    }
   },
 
   -- full
   ["POSY"] = {
-    command = "POSY",
-    rtype = "float",
-    params = {},
-    description = [[
-      Returns Y position of centre of target.
-    ]],
-    callback =
-      function(self)
-        return self.target.position()[2] or 0.0
-      end
+    ["float"] = {
+      command = "POSY",
+      rtype = "float",
+      params = {},
+      description = [[
+        Returns Y position of centre of target.
+      ]],
+      callback =
+        function(self)
+          return self.target.position()[2] or 0.0
+        end
+    }
   },
 
 
   ["PUHL"] = {
-    lvalue = {
+    ["command"] = {
       command = "PUHL",
       rtype = "command",
       params = {
@@ -1130,7 +1239,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "PUHL",
       rtype = "integer",
       params = {
@@ -1149,7 +1258,7 @@ CAOS.Machine.commands = {
 
   
   ["PUPT"] = {
-    lvalue = {
+    ["command"] = {
       command = "PUPT",
       rtype = "command",
       params = {
@@ -1165,7 +1274,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "PUPT",
       rtype = "integer",
       params = {
@@ -1184,7 +1293,7 @@ CAOS.Machine.commands = {
 
   -- partial/none
   ["RNGE"] = {
-    lvalue = {
+    ["command"] = {
       command = "RNGE",
       rtype = "command",
       params = {
@@ -1199,7 +1308,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["float"] = {
       command = "RNGE",
       rtype = "float",
       params = {},
@@ -1215,21 +1324,24 @@ CAOS.Machine.commands = {
 
 
   ["RTAR"] = {
-    command = "RTAR",
-    rtype = "command",
-    params = {
-      { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
-    description = [[
-      Randomly chooses an agent which matches the given classifier, and targets it.
-    ]],
-    callback =
-      function(self, family, genus, species)
-      end
+    ["command"] = {
+      command = "RTAR",
+      rtype = "command",
+      params = {
+        { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
+      description = [[
+        Randomly chooses an agent which matches the given classifier, and targets it.
+      ]],
+      callback =
+        function(self, family, genus, species)
+        end
+    }
   },
 
   -- partial/full
   ["SEEE"] = {
-    command = "SEEE",
+    ["integer"] = {
+      command = "SEEE",
     rtype = "integer",
     params = {
       { "first", "agent" },  { "second", "agent" } },
@@ -1244,11 +1356,13 @@ CAOS.Machine.commands = {
         end
         return 0
       end
+    }
   },
 
 
   ["SHOW"] = {
-    command = "SHOW",
+    ["command"] = {
+      command = "SHOW",
     rtype = "command",
     params = {
       { "visibility", "integer" } },
@@ -1261,40 +1375,45 @@ CAOS.Machine.commands = {
     callback =
       function(self, visibility)
       end
+    }
   },
 
   -- full
   ["SPCS"] = {
-    command = "SPCS",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns species of target.  See also @FMLY@, @GNUS@.
-    ]],
-    callback =
-      function(self)
-        return CAOS.getVar(self.target, "caos_species") or 0
-      end
+    ["integer"] = {
+      command = "SPCS",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns species of target.  See also @FMLY@, @GNUS@.
+      ]],
+      callback =
+        function(self)
+          return CAOS.getVar(self.target, "caos_species") or 0
+        end
+    }
   },
 
 
   ["STAR"] = {
-    command = "STAR",
-    rtype = "command",
-    params = {
-      { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
-    description = [[
-      Randomly chooses an agent which matches the given classifier and can be seen by the owner of the 
-      script. It then sets @TARG@ to that agent.  See @ESEE@ for an explanation of seeing.
-    ]],
-    callback =
-      function(self, family, genus, species)
-      end
+    ["command"] = {
+      command = "STAR",
+      rtype = "command",
+      params = {
+        { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
+      description = [[
+        Randomly chooses an agent which matches the given classifier and can be seen by the owner of the 
+        script. It then sets @TARG@ to that agent.  See @ESEE@ for an explanation of seeing.
+      ]],
+      callback =
+        function(self, family, genus, species)
+        end
+    }
   },
 
   -- full
   ["TARG"] = {
-    rvalue = {
+    ["agent"] = {
       command = "TARG",
       rtype = "agent",
       params = {},
@@ -1307,7 +1426,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    lvalue = {
+    ["command"] = {
       command = "TARG",
       rtype = "command",
       params = {
@@ -1324,24 +1443,26 @@ CAOS.Machine.commands = {
 
 
   ["TCOR"] = {
-    command = "TCOR",
-    rtype = "integer",
-    params = {
-      { "topY", "float" },  { "bottomY", "float" },  { "leftX", "float" },  { "rightX", "float" } },
-    description = [[
-      Tests setting the bounding box of the physical core of the object TARG.  May be set to smaller (
-      or larger) than the sprite's rectangle.  Returns 1 if OK to set (using @CORE@), 0 if not.
-      
-    ]],
-    callback =
-      function(self, topY, bottomY, leftX, rightX)
-        return 0
-      end
+    ["integer"] = {
+      command = "TCOR",
+      rtype = "integer",
+      params = {
+        { "topY", "float" },  { "bottomY", "float" },  { "leftX", "float" },  { "rightX", "float" } },
+      description = [[
+        Tests setting the bounding box of the physical core of the object TARG.  May be set to smaller (
+        or larger) than the sprite's rectangle.  Returns 1 if OK to set (using @CORE@), 0 if not.
+        
+      ]],
+      callback =
+        function(self, topY, bottomY, leftX, rightX)
+          return 0
+        end
+    }
   },
 
   -- full/partial
   ["TICK"] = {
-    lvalue = {
+    ["command"] = {
       command = "TICK",
       rtype = "command",
       params = {
@@ -1355,7 +1476,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "TICK",
       rtype = "integer",
       params = {},
@@ -1371,22 +1492,24 @@ CAOS.Machine.commands = {
 
 
   ["TINO"] = {
-    command = "TINO",
-    rtype = "command",
-    params = {
-      { "red_tint", "integer" },  { "green_tint", "integer" },  { "blue_tint", "integer" },  { "rotation", "integer" },  { "swap", "integer" } },
-    description = [[
-      Like @TINT@ but only tints the current frame.  The other frames are no longer available in the gallery, 
-      it becomes a one frame sprite file.  Original display engine only.
-    ]],
-    callback =
-      function(self, red_tint, green_tint, blue_tint, rotation, swap)
-      end
+    ["command"] = {
+      command = "TINO",
+      rtype = "command",
+      params = {
+        { "red_tint", "integer" },  { "green_tint", "integer" },  { "blue_tint", "integer" },  { "rotation", "integer" },  { "swap", "integer" } },
+      description = [[
+        Like @TINT@ but only tints the current frame.  The other frames are no longer available in the gallery, 
+        it becomes a one frame sprite file.  Original display engine only.
+      ]],
+      callback =
+        function(self, red_tint, green_tint, blue_tint, rotation, swap)
+        end
+    }
   },
 
 
   ["TINT"] = {
-    lvalue = {
+    ["command"] = {
       command = "TINT",
       rtype = "command",
       params = {
@@ -1403,7 +1526,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "TINT",
       rtype = "integer",
       params = {
@@ -1425,23 +1548,25 @@ CAOS.Machine.commands = {
 
 
   ["TOTL"] = {
-    command = "TOTL",
-    rtype = "integer",
-    params = {
-      { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
-    description = [[
-      Counts the number of agents in the world matching the classifier.
-    ]],
-    callback =
-      function(self, family, genus, species)
-        return 0
-      end
+    ["integer"] = {
+      command = "TOTL",
+      rtype = "integer",
+      params = {
+        { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
+      description = [[
+        Counts the number of agents in the world matching the classifier.
+      ]],
+      callback =
+        function(self, family, genus, species)
+          return 0
+        end
+    }
   },
 
 
   -- partial
   ["TOUC"] = {
-    rvalue = {
+    ["integer"] = {
       command = "TOUC",
       rtype = "integer",
       params = {
@@ -1461,7 +1586,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    lvalue = {
+    ["command"] = {
       command = "TOUC",
       rtype = "command",
       params = {},
@@ -1477,7 +1602,7 @@ CAOS.Machine.commands = {
   
   -- N/A
   ["TRAN"] = {
-    rvalue = {
+    ["integer"] = {
       command = "TRAN",
       rtype = "integer",
       params = {
@@ -1491,7 +1616,7 @@ CAOS.Machine.commands = {
           return 0
         end
     },
-    lvalue = {
+    ["command"] = {
       command = "TRAN",
       rtype = "command",
       params = {
@@ -1509,22 +1634,25 @@ CAOS.Machine.commands = {
 
 
   ["TTAR"] = {
-    command = "TTAR",
-    rtype = "command",
-    params = {
-      { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
-    description = [[
-      Randomly chooses an agent which matches the given classifier and is touching the owner of the script. It 
-      then sets @TARG@ to that agent.  See @ETCH@.
-    ]],
-    callback =
-      function(self, family, genus, species)
-      end
+    ["command"] = {
+      command = "TTAR",
+      rtype = "command",
+      params = {
+        { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
+      description = [[
+        Randomly chooses an agent which matches the given classifier and is touching the owner of the script. It 
+        then sets @TARG@ to that agent.  See @ETCH@.
+      ]],
+      callback =
+        function(self, family, genus, species)
+        end
+    }
   },
 
 
   ["TWIN"] = {
-    command = "TWIN",
+    ["agent"] = {
+      command = "TWIN",
     rtype = "agent",
     params = {
       { "original", "agent" },  { "agent_null", "integer" } },
@@ -1539,11 +1667,13 @@ CAOS.Machine.commands = {
       function(self, original, agent_null)
         return nil
       end
+    }
   },
 
 
   ["UCLN"] = {
-    command = "UCLN",
+    ["command"] = {
+      command = "UCLN",
     rtype = "command",
     params = {},
     description = [[
@@ -1554,11 +1684,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
   -- full?
   ["VISI"] = {
-    command = "VISI",
+    ["integer"] = {
+      command = "VISI",
     rtype = "integer",
     params = {
       { "checkAllCameras", "integer" } },
@@ -1578,11 +1710,13 @@ CAOS.Machine.commands = {
                 maxY = bounds.bottom
               }) and 1 or 0
       end
+    }
   },
 
   -- partial
   ["WDTH"] = {
-    command = "WDTH",
+    ["integer"] = {
+      command = "WDTH",
     rtype = "integer",
     params = {},
     description = [[
@@ -1593,11 +1727,13 @@ CAOS.Machine.commands = {
         local bounds = CAOS.getVar(self.target, bounds)
         return bounds and math.abs(bounds.right - bounds.left) or 0
       end
+    }
   },
 
 
   ["WILD"] = {
-    command = "WILD",
+    ["string"] = {
+      command = "WILD",
     rtype = "string",
     params = {
       { "family", "integer" },  { "genus", "integer" },  { "species", "integer" },  { "tag_stub", "string" },  { "offset", "integer" } },
@@ -1612,11 +1748,13 @@ CAOS.Machine.commands = {
       function(self, family, genus, species, tag_stub, offset)
         return ""
       end
+    }
   },
 
 
   ["_IT_"] = {
-    command = "_IT_",
+    ["agent"] = {
+      command = "_IT_",
     rtype = "agent",
     params = {},
     description = [[
@@ -1627,27 +1765,31 @@ CAOS.Machine.commands = {
       function(self)
         return nil
       end
+    }
   },
 
 
   ["ADIN"] = {
-    command = "ADIN",
-    rtype = "command",
-    params = {
-      { "verb", "integer" },  { "noun", "integer" },  { "qualifier", "float" },  { "drive", "integer" } },
-    description = [[
-      Add an instinct to the creature's brain queue.  (The instinct is not processed immediately).  Example:  ADIN 3 
-      4 0.5 7 encourages (by a factor of 0.5) the creature to do action 3 on 
-      category 4 when drive 7 is high.
-    ]],
-    callback =
-      function(self, verb, noun, qualifier, drive)
-      end
+    ["command"] = {
+      command = "ADIN",
+      rtype = "command",
+      params = {
+        { "verb", "integer" },  { "noun", "integer" },  { "qualifier", "float" },  { "drive", "integer" } },
+      description = [[
+        Add an instinct to the creature's brain queue.  (The instinct is not processed immediately).  Example:  ADIN 3 
+        4 0.5 7 encourages (by a factor of 0.5) the creature to do action 3 on 
+        category 4 when drive 7 is high.
+      ]],
+      callback =
+        function(self, verb, noun, qualifier, drive)
+        end
+    }
   },
 
 
   ["BRN: DMPB"] = {
-    command = "BRN: DMPB",
+    ["command"] = {
+      command = "BRN: DMPB",
     rtype = "command",
     params = {},
     description = [[
@@ -1656,137 +1798,156 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["BRN: DMPD"] = {
-    command = "BRN: DMPD",
-    rtype = "command",
-    params = {
-      { "tract_number", "integer" },  { "dendrite_number", "integer" } },
-    description = [[
-      Dumps a dendrite as binary data.
-    ]],
-    callback =
-      function(self, tract_number, dendrite_number)
-      end
+    ["command"] = {
+      command = "BRN: DMPD",
+      rtype = "command",
+      params = {
+        { "tract_number", "integer" },  { "dendrite_number", "integer" } },
+      description = [[
+        Dumps a dendrite as binary data.
+      ]],
+      callback =
+        function(self, tract_number, dendrite_number)
+        end
+    }
   },
 
 
   ["BRN: DMPL"] = {
-    command = "BRN: DMPL",
-    rtype = "command",
-    params = {
-      { "lobe_number", "integer" } },
-    description = [[
-      Dumps a lobe as binary data.
-    ]],
-    callback =
-      function(self, lobe_number)
-      end
+    ["command"] = {
+      command = "BRN: DMPL",
+      rtype = "command",
+      params = {
+        { "lobe_number", "integer" } },
+      description = [[
+        Dumps a lobe as binary data.
+      ]],
+      callback =
+        function(self, lobe_number)
+        end
+    }
   },
 
 
   ["BRN: DMPN"] = {
-    command = "BRN: DMPN",
-    rtype = "command",
-    params = {
-      { "lobe_number", "integer" },  { "neuron_number", "integer" } },
-    description = [[
-      Dumps a neuron as binary data.
-    ]],
-    callback =
-      function(self, lobe_number, neuron_number)
-      end
+    ["command"] = {
+      command = "BRN: DMPN",
+      rtype = "command",
+      params = {
+        { "lobe_number", "integer" },  { "neuron_number", "integer" } },
+      description = [[
+        Dumps a neuron as binary data.
+      ]],
+      callback =
+        function(self, lobe_number, neuron_number)
+        end
+    }
   },
 
 
   ["BRN: DMPT"] = {
-    command = "BRN: DMPT",
-    rtype = "command",
-    params = {
-      { "tract_number", "integer" } },
-    description = [[
-      Dumps a tract as binary data.
-    ]],
-    callback =
-      function(self, tract_number)
-      end
+    ["command"] = {
+      command = "BRN: DMPT",
+      rtype = "command",
+      params = {
+        { "tract_number", "integer" } },
+      description = [[
+        Dumps a tract as binary data.
+      ]],
+      callback =
+        function(self, tract_number)
+        end
+    }
   },
 
 
   ["BRN: SETD"] = {
-    command = "BRN: SETD",
-    rtype = "command",
-    params = {
-      { "tract_number", "integer" },  { "dendrite_number", "integer" },  { "weight_number", "integer" },  { "new_value", "float" } },
-    description = [[
-      Sets a dendrite weight.
-    ]],
-    callback =
-      function(self, tract_number, dendrite_number, weight_number, new_value)
-      end
+    ["command"] = {
+      command = "BRN: SETD",
+      rtype = "command",
+      params = {
+        { "tract_number", "integer" },  { "dendrite_number", "integer" },  { "weight_number", "integer" },  { "new_value", "float" } },
+      description = [[
+        Sets a dendrite weight.
+      ]],
+      callback =
+        function(self, tract_number, dendrite_number, weight_number, new_value)
+        end
+    }
   },
 
 
   ["BRN: SETL"] = {
-    command = "BRN: SETL",
-    rtype = "command",
-    params = {
-      { "lobe_number", "integer" },  { "line_number", "integer" },  { "new_value", "float" } },
-    description = [[
-      Sets a lobe's SV rule float value.
-    ]],
-    callback =
-      function(self, lobe_number, line_number, new_value)
-      end
+    ["command"] = {
+      command = "BRN: SETL",
+      rtype = "command",
+      params = {
+        { "lobe_number", "integer" },  { "line_number", "integer" },  { "new_value", "float" } },
+      description = [[
+        Sets a lobe's SV rule float value.
+      ]],
+      callback =
+        function(self, lobe_number, line_number, new_value)
+        end
+    }
   },
 
 
   ["BRN: SETN"] = {
-    command = "BRN: SETN",
-    rtype = "command",
-    params = {
-      { "lobe_number", "integer" },  { "neuron_number", "integer" },  { "state_number", "integer" },  { "new_value", "float" } },
-    description = [[
-      Sets a neuron weight.
-    ]],
-    callback =
-      function(self, lobe_number, neuron_number, state_number, new_value)
-      end
+    ["command"] = {
+      command = "BRN: SETN",
+      rtype = "command",
+      params = {
+        { "lobe_number", "integer" },  { "neuron_number", "integer" },  { "state_number", "integer" },  { "new_value", "float" } },
+      description = [[
+        Sets a neuron weight.
+      ]],
+      callback =
+        function(self, lobe_number, neuron_number, state_number, new_value)
+        end
+    }
   },
 
 
   ["BRN: SETT"] = {
-    command = "BRN: SETT",
-    rtype = "command",
-    params = {
-      { "tract_number", "integer" },  { "line_number", "integer" },  { "new_value", "float" } },
-    description = [[
-      Sets a tract's SV rule float value.
-    ]],
-    callback =
-      function(self, tract_number, line_number, new_value)
-      end
+    ["command"] = {
+      command = "BRN: SETT",
+      rtype = "command",
+      params = {
+        { "tract_number", "integer" },  { "line_number", "integer" },  { "new_value", "float" } },
+      description = [[
+        Sets a tract's SV rule float value.
+      ]],
+      callback =
+        function(self, tract_number, line_number, new_value)
+        end
+    }
   },
 
 
   ["DOIN"] = {
-    command = "DOIN",
-    rtype = "command",
-    params = {
-      { "no_of_instincts_to_process", "integer" } },
-    description = [[
-      Make the creature TARG process N instincts.
-    ]],
-    callback =
-      function(self, no_of_instincts_to_process)
-      end
+    ["command"] = {
+      command = "DOIN",
+      rtype = "command",
+      params = {
+        { "no_of_instincts_to_process", "integer" } },
+      description = [[
+        Make the creature TARG process N instincts.
+      ]],
+      callback =
+        function(self, no_of_instincts_to_process)
+        end
+    }
   },
 
 
   ["BKGD"] = {
-    lvalue = {
+    ["command"] = {
       command = "BKGD",
       rtype = "command",
       params = {
@@ -1800,7 +1961,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["string"] = {
       command = "BKGD",
       rtype = "string",
       params = {
@@ -1817,96 +1978,109 @@ CAOS.Machine.commands = {
 
 
   ["BRMI"] = {
-    command = "BRMI",
-    rtype = "command",
-    params = {
-      { "metaroom_base,", "integer" },  { "room_base", "integer" } },
-    description = [[
-      Sets the Map's Metaroom and Room index bases for adding new rooms/metarooms.
-    ]],
-    callback =
-      function(self, metaroom_base, room_base)
-      end
+    ["command"] = {
+      command = "BRMI",
+      rtype = "command",
+      params = {
+        { "metaroom_base,", "integer" },  { "room_base", "integer" } },
+      description = [[
+        Sets the Map's Metaroom and Room index bases for adding new rooms/metarooms.
+      ]],
+      callback =
+        function(self, metaroom_base, room_base)
+        end
+    }
   },
 
 
   ["CMRA"] = {
-    command = "CMRA",
-    rtype = "command",
-    params = {
-      { "x", "integer" },  { "y", "integer" },  { "pan", "integer" } },
-    description = [[
-      Move current camera so top left corner of view is at world coordinate x y. Set pan 0 
-      to jump straight to location, pan 1 to smoothly scroll there (unless in a different meta room).
-    ]],
-    callback =
-      function(self, x, y, pan)
-      end
+    ["command"] = {
+      command = "CMRA",
+      rtype = "command",
+      params = {
+        { "x", "integer" },  { "y", "integer" },  { "pan", "integer" } },
+      description = [[
+        Move current camera so top left corner of view is at world coordinate x y. Set pan 0 
+        to jump straight to location, pan 1 to smoothly scroll there (unless in a different meta room).
+      ]],
+      callback =
+        function(self, x, y, pan)
+        end
+    }
   },
 
 
   ["CMRP"] = {
-    command = "CMRP",
-    rtype = "command",
-    params = {
-      { "x", "integer" },  { "y", "integer" },  { "pan", "integer" } },
-    description = [[
-      Centre current camera on world coordinate x y. Set pan 0 to jump straight to location, pan 1 
-      to smoothly scroll there (unless in different meta room), and pan 2 to smoothly scroll only if the 
-      destination is already visible.
-    ]],
-    callback =
-      function(self, x, y, pan)
-      end
+    ["command"] = {
+      command = "CMRP",
+      rtype = "command",
+      params = {
+        { "x", "integer" },  { "y", "integer" },  { "pan", "integer" } },
+      description = [[
+        Centre current camera on world coordinate x y. Set pan 0 to jump straight to location, pan 1 
+        to smoothly scroll there (unless in different meta room), and pan 2 to smoothly scroll only if the 
+        destination is already visible.
+      ]],
+      callback =
+        function(self, x, y, pan)
+        end
+    }
   },
 
 
   ["CMRT"] = {
-    command = "CMRT",
-    rtype = "command",
-    params = {
-      { "pan", "integer" } },
-    description = [[
-      Centre current camera on target.  Set pan 0 to jump straight to location, pan 1 to smoothly scroll 
-      there (unless in different meta room), and pan 2 to smoothly scroll only if the destination is already 
-      visible.
-    ]],
-    callback =
-      function(self, pan)
-      end
+    ["command"] = {
+      command = "CMRT",
+      rtype = "command",
+      params = {
+        { "pan", "integer" } },
+      description = [[
+        Centre current camera on target.  Set pan 0 to jump straight to location, pan 1 to smoothly scroll 
+        there (unless in different meta room), and pan 2 to smoothly scroll only if the destination is already 
+        visible.
+      ]],
+      callback =
+        function(self, pan)
+        end
+    }
   },
 
 
   ["CMRX"] = {
-    command = "CMRX",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the x coordinate of the centre of the current camera.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "CMRX",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the x coordinate of the centre of the current camera.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["CMRY"] = {
-    command = "CMRY",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the y coordinate of the centre of the current camera.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "CMRY",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the y coordinate of the centre of the current camera.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["FRSH"] = {
-    command = "FRSH",
+    ["command"] = {
+      command = "FRSH",
     rtype = "command",
     params = {},
     description = [[
@@ -1915,11 +2089,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["LINE"] = {
-    command = "LINE",
+    ["command"] = {
+      command = "LINE",
     rtype = "command",
     params = {
       { "x1", "integer" },  { "y1", "integer" },  { "x2", "integer" },  { "y2", "integer" },  { "r", "integer" },  { "g", "integer" },  { "b", "integer" },  { "stipple_on", "integer" },  { "stipple_off", "integer" } },
@@ -1932,28 +2108,31 @@ CAOS.Machine.commands = {
     callback =
       function(self, x1, y1, x2, y2, r, g, b, stipple_on, stipple_off)
       end
+    }
   },
 
 
   ["LOFT"] = {
-    command = "LOFT",
-    rtype = "integer",
-    params = {
-      { "filename", "string" } },
-    description = [[
-      Declares that you have finished with a photograph image file taken by @SNAP@.  If the file is in 
-      use in a gallery, this function fails and returns 1.  Otherwise it returns 0.  The file will be 
-      marked for the attic, and moved there later.
-    ]],
-    callback =
-      function(self, filename)
-        return 0
-      end
+    ["integer"] = {
+      command = "LOFT",
+      rtype = "integer",
+      params = {
+        { "filename", "string" } },
+      description = [[
+        Declares that you have finished with a photograph image file taken by @SNAP@.  If the file is in 
+        use in a gallery, this function fails and returns 1.  Otherwise it returns 0.  The file will be 
+        marked for the attic, and moved there later.
+      ]],
+      callback =
+        function(self, filename)
+          return 0
+        end
+    }
   },
 
 
   ["META"] = {
-    lvalue = {
+    ["command"] = {
       command = "META",
       rtype = "command",
       params = {
@@ -1970,7 +2149,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "META",
       rtype = "integer",
       params = {},
@@ -1986,23 +2165,26 @@ CAOS.Machine.commands = {
 
 
   ["SCAM"] = {
-    command = "SCAM",
-    rtype = "command",
-    params = {
-      { "compoundagent", "agent" },  { "partNumber", "integer" } },
-    description = [[
-      Sets the current camera to be used in subsequent camera macro commands.  This uses the given @TARG@ and 
-      the given @PART@ number.  If you set this to @NULL@ then the Main Camera will be used.  This 
-      is the default setting
-    ]],
-    callback =
-      function(self, compoundagent, partNumber)
-      end
+    ["command"] = {
+      command = "SCAM",
+      rtype = "command",
+      params = {
+        { "compoundagent", "agent" },  { "partNumber", "integer" } },
+      description = [[
+        Sets the current camera to be used in subsequent camera macro commands.  This uses the given @TARG@ and 
+        the given @PART@ number.  If you set this to @NULL@ then the Main Camera will be used.  This 
+        is the default setting
+      ]],
+      callback =
+        function(self, compoundagent, partNumber)
+        end
+    }
   },
 
 
   ["SNAP"] = {
-    command = "SNAP",
+    ["command"] = {
+      command = "SNAP",
     rtype = "command",
     params = {
       { "filename", "string" },  { "x_centre", "integer" },  { "y_centre", "integer" },  { "width", "integer" },  { "height", "integer" },  { "zoom_factor", "integer" } },
@@ -2016,27 +2198,30 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["SNAX"] = {
-    command = "SNAX",
-    rtype = "integer",
-    params = {
-      { "filename", "string" } },
-    description = [[
-      Returns 1 if the specified image file exists, or 0 if it doesn't.  Use with @SNAP@ to 
-      find a unique filename to use.
-    ]],
-    callback =
-      function(self, filename )
-        return 0
-      end
+    ["integer"] = {
+      command = "SNAX",
+      rtype = "integer",
+      params = {
+        { "filename", "string" } },
+      description = [[
+        Returns 1 if the specified image file exists, or 0 if it doesn't.  Use with @SNAP@ to 
+        find a unique filename to use.
+      ]],
+      callback =
+        function(self, filename )
+          return 0
+        end
+    }
   },
 
 
   ["TRCK"] = {
-    lvalue = {
+    ["command"] = {
       command = "TRCK",
       rtype = "command",
       params = {
@@ -2053,7 +2238,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["agent"] = {
       command = "TRCK",
       rtype = "agent",
       params = {},
@@ -2069,7 +2254,7 @@ CAOS.Machine.commands = {
 
 
   ["WDOW"] = {
-    lvalue = {
+    ["command"] = {
       command = "WDOW",
       rtype = "command",
       params = {},
@@ -2081,7 +2266,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "WDOW",
       rtype = "integer",
       params = {},
@@ -2097,107 +2282,122 @@ CAOS.Machine.commands = {
 
 
   ["WNDB"] = {
-    command = "WNDB",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns world coordinates of bottom of current camera window.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "WNDB",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns world coordinates of bottom of current camera window.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["WNDH"] = {
-    command = "WNDH",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns height of current camera window.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "WNDH",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns height of current camera window.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["WNDL"] = {
-    command = "WNDL",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns world coordinates of left of current camera window.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "WNDL",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns world coordinates of left of current camera window.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["WNDR"] = {
-    command = "WNDR",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns world coordinates of right of current camera window.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "WNDR",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns world coordinates of right of current camera window.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["WNDT"] = {
-    command = "WNDT",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns world coordinates of top of current camera window.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "WNDT",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns world coordinates of top of current camera window.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["WNDW"] = {
-    command = "WNDW",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns width of current camera window.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "WNDW",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns width of current camera window.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["ZOOM"] = {
-    command = "ZOOM",
-    rtype = "command",
-    params = {
-      { "pixels", "integer" },  { "x", "integer" },  { "y", "integer" } },
-    description = [[
-      Zoom in on the specified position by a negative amount of pixels or out by positive amount of 
-      pixels.  If you send -1 as the x and y coordinates then the camera zooms in on the 
-      exising view port centre.  This only applies to remote cameras.
-    ]],
-    callback =
-      function(self, pixels, x, y )
-      end
+    ["command"] = {
+      command = "ZOOM",
+      rtype = "command",
+      params = {
+        { "pixels", "integer" },  { "x", "integer" },  { "y", "integer" } },
+      description = [[
+        Zoom in on the specified position by a negative amount of pixels or out by positive amount of 
+        pixels.  If you send -1 as the x and y coordinates then the camera zooms in on the 
+        exising view port centre.  This only applies to remote cameras.
+      ]],
+      callback =
+        function(self, pixels, x, y )
+        end
+    }
   },
 
 
   ["_CD_ EJCT"] = {
-    command = "_CD_ EJCT",
+    ["command"] = {
+      command = "_CD_ EJCT",
     rtype = "command",
     params = {},
     description = [[
@@ -2206,53 +2406,61 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["_CD_ FRQH"] = {
-    command = "_CD_ FRQH",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the average value for the highest frequencies detected in the CD player for the current tick.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "_CD_ FRQH",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the average value for the highest frequencies detected in the CD player for the current tick.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["_CD_ FRQL"] = {
-    command = "_CD_ FRQL",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the average value for the lowest frequencies detected in the CD player for the current tick.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "_CD_ FRQL",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the average value for the lowest frequencies detected in the CD player for the current tick.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["_CD_ FRQM"] = {
-    command = "_CD_ FRQM",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the average value for the medium frequencies detected in the CD player for the current tick.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "_CD_ FRQM",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the average value for the medium frequencies detected in the CD player for the current tick.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["_CD_ INIT"] = {
-    command = "_CD_ INIT",
+    ["command"] = {
+      command = "_CD_ INIT",
     rtype = "command",
     params = {},
     description = [[
@@ -2262,40 +2470,46 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["_CD_ PAWS"] = {
-    command = "_CD_ PAWS",
-    rtype = "command",
-    params = {
-      { "on_off", "integer" } },
-    description = [[
-      Pause the CD player if the parameter is greater than zero, to continue playing a previous paused track 
-      set the parameter to 1.
-    ]],
-    callback =
-      function(self, on_off )
-      end
+    ["command"] = {
+      command = "_CD_ PAWS",
+      rtype = "command",
+      params = {
+        { "on_off", "integer" } },
+      description = [[
+        Pause the CD player if the parameter is greater than zero, to continue playing a previous paused track 
+        set the parameter to 1.
+      ]],
+      callback =
+        function(self, on_off )
+        end
+    }
   },
 
 
   ["_CD_ PLAY"] = {
-    command = "_CD_ PLAY",
-    rtype = "command",
-    params = {
-      { "first_track", "integer" },  { "last_track", "integer" } },
-    description = [[
-      Tell the CD Player to play the given track.
-    ]],
-    callback =
-      function(self, first_track, last_track )
-      end
+    ["command"] = {
+      command = "_CD_ PLAY",
+      rtype = "command",
+      params = {
+        { "first_track", "integer" },  { "last_track", "integer" } },
+      description = [[
+        Tell the CD Player to play the given track.
+      ]],
+      callback =
+        function(self, first_track, last_track )
+        end
+    }
   },
 
 
   ["_CD_ SHUT"] = {
-    command = "_CD_ SHUT",
+    ["command"] = {
+      command = "_CD_ SHUT",
     rtype = "command",
     params = {},
     description = [[
@@ -2305,11 +2519,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["_CD_ STOP"] = {
-    command = "_CD_ STOP",
+    ["command"] = {
+      command = "_CD_ STOP",
     rtype = "command",
     params = {},
     description = [[
@@ -2318,11 +2534,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["FCUS"] = {
-    command = "FCUS",
+    ["command"] = {
+      command = "FCUS",
     rtype = "command",
     params = {},
     description = [[
@@ -2332,11 +2550,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["FRMT"] = {
-    command = "FRMT",
+    ["command"] = {
+      command = "FRMT",
     rtype = "command",
     params = {
       { "left_margin", "integer" },  { "top_margin", "integer" },  { "right_margin", "integer" },  { "bottom_margin", "integer" },  { "line_spacing", "integer" },  { "character_spacing", "integer" },  { "justification", "integer" } },
@@ -2350,71 +2570,80 @@ CAOS.Machine.commands = {
     callback =
       function(self, left_margin, top_margin, right_margin, bottom_margin, line_spacing, character_spacing, justification )
       end
+    }
   },
 
 
   ["GRPL"] = {
-    command = "GRPL",
-    rtype = "command",
-    params = {
-      { "red", "integer" },  { "green", "integer" },  { "blue", "integer" },  { "min_y", "float" },  { "max_y", "float" } },
-    description = [[
-      Add a line to a graph (previously created with @PAT: GRPH@). The first line you add will be 
-      line 0.
-    ]],
-    callback =
-      function(self, red, green, blue, min_y, max_y )
-      end
+    ["command"] = {
+      command = "GRPL",
+      rtype = "command",
+      params = {
+        { "red", "integer" },  { "green", "integer" },  { "blue", "integer" },  { "min_y", "float" },  { "max_y", "float" } },
+      description = [[
+        Add a line to a graph (previously created with @PAT: GRPH@). The first line you add will be 
+        line 0.
+      ]],
+      callback =
+        function(self, red, green, blue, min_y, max_y )
+        end
+    }
   },
 
 
   ["GRPV"] = {
-    command = "GRPV",
-    rtype = "command",
-    params = {
-      { "line_index", "integer" },  { "value", "float" } },
-    description = [[
-      Add a value to a line on a graph. after you have added a value to each line 
-      on the graph, it will be updated by scrolling the current values to the left
-    ]],
-    callback =
-      function(self, line_index, value )
-      end
+    ["command"] = {
+      command = "GRPV",
+      rtype = "command",
+      params = {
+        { "line_index", "integer" },  { "value", "float" } },
+      description = [[
+        Add a value to a line on a graph. after you have added a value to each line 
+        on the graph, it will be updated by scrolling the current values to the left
+      ]],
+      callback =
+        function(self, line_index, value )
+        end
+    }
   },
 
 
   ["NEW: COMP"] = {
-    command = "NEW: COMP",
-    rtype = "command",
-    params = {
-      { "family", "integer" },  { "genus", "integer" },  { "species", "integer" },  { "sprite_file", "string" },  { "image_count", "integer" },  { "first_image", "integer" },  { "plane", "integer" } },
-    description = [[
-      Create a new compound agent. The sprite file is for the first part, which is made automatically.  Similarly, 
-      image_count and first_image are for that first part.  The plane is the absolute plane of part 1 - the 
-      planes of other parts are relative to the first part.
-    ]],
-    callback =
-      function(self, family, genus, species, sprite_file, image_count, first_image, plane )
-      end
+    ["command"] = {
+      command = "NEW: COMP",
+      rtype = "command",
+      params = {
+        { "family", "integer" },  { "genus", "integer" },  { "species", "integer" },  { "sprite_file", "string" },  { "image_count", "integer" },  { "first_image", "integer" },  { "plane", "integer" } },
+      description = [[
+        Create a new compound agent. The sprite file is for the first part, which is made automatically.  Similarly, 
+        image_count and first_image are for that first part.  The plane is the absolute plane of part 1 - the 
+        planes of other parts are relative to the first part.
+      ]],
+      callback =
+        function(self, family, genus, species, sprite_file, image_count, first_image, plane )
+        end
+    }
   },
 
 
   ["NPGS"] = {
-    command = "NPGS",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the number of available pages for current text part.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "NPGS",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the number of available pages for current text part.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["PAGE"] = {
-    lvalue = {
+    ["command"] = {
       command = "PAGE",
       rtype = "command",
       params = {
@@ -2429,7 +2658,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "PAGE",
       rtype = "integer",
       params = {},
@@ -2445,7 +2674,7 @@ CAOS.Machine.commands = {
 
 
   ["PART"] = {
-    lvalue = {
+    ["command"] = {
       command = "PART",
       rtype = "command",
       params = {
@@ -2459,7 +2688,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "PART",
       rtype = "integer",
       params = {
@@ -2477,37 +2706,42 @@ CAOS.Machine.commands = {
 
 
   ["PAT: BUTT"] = {
-    command = "PAT: BUTT",
-    rtype = "command",
-    params = {
-      { "part_id", "integer" },  { "sprite_file", "string" },  { "first_image", "integer" },  { "image_count", "integer" },  { "rel_x", "decimal" },  { "rel_y", "decimal" },  { "rel_plane", "integer" },  { "anim_hover", "byte-string" },  { "message_id", "integer" },  { "option", "integer" } },
-    description = [[
-      Create a button on a compound agent.  anim_hover is an animation, as in the @ANIM@ command, to use when the mouse is over the button - when the mouse is moved off, it returns to any previous animation that was going.  message_id is sent when the button is clicked.  option is 0 for the mouse to hit anywhere in the bounding box, 1 to hit only non-transparent pixels.
-      @_P1_@ of the message is set to the part number of the buttons allowing you to overload your messages by button group and then switch on input value in the script.
-    ]],
-    callback =
-      function(self, part_id, sprite_file, first_image, image_count, rel_x, rel_y, rel_plane, anim_hover, message_id, option )
-      end
+    ["command"] = {
+      command = "PAT: BUTT",
+      rtype = "command",
+      params = {
+        { "part_id", "integer" },  { "sprite_file", "string" },  { "first_image", "integer" },  { "image_count", "integer" },  { "rel_x", "decimal" },  { "rel_y", "decimal" },  { "rel_plane", "integer" },  { "anim_hover", "byte-string" },  { "message_id", "integer" },  { "option", "integer" } },
+      description = [[
+        Create a button on a compound agent.  anim_hover is an animation, as in the @ANIM@ command, to use when the mouse is over the button - when the mouse is moved off, it returns to any previous animation that was going.  message_id is sent when the button is clicked.  option is 0 for the mouse to hit anywhere in the bounding box, 1 to hit only non-transparent pixels.
+        @_P1_@ of the message is set to the part number of the buttons allowing you to overload your messages by button group and then switch on input value in the script.
+      ]],
+      callback =
+        function(self, part_id, sprite_file, first_image, image_count, rel_x, rel_y, rel_plane, anim_hover, message_id, option )
+        end
+    }
   },
 
 
   ["PAT: CMRA"] = {
-    command = "PAT: CMRA",
-    rtype = "command",
-    params = {
-      { "part_id", "integer" },  { "overlay_sprite", "string" },  { "baseimage", "integer" },  { "relx", "decimal" },  { "rely", "decimal" },  { "relplane", "integer" },  { "viewWidth", "integer" },  { "viewHeight", "integer" },  { "cameraWidth", "integer" },  { "cameraHeight", "integer" } },
-    description = [[
-      Create a camera with possible overlay sprite whose name may be blank.  Use @SCAM@ to change the camera'
-      s view.
-    ]],
-    callback =
-      function(self, part_id, overlay_sprite, baseimage, relx, rely, relplane, viewWidth, viewHeight, cameraWidth, cameraHeight )
-      end
+    ["command"] = {
+      command = "PAT: CMRA",
+      rtype = "command",
+      params = {
+        { "part_id", "integer" },  { "overlay_sprite", "string" },  { "baseimage", "integer" },  { "relx", "decimal" },  { "rely", "decimal" },  { "relplane", "integer" },  { "viewWidth", "integer" },  { "viewHeight", "integer" },  { "cameraWidth", "integer" },  { "cameraHeight", "integer" } },
+      description = [[
+        Create a camera with possible overlay sprite whose name may be blank.  Use @SCAM@ to change the camera'
+        s view.
+      ]],
+      callback =
+        function(self, part_id, overlay_sprite, baseimage, relx, rely, relplane, viewWidth, viewHeight, cameraWidth, cameraHeight )
+        end
+    }
   },
 
 
   ["PAT: DULL"] = {
-    command = "PAT: DULL",
+    ["command"] = {
+      command = "PAT: DULL",
     rtype = "command",
     params = {
       { "part_id", "integer" },  { "sprite_file", "string" },  { "first_image", "integer" },  { "rel_x", "decimal" },  { "rel_y", "decimal" },  { "rel_plane", "integer" } },
@@ -2520,69 +2754,79 @@ CAOS.Machine.commands = {
     callback =
       function(self, part_id, sprite_file, first_image, rel_x, rel_y, rel_plane )
       end
+    }
   },
 
 
   ["PAT: FIXD"] = {
-    command = "PAT: FIXD",
-    rtype = "command",
-    params = {
-      { "part_id", "integer" },  { "sprite_file", "string" },  { "first_image", "integer" },  { "rel_x", "decimal" },  { "rel_y", "decimal" },  { "rel_plane", "integer" },  { "font_sprite", "string" } },
-    description = [[
-      Create a fixed text part. The text is wrapped on top of the supplied gallery image. new-line 
-      characters may be used.  Use @PTXT@ to set the text.
-    ]],
-    callback =
-      function(self, part_id, sprite_file, first_image, rel_x, rel_y, rel_plane, font_sprite )
-      end
+    ["command"] = {
+      command = "PAT: FIXD",
+      rtype = "command",
+      params = {
+        { "part_id", "integer" },  { "sprite_file", "string" },  { "first_image", "integer" },  { "rel_x", "decimal" },  { "rel_y", "decimal" },  { "rel_plane", "integer" },  { "font_sprite", "string" } },
+      description = [[
+        Create a fixed text part. The text is wrapped on top of the supplied gallery image. new-line 
+        characters may be used.  Use @PTXT@ to set the text.
+      ]],
+      callback =
+        function(self, part_id, sprite_file, first_image, rel_x, rel_y, rel_plane, font_sprite )
+        end
+    }
   },
 
 
   ["PAT: GRPH"] = {
-    command = "PAT: GRPH",
-    rtype = "command",
-    params = {
-      { "part_id", "integer" },  { "overlay_sprite", "string" },  { "baseimage", "integer" },  { "relx", "decimal" },  { "rely", "decimal" },  { "relplane", "integer" },  { "numValues", "integer" } },
-    description = [[
-      Creates a graph part on a compound agent. Use @GRPL@ to add a line to the graph and @
-      GRPV@ to add a value to a graph line.
-    ]],
-    callback =
-      function(self, part_id, overlay_sprite, baseimage, relx, rely, relplane, numValues )
-      end
+    ["command"] = {
+      command = "PAT: GRPH",
+      rtype = "command",
+      params = {
+        { "part_id", "integer" },  { "overlay_sprite", "string" },  { "baseimage", "integer" },  { "relx", "decimal" },  { "rely", "decimal" },  { "relplane", "integer" },  { "numValues", "integer" } },
+      description = [[
+        Creates a graph part on a compound agent. Use @GRPL@ to add a line to the graph and @
+        GRPV@ to add a value to a graph line.
+      ]],
+      callback =
+        function(self, part_id, overlay_sprite, baseimage, relx, rely, relplane, numValues )
+        end
+    }
   },
 
 
   ["PAT: KILL"] = {
-    command = "PAT: KILL",
-    rtype = "command",
-    params = {
-      { "part_id", "integer" } },
-    description = [[
-      Destroys the specified part of a compound agent.  You can't destroy part 0.
-    ]],
-    callback =
-      function(self, part_id )
-      end
+    ["command"] = {
+      command = "PAT: KILL",
+      rtype = "command",
+      params = {
+        { "part_id", "integer" } },
+      description = [[
+        Destroys the specified part of a compound agent.  You can't destroy part 0.
+      ]],
+      callback =
+        function(self, part_id )
+        end
+    }
   },
 
 
   ["PAT: MOVE"] = {
-    command = "PAT: MOVE",
-    rtype = "command",
-    params = {
-      { "part_id", "integer" },  { "rel_x", "decimal" },  { "rely", "decimal" } },
-    description = [[
-      Moves a compound part to the new relative position specified.
-    ]],
-    callback =
-      function(self, part_id, rel_x, rely )
-      end
+    ["command"] = {
+      command = "PAT: MOVE",
+      rtype = "command",
+      params = {
+        { "part_id", "integer" },  { "rel_x", "decimal" },  { "rely", "decimal" } },
+      description = [[
+        Moves a compound part to the new relative position specified.
+      ]],
+      callback =
+        function(self, part_id, rel_x, rely )
+        end
+    }
   },
 
 
   ["PAT: TEXT"] = {
-    command = "PAT: TEXT",
+    ["command"] = {
+      command = "PAT: TEXT",
     rtype = "command",
     params = {
       { "part_id", "integer" },  { "sprite_file", "string" },  { "first_image", "integer" },  { "rel_x", "decimal" },  { "rel_y", "decimal" },  { "rel_plane", "integer" },  { "message_id", "integer" },  { "font_sprite", "string" } },
@@ -2595,27 +2839,30 @@ CAOS.Machine.commands = {
     callback =
       function(self, part_id, sprite_file, first_image, rel_x, rel_y, rel_plane, message_id, font_sprite )
       end
+    }
   },
 
 
   ["PNXT"] = {
-    command = "PNXT",
-    rtype = "integer",
-    params = {
-      { "previous_part", "integer" } },
-    description = [[
-      Returns the next compound @PART@ on an agent.  Start by calling it with -1 to get the first 
-      part, and it finishes by returning -1 when it reaches the end.
-    ]],
-    callback =
-      function(self, previous_part )
-        return 0
-      end
+    ["integer"] = {
+      command = "PNXT",
+      rtype = "integer",
+      params = {
+        { "previous_part", "integer" } },
+      description = [[
+        Returns the next compound @PART@ on an agent.  Start by calling it with -1 to get the first 
+        part, and it finishes by returning -1 when it reaches the end.
+      ]],
+      callback =
+        function(self, previous_part )
+          return 0
+        end
+    }
   },
 
 
   ["PTXT"] = {
-    lvalue = {
+    ["command"] = {
       command = "PTXT",
       rtype = "command",
       params = {
@@ -2635,7 +2882,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["string"] = {
       command = "PTXT",
       rtype = "string",
       params = {},
@@ -2651,21 +2898,24 @@ CAOS.Machine.commands = {
 
 
   ["AGES"] = {
-    command = "AGES",
-    rtype = "command",
-    params = {
-      { "times", "integer" } },
-    description = [[
-      Forces a creature to age the given number of times.  See also @CAGE@.
-    ]],
-    callback =
-      function(self, times )
-      end
+    ["command"] = {
+      command = "AGES",
+      rtype = "command",
+      params = {
+        { "times", "integer" } },
+      description = [[
+        Forces a creature to age the given number of times.  See also @CAGE@.
+      ]],
+      callback =
+        function(self, times )
+        end
+    }
   },
 
 
   ["APPR"] = {
-    command = "APPR",
+    ["command"] = {
+      command = "APPR",
     rtype = "command",
     params = {},
     description = [[
@@ -2676,11 +2926,12 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["ASLP"] = {
-    lvalue = {
+    ["command"] = {
       command = "ASLP",
       rtype = "command",
       params = {
@@ -2693,7 +2944,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "ASLP",
       rtype = "integer",
       params = {},
@@ -2709,21 +2960,23 @@ CAOS.Machine.commands = {
 
 
   ["ATTN"] = {
-    command = "ATTN",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the current focus of attention id.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "ATTN",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the current focus of attention id.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["BODY"] = {
-    lvalue = {
+    ["command"] = {
       command = "BODY",
       rtype = "command",
       params = {
@@ -2736,7 +2989,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "BODY",
       rtype = "integer",
       params = {
@@ -2754,23 +3007,26 @@ CAOS.Machine.commands = {
 
 
   ["BOOT"] = {
-    command = "BOOT",
-    rtype = "command",
-    params = {
-      { "subboot_number", "integer" },  { "folder_number_sum", "integer" },  { "clear_world", "integer" } },
-    description = [[
-      Loads in a list of numbered bootstrap folders contained within a folder called subboot. Bootstraps folders numbers are 
-      powers of 2, sum the folder numbers to load those folders.  There is provision for more than one 
-      subboot folder, these should be uniquely numbered. 
-    ]],
-    callback =
-      function(self, subboot_number, folder_number_sum, clear_world )
-      end
+    ["command"] = {
+      command = "BOOT",
+      rtype = "command",
+      params = {
+        { "subboot_number", "integer" },  { "folder_number_sum", "integer" },  { "clear_world", "integer" } },
+      description = [[
+        Loads in a list of numbered bootstrap folders contained within a folder called subboot. Bootstraps folders numbers are 
+        powers of 2, sum the folder numbers to load those folders.  There is provision for more than one 
+        subboot folder, these should be uniquely numbered. 
+      ]],
+      callback =
+        function(self, subboot_number, folder_number_sum, clear_world )
+        end
+    }
   },
 
 
   ["BORN"] = {
-    command = "BORN",
+    ["command"] = {
+      command = "BORN",
     rtype = "command",
     params = {},
     description = [[
@@ -2779,25 +3035,29 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["BVAR"] = {
-    command = "BVAR",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the variant number for target creature.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "BVAR",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the variant number for target creature.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["BYIT"] = {
-    command = "BYIT",
+    ["integer"] = {
+      command = "BYIT",
     rtype = "integer",
     params = {},
     description = [[
@@ -2808,25 +3068,28 @@ CAOS.Machine.commands = {
       function(self)
         return 0
       end
+    }
   },
 
 
   ["CAGE"] = {
-    command = "CAGE",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns life stage of target creature.  See also @AGES@.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "CAGE",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns life stage of target creature.  See also @AGES@.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["CALG"] = {
-    lvalue = {
+    ["command"] = {
       command = "CALG",
       rtype = "command",
       params = {
@@ -2840,7 +3103,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "CALG",
       rtype = "integer",
       params = {
@@ -2858,7 +3121,7 @@ CAOS.Machine.commands = {
 
 
   ["CHEM"] = {
-    lvalue = {
+    ["command"] = {
       command = "CHEM",
       rtype = "command",
       params = {
@@ -2871,7 +3134,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["float"] = {
       command = "CHEM",
       rtype = "float",
       params = {
@@ -2888,7 +3151,8 @@ CAOS.Machine.commands = {
 
   -- full
   ["CREA"] = {
-    command = "CREA",
+    ["integer"] = {
+      command = "CREA",
     rtype = "integer",
     params = {
       { "agent", "agent" } },
@@ -2900,11 +3164,12 @@ CAOS.Machine.commands = {
         local typ = world.entityType(agent)
         return ( typ == "player" or typ == "npc" ) and 1 or 0
       end
+    }
   },
 
 
   ["DEAD"] = {
-    lvalue = {
+    ["command"] = {
       command = "DEAD",
       rtype = "command",
       params = {},
@@ -2918,7 +3183,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "DEAD",
       rtype = "integer",
       params = {},
@@ -2934,49 +3199,55 @@ CAOS.Machine.commands = {
 
 
   ["DECN"] = {
-    command = "DECN",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the current focus of decision id.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "DECN",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the current focus of decision id.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["DFTX"] = {
-    command = "DFTX",
-    rtype = "float",
-    params = {},
-    description = [[
-      Returns X coordinate of creature's down foot.
-    ]],
-    callback =
-      function(self)
-        return 0.0
-      end
+    ["float"] = {
+      command = "DFTX",
+      rtype = "float",
+      params = {},
+      description = [[
+        Returns X coordinate of creature's down foot.
+      ]],
+      callback =
+        function(self)
+          return 0.0
+        end
+    }
   },
 
 
   ["DFTY"] = {
-    command = "DFTY",
-    rtype = "float",
-    params = {},
-    description = [[
-      Returns Y coordinate of creature's down foot.
-    ]],
-    callback =
-      function(self)
-        return 0.0
-      end
+    ["float"] = {
+      command = "DFTY",
+      rtype = "float",
+      params = {},
+      description = [[
+        Returns Y coordinate of creature's down foot.
+      ]],
+      callback =
+        function(self)
+          return 0.0
+        end
+    }
   },
 
 
   ["DIRN"] = {
-    lvalue = {
+    ["command"] = {
       command = "DIRN",
       rtype = "command",
       params = {
@@ -2989,7 +3260,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "DIRN",
       rtype = "integer",
       params = {},
@@ -3005,7 +3276,8 @@ CAOS.Machine.commands = {
 
 
   ["DONE"] = {
-    command = "DONE",
+    ["command"] = {
+      command = "DONE",
     rtype = "command",
     params = {},
     description = [[
@@ -3014,11 +3286,12 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["DREA"] = {
-    lvalue = {
+    ["command"] = {
       command = "DREA",
       rtype = "command",
       params = {
@@ -3032,7 +3305,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "DREA",
       rtype = "integer",
       params = {},
@@ -3048,7 +3321,7 @@ CAOS.Machine.commands = {
 
 
   ["DRIV"] = {
-    lvalue = {
+    ["command"] = {
       command = "DRIV",
       rtype = "command",
       params = {
@@ -3061,7 +3334,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["float"] = {
       command = "DRIV",
       rtype = "float",
       params = {
@@ -3078,35 +3351,39 @@ CAOS.Machine.commands = {
 
 
   ["DRV!"] = {
-    command = "DRV!",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the id of the highest drive for the target creature.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "DRV!",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the id of the highest drive for the target creature.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["EXPR"] = {
-    command = "EXPR",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the current facial expression index for the creature.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "EXPR",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the current facial expression index for the creature.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["FACE"] = {
-    lvalue = {
+    ["command"] = {
       command = "FACE",
       rtype = "command",
       params = {
@@ -3119,145 +3396,157 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
-      ["integer"] = {
-        command = "FACE",
-        rtype = "integer",
-        params = {},
-        description = [[
-          Returns the front facing pose for the current facial expression.  See the @FACE@ string rvalue.
-        ]],
-        callback =
-          function(self)
-            return 0
-          end
-      },
+    ["integer"] = {
+      command = "FACE",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the front facing pose for the current facial expression.  See the @FACE@ string rvalue.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    },
 
-      ["string"] = {
-        command = "FACE",
-        rtype = "string",
-        params = {},
-        description = [[
-          Returns the name of the sprite file for the target creature's face.  Currently automatically gives you the 
-          youngest age version of the gallery but soon will work in the following way: If you set the 
-          parameter to -1 you will get the name of the file the creature is currently using.  Note that 
-          when the creature ages, this file name will change (the @GALL@ command could be useful here).  If you 
-          set the parameter to a particular age then the filename returned will be the gallery that best matches 
-          that age.  Use the @FACE@ integer rvalue to get the pose number for facing forwards.  See also @LIMB@.
-          
-        ]],
-        callback =
-          function(self)
-            return ""
-          end
-      }
+    ["string"] = {
+      command = "FACE",
+      rtype = "string",
+      params = {},
+      description = [[
+        Returns the name of the sprite file for the target creature's face.  Currently automatically gives you the 
+        youngest age version of the gallery but soon will work in the following way: If you set the 
+        parameter to -1 you will get the name of the file the creature is currently using.  Note that 
+        when the creature ages, this file name will change (the @GALL@ command could be useful here).  If you 
+        set the parameter to a particular age then the filename returned will be the gallery that best matches 
+        that age.  Use the @FACE@ integer rvalue to get the pose number for facing forwards.  See also @LIMB@.
+        
+      ]],
+      callback =
+        function(self)
+          return ""
+        end
     }
   },
 
 
   ["FORF"] = {
-    command = "FORF",
-    rtype = "command",
-    params = {
-      { "creature_to_learn_about", "agent" } },
-    description = [[
-      Set the friends or foe lobe to learn from the creature.
-    ]],
-    callback =
-      function(self, creature_to_learn_about )
-      end
+    ["command"] = {
+      command = "FORF",
+      rtype = "command",
+      params = {
+        { "creature_to_learn_about", "agent" } },
+      description = [[
+        Set the friends or foe lobe to learn from the creature.
+      ]],
+      callback =
+        function(self, creature_to_learn_about )
+        end
+    }
   },
 
 
   ["HAIR"] = {
-    command = "HAIR",
-    rtype = "command",
-    params = {
-      { "stage", "integer" } },
-    description = [[
-      Tidies or ruffles hair.  Positive means tidy, negative untidy.  There can be multiple stages of tidiness or untidiness; 
-      the more extreme the value the tidier or untidier.
-    ]],
-    callback =
-      function(self, stage )
-      end
+    ["command"] = {
+      command = "HAIR",
+      rtype = "command",
+      params = {
+        { "stage", "integer" } },
+      description = [[
+        Tidies or ruffles hair.  Positive means tidy, negative untidy.  There can be multiple stages of tidiness or untidiness; 
+        the more extreme the value the tidier or untidier.
+      ]],
+      callback =
+        function(self, stage )
+        end
+    }
   },
 
 
   ["HHLD"] = {
-    command = "HHLD",
-    rtype = "agent",
-    params = {},
-    description = [[
-      Returns the creature currently holding hands with the pointer agent. NULL if no agent is holding hands.
-    ]],
-    callback =
-      function(self)
-        return nil
-      end
+    ["agent"] = {
+      command = "HHLD",
+      rtype = "agent",
+      params = {},
+      description = [[
+        Returns the creature currently holding hands with the pointer agent. NULL if no agent is holding hands.
+      ]],
+      callback =
+        function(self)
+          return nil
+        end
+    }
   },
 
 
   ["INJR"] = {
-    command = "INJR",
-    rtype = "command",
-    params = {
-      { "organ", "integer" },  { "amount", "integer" } },
-    description = [[
-      Injures an organ, -1 to randomly choose the organ, 0 for the body organ.
-    ]],
-    callback =
-      function(self, organ, amount )
-      end
+    ["command"] = {
+      command = "INJR",
+      rtype = "command",
+      params = {
+        { "organ", "integer" },  { "amount", "integer" } },
+      description = [[
+        Injures an organ, -1 to randomly choose the organ, 0 for the body organ.
+      ]],
+      callback =
+        function(self, organ, amount )
+        end
+    }
   },
 
 
   ["INS#"] = {
-    command = "INS#",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Number of instincts still queued to be processed.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "INS#",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Number of instincts still queued to be processed.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["LIKE"] = {
-    command = "LIKE",
-    rtype = "command",
-    params = {
-      { "creature_state_opinion_about", "agent" } },
-    description = [[
-      State a personal opinion about a creature.
-    ]],
-    callback =
-      function(self, creature_state_opinion_about )
-      end
+    ["command"] = {
+      command = "LIKE",
+      rtype = "command",
+      params = {
+        { "creature_state_opinion_about", "agent" } },
+      description = [[
+        State a personal opinion about a creature.
+      ]],
+      callback =
+        function(self, creature_state_opinion_about )
+        end
+    }
   },
 
 
   ["LIMB"] = {
-    command = "LIMB",
-    rtype = "string",
-    params = {
-      { "body_part", "integer" },  { "genus", "integer" },  { "gender", "integer" },  { "age", "integer" },  { "variant", "integer" } },
-    description = [[
-      Returns the filename for the specified part of a creature.  If the exact part isn't present, a '
-      nearby' file which is on the disk is returned.
-    ]],
-    callback =
-      function(self, body_part, genus, gender, age, variant )
-        return ""
-      end
+    ["string"] = {
+      command = "LIMB",
+      rtype = "string",
+      params = {
+        { "body_part", "integer" },  { "genus", "integer" },  { "gender", "integer" },  { "age", "integer" },  { "variant", "integer" } },
+      description = [[
+        Returns the filename for the specified part of a creature.  If the exact part isn't present, a '
+        nearby' file which is on the disk is returned.
+      ]],
+      callback =
+        function(self, body_part, genus, gender, age, variant )
+          return ""
+        end
+    }
   },
 
 
   ["LOCI"] = {
-    lvalue = {
+    ["command"] = {
       command = "LOCI",
       rtype = "command",
       params = {
@@ -3270,7 +3559,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["float"] = {
       command = "LOCI",
       rtype = "float",
       params = {
@@ -3287,23 +3576,26 @@ CAOS.Machine.commands = {
 
 
   ["LTCY"] = {
-    command = "LTCY",
-    rtype = "command",
-    params = {
-      { "action", "integer" },  { "min", "integer" },  { "max", "integer" } },
-    description = [[
-      Sets latency time on involuntary actions to a random value between min and max.  After an involuntary action 
-      occurs, the same action will not be able to kick in again until after that many ticks.  Min 
-      and max must range between 0 and 255. 
-    ]],
-    callback =
-      function(self, action, min, max )
-      end
+    ["command"] = {
+      command = "LTCY",
+      rtype = "command",
+      params = {
+        { "action", "integer" },  { "min", "integer" },  { "max", "integer" } },
+      description = [[
+        Sets latency time on involuntary actions to a random value between min and max.  After an involuntary action 
+        occurs, the same action will not be able to kick in again until after that many ticks.  Min 
+        and max must range between 0 and 255. 
+      ]],
+      callback =
+        function(self, action, min, max )
+        end
+    }
   },
 
 
   ["MATE"] = {
-    command = "MATE",
+    ["command"] = {
+      command = "MATE",
     rtype = "command",
     params = {},
     description = [[
@@ -3315,11 +3607,12 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["MIND"] = {
-    lvalue = {
+    ["command"] = {
       command = "MIND",
       rtype = "command",
       params = {
@@ -3333,7 +3626,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "MIND",
       rtype = "integer",
       params = {},
@@ -3349,7 +3642,7 @@ CAOS.Machine.commands = {
 
 
   ["MOTR"] = {
-    lvalue = {
+    ["command"] = {
       command = "MOTR",
       rtype = "command",
       params = {
@@ -3363,7 +3656,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "MOTR",
       rtype = "integer",
       params = {},
@@ -3379,36 +3672,41 @@ CAOS.Machine.commands = {
 
 
   ["MVFT"] = {
-    command = "MVFT",
-    rtype = "command",
-    params = {
-      { "x", "float" },  { "y", "float" } },
-    description = [[
-      Move creature's down foot to position x,y.  Use this instead of @MVTO@ for creatures.
-    ]],
-    callback =
-      function(self, x, y )
-      end
+    ["command"] = {
+      command = "MVFT",
+      rtype = "command",
+      params = {
+        { "x", "float" },  { "y", "float" } },
+      description = [[
+        Move creature's down foot to position x,y.  Use this instead of @MVTO@ for creatures.
+      ]],
+      callback =
+        function(self, x, y )
+        end
+    }
   },
 
 
   ["NEW: CRAG"] = {
-    command = "NEW: CRAG",
-    rtype = "command",
-    params = {
-      { "family", "integer" },  { "gene_agent", "agent" },  { "gene_slot", "integer" },  { "sex", "integer" },  { "variant", "integer" },  { "sprite_file", "string" },  { "image_count", "integer" },  { "first_image", "integer" },  { "plane", "integer" } },
-    description = [[
-      Makes a non-skeletal creature.  The first five arguments are the same as @NEW: CREA@.  The last four, 
-      starting from the sprite file, are exactly as in @NEW: COMP@.
-    ]],
-    callback =
-      function(self, family, gene_agent, gene_slot, sex, variant, sprite_file, image_count, first_image, plane )
-      end
+    ["command"] = {
+      command = "NEW: CRAG",
+      rtype = "command",
+      params = {
+        { "family", "integer" },  { "gene_agent", "agent" },  { "gene_slot", "integer" },  { "sex", "integer" },  { "variant", "integer" },  { "sprite_file", "string" },  { "image_count", "integer" },  { "first_image", "integer" },  { "plane", "integer" } },
+      description = [[
+        Makes a non-skeletal creature.  The first five arguments are the same as @NEW: CREA@.  The last four, 
+        starting from the sprite file, are exactly as in @NEW: COMP@.
+      ]],
+      callback =
+        function(self, family, gene_agent, gene_slot, sex, variant, sprite_file, image_count, first_image, plane )
+        end
+    }
   },
 
 
   ["NEW: CREA"] = {
-    command = "NEW: CREA",
+    ["command"] = {
+      command = "NEW: CREA",
     rtype = "command",
     params = {
       { "family", "integer" },  { "gene_agent", "agent" },  { "gene_slot", "integer" },  { "sex", "integer" },  { "variant", "integer" } },
@@ -3422,27 +3720,30 @@ CAOS.Machine.commands = {
     callback =
       function(self, family, gene_agent, gene_slot, sex, variant )
       end
+    }
   },
 
 
   ["NEWC"] = {
-    command = "NEWC",
-    rtype = "command",
-    params = {
-      { "family", "integer" },  { "gene_agent", "agent" },  { "gene_slot", "integer" },  { "sex", "integer" },  { "variant", "integer" } },
-    description = [[
-      This version of @NEW: CREA@ executes over a series of ticks, helping to prevent the pause caused by 
-      the creation of a creature with the @NEW: CREA@ command. However, it cannot be used in install scripts (
-      e.g. the bootstrap) and so @NEW: CREA@ should be used for that.
-    ]],
-    callback =
-      function(self, family, gene_agent, gene_slot, sex, variant )
-      end
+    ["command"] = {
+      command = "NEWC",
+      rtype = "command",
+      params = {
+        { "family", "integer" },  { "gene_agent", "agent" },  { "gene_slot", "integer" },  { "sex", "integer" },  { "variant", "integer" } },
+      description = [[
+        This version of @NEW: CREA@ executes over a series of ticks, helping to prevent the pause caused by 
+        the creation of a creature with the @NEW: CREA@ command. However, it cannot be used in install scripts (
+        e.g. the bootstrap) and so @NEW: CREA@ should be used for that.
+      ]],
+      callback =
+        function(self, family, gene_agent, gene_slot, sex, variant )
+        end
+    }
   },
 
 
   ["NORN"] = {
-    lvalue = {
+    ["command"] = {
       command = "NORN",
       rtype = "command",
       params = {
@@ -3456,7 +3757,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["agent"] = {
       command = "NORN",
       rtype = "agent",
       params = {},
@@ -3472,7 +3773,8 @@ CAOS.Machine.commands = {
 
 
   ["NUDE"] = {
-    command = "NUDE",
+    ["command"] = {
+      command = "NUDE",
     rtype = "command",
     params = {},
     description = [[
@@ -3482,67 +3784,77 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["ORDR SHOU"] = {
-    command = "ORDR SHOU",
-    rtype = "command",
-    params = {
-      { "speech", "string" } },
-    description = [[
-      Sends a spoken command from target to all creatures that can hear it.
-    ]],
-    callback =
-      function(self, speech )
-      end
+    ["command"] = {
+      command = "ORDR SHOU",
+      rtype = "command",
+      params = {
+        { "speech", "string" } },
+      description = [[
+        Sends a spoken command from target to all creatures that can hear it.
+      ]],
+      callback =
+        function(self, speech )
+        end
+    }
   },
 
 
   ["ORDR SIGN"] = {
-    command = "ORDR SIGN",
-    rtype = "command",
-    params = {
-      { "speech", "string" } },
-    description = [[
-      Sends a spoken command from target to all creatures that can see it.
-    ]],
-    callback =
-      function(self, speech )
-      end
+    ["command"] = {
+      command = "ORDR SIGN",
+      rtype = "command",
+      params = {
+        { "speech", "string" } },
+      description = [[
+        Sends a spoken command from target to all creatures that can see it.
+      ]],
+      callback =
+        function(self, speech )
+        end
+    }
   },
 
 
   ["ORDR TACT"] = {
-    command = "ORDR TACT",
-    rtype = "command",
-    params = {
-      { "speech", "string" } },
-    description = [[
-      Sends a spoken command from target to all creatures that are touching it.
-    ]],
-    callback =
-      function(self, speech )
-      end
+    ["command"] = {
+      command = "ORDR TACT",
+      rtype = "command",
+      params = {
+        { "speech", "string" } },
+      description = [[
+        Sends a spoken command from target to all creatures that are touching it.
+      ]],
+      callback =
+        function(self, speech )
+        end
+    }
   },
 
 
   ["ORDR WRIT"] = {
-    command = "ORDR WRIT",
-    rtype = "command",
-    params = {
-      { "creature", "agent" },  { "speech", "string" } },
-    description = [[
-      Sends a spoken command from target to the specified creature.
-    ]],
-    callback =
-      function(self, creature, speech )
-      end
+    ["command"] = {
+      command = "ORDR WRIT",
+      rtype = "command",
+      params = {
+        { "creature", "agent" },  { "speech", "string" } },
+      description = [[
+        Sends a spoken command from target to the specified creature.
+      ]],
+      callback =
+        function(self, creature, speech )
+        end
+    }
   },
 
 
   ["ORGF"] = {
-    command = "ORGF",
+    ["float"] = {
+      command = "ORGF",
     rtype = "float",
     params = {
       { "organ_number", "integer" },  { "data", "integer" } },
@@ -3563,11 +3875,13 @@ CAOS.Machine.commands = {
       function(self, organ_number, data )
         return 0.0
       end
+    }
   },
 
 
   ["ORGI"] = {
-    command = "ORGI",
+    ["integer"] = {
+      command = "ORGI",
     rtype = "integer",
     params = {
       { "organ_number", "integer" },  { "data", "integer" } },
@@ -3581,55 +3895,63 @@ CAOS.Machine.commands = {
       function(self, organ_number, data )
         return 0
       end
+    }
   },
 
 
   ["ORGN"] = {
-    command = "ORGN",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the number of organs in target creature.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "ORGN",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the number of organs in target creature.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["PLMD"] = {
-    command = "PLMD",
-    rtype = "command",
-    params = {
-      { "tract_index,", "integer" },  { "filename", "string" } },
-    description = [[
-      Dumps out all the dendrite learned information of the specified tract to a file (will be changed to 
-      sync with Palm).
-    ]],
-    callback =
-      function(self, tract_index, filename )
-      end
+    ["command"] = {
+      command = "PLMD",
+      rtype = "command",
+      params = {
+        { "tract_index,", "integer" },  { "filename", "string" } },
+      description = [[
+        Dumps out all the dendrite learned information of the specified tract to a file (will be changed to 
+        sync with Palm).
+      ]],
+      callback =
+        function(self, tract_index, filename )
+        end
+    }
   },
 
 
   ["PLMU"] = {
-    command = "PLMU",
-    rtype = "command",
-    params = {
-      { "tract_index,", "integer" },  { "filename", "string" } },
-    description = [[
-      Configures the dendrites in the specified tract with the data in the file (will be changed to sync 
-      with Palm).
-    ]],
-    callback =
-      function(self, tract_index, filename )
-      end
+    ["command"] = {
+      command = "PLMU",
+      rtype = "command",
+      params = {
+        { "tract_index,", "integer" },  { "filename", "string" } },
+      description = [[
+        Configures the dendrites in the specified tract with the data in the file (will be changed to sync 
+        with Palm).
+      ]],
+      callback =
+        function(self, tract_index, filename )
+        end
+    }
   },
 
 
   ["SAYN"] = {
-    command = "SAYN",
+    ["command"] = {
+      command = "SAYN",
     rtype = "command",
     params = {},
     description = [[
@@ -3638,26 +3960,29 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["SEEN"] = {
-    command = "SEEN",
-    rtype = "agent",
-    params = {
-      { "category", "integer" } },
-    description = [[
-      Returns the agent which the creature TARG has currently in mind for the category specified.
-    ]],
-    callback =
-      function(self, category )
-        return nil
-      end
+    ["agent"] = {
+      command = "SEEN",
+      rtype = "agent",
+      params = {
+        { "category", "integer" } },
+      description = [[
+        Returns the agent which the creature TARG has currently in mind for the category specified.
+      ]],
+      callback =
+        function(self, category )
+          return nil
+        end
+    }
   },
 
 
   ["SOUL"] = {
-    lvalue = {
+    ["command"] = {
       command = "SOUL",
       rtype = "command",
       params = {
@@ -3672,7 +3997,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "SOUL",
       rtype = "integer",
       params = {
@@ -3689,35 +4014,40 @@ CAOS.Machine.commands = {
 
 
   ["SPNL"] = {
-    command = "SPNL",
-    rtype = "command",
-    params = {
-      { "lobe_moniker", "string" },  { "neuron_id", "integer" },  { "value", "float" } },
-    description = [[
-      This sets the input of the neuron in the lobe specified to be the value given.
-    ]],
-    callback =
-      function(self, lobe_moniker, neuron_id, value )
-      end
+    ["command"] = {
+      command = "SPNL",
+      rtype = "command",
+      params = {
+        { "lobe_moniker", "string" },  { "neuron_id", "integer" },  { "value", "float" } },
+      description = [[
+        This sets the input of the neuron in the lobe specified to be the value given.
+      ]],
+      callback =
+        function(self, lobe_moniker, neuron_id, value )
+        end
+    }
   },
 
 
   ["STEP"] = {
-    command = "STEP",
-    rtype = "command",
-    params = {
-      { "facultyId", "integer" } },
-    description = [[
-      Does one update of the specified faculty (for faculty id see @SOUL#@).
-    ]],
-    callback =
-      function(self, facultyId )
-      end
+    ["command"] = {
+      command = "STEP",
+      rtype = "command",
+      params = {
+        { "facultyId", "integer" } },
+      description = [[
+        Does one update of the specified faculty (for faculty id see @SOUL#@).
+      ]],
+      callback =
+        function(self, facultyId )
+        end
+    }
   },
 
 
   ["STIM SHOU"] = {
-    command = "STIM SHOU",
+    ["command"] = {
+      command = "STIM SHOU",
     rtype = "command",
     params = {
       { "stimulus", "integer" },  { "strength", "float" } },
@@ -3730,110 +4060,126 @@ CAOS.Machine.commands = {
     callback =
       function(self, stimulus, strength )
       end
+    }
   },
 
 
   ["STIM SIGN"] = {
-    command = "STIM SIGN",
-    rtype = "command",
-    params = {
-      { "stimulus", "integer" },  { "strength", "float" } },
-    description = [[
-      Send a stimulus to all creatures who can see @OWNR@.
-    ]],
-    callback =
-      function(self, stimulus, strength )
-      end
+    ["command"] = {
+      command = "STIM SIGN",
+      rtype = "command",
+      params = {
+        { "stimulus", "integer" },  { "strength", "float" } },
+      description = [[
+        Send a stimulus to all creatures who can see @OWNR@.
+      ]],
+      callback =
+        function(self, stimulus, strength )
+        end
+    }
   },
 
 
   ["STIM TACT"] = {
-    command = "STIM TACT",
-    rtype = "command",
-    params = {
-      { "stimulus", "integer" },  { "strength", "float" } },
-    description = [[
-      Send a stimulus to all creatures who are touching @OWNR@.
-    ]],
-    callback =
-      function(self, stimulus, strength )
-      end
+    ["command"] = {
+      command = "STIM TACT",
+      rtype = "command",
+      params = {
+        { "stimulus", "integer" },  { "strength", "float" } },
+      description = [[
+        Send a stimulus to all creatures who are touching @OWNR@.
+      ]],
+      callback =
+        function(self, stimulus, strength )
+        end
+    }
   },
 
 
   ["STIM WRIT"] = {
-    command = "STIM WRIT",
-    rtype = "command",
-    params = {
-      { "creature", "agent" },  { "stimulus", "integer" },  { "strength", "float" } },
-    description = [[
-      Send stimulus to a specific creature.  Can be used from an install script, but the stimulus will be 
-      from @NULL@, so the creature will react but not learn.
-    ]],
-    callback =
-      function(self, creature, stimulus, strength )
-      end
+    ["command"] = {
+      command = "STIM WRIT",
+      rtype = "command",
+      params = {
+        { "creature", "agent" },  { "stimulus", "integer" },  { "strength", "float" } },
+      description = [[
+        Send stimulus to a specific creature.  Can be used from an install script, but the stimulus will be 
+        from @NULL@, so the creature will react but not learn.
+      ]],
+      callback =
+        function(self, creature, stimulus, strength )
+        end
+    }
   },
 
 
   ["SWAY SHOU"] = {
-    command = "SWAY SHOU",
-    rtype = "command",
-    params = {
-      { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" } },
-    description = [[
-      Stimulate all creatures that can hear @OWNR@ to adjust four drives by the given amounts.
-    ]],
-    callback =
-      function(self, drive, adjust, drive, adjust, drive, adjust, drive, adjust )
-      end
+    ["command"] = {
+      command = "SWAY SHOU",
+      rtype = "command",
+      params = {
+        { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" } },
+      description = [[
+        Stimulate all creatures that can hear @OWNR@ to adjust four drives by the given amounts.
+      ]],
+      callback =
+        function(self, drive, adjust, drive, adjust, drive, adjust, drive, adjust )
+        end
+    }
   },
 
 
   ["SWAY SIGN"] = {
-    command = "SWAY SIGN",
-    rtype = "command",
-    params = {
-      { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" } },
-    description = [[
-      Stimulate all creatures that can see @OWNR@ to adjust four drives by the given amounts.
-    ]],
-    callback =
-      function(self, drive, adjust, drive, adjust, drive, adjust, drive, adjust )
-      end
+    ["command"] = {
+      command = "SWAY SIGN",
+      rtype = "command",
+      params = {
+        { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" } },
+      description = [[
+        Stimulate all creatures that can see @OWNR@ to adjust four drives by the given amounts.
+      ]],
+      callback =
+        function(self, drive, adjust, drive, adjust, drive, adjust, drive, adjust )
+        end
+    }
   },
 
 
   ["SWAY TACT"] = {
-    command = "SWAY TACT",
-    rtype = "command",
-    params = {
-      { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" } },
-    description = [[
-      Stimulate all creatures that are touching @OWNR@ to adjust four drives by the given amounts.
-    ]],
-    callback =
-      function(self, drive, adjust, drive, adjust, drive, adjust, drive, adjust )
-      end
+    ["command"] = {
+      command = "SWAY TACT",
+      rtype = "command",
+      params = {
+        { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" } },
+      description = [[
+        Stimulate all creatures that are touching @OWNR@ to adjust four drives by the given amounts.
+      ]],
+      callback =
+        function(self, drive, adjust, drive, adjust, drive, adjust, drive, adjust )
+        end
+    }
   },
 
 
   ["SWAY WRIT"] = {
-    command = "SWAY WRIT",
-    rtype = "command",
-    params = {
-      { "creature", "agent" },  { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" } },
-    description = [[
-      Stimulate a specific creature to adjust four drives by the given amounts.
-    ]],
-    callback =
-      function(self, creature, drive, adjust, drive, adjust, drive, adjust, drive, adjust )
-      end
+    ["command"] = {
+      command = "SWAY WRIT",
+      rtype = "command",
+      params = {
+        { "creature", "agent" },  { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" },  { "drive", "integer" },  { "adjust", "float" } },
+      description = [[
+        Stimulate a specific creature to adjust four drives by the given amounts.
+      ]],
+      callback =
+        function(self, creature, drive, adjust, drive, adjust, drive, adjust, drive, adjust )
+        end
+    }
   },
 
 
   ["TAGE"] = {
-    command = "TAGE",
+    ["integer"] = {
+      command = "TAGE",
     rtype = "integer",
     params = {},
     description = [[
@@ -3844,39 +4190,44 @@ CAOS.Machine.commands = {
       function(self)
         return 0
       end
+    }
   },
 
 
   ["UFTX"] = {
-    command = "UFTX",
-    rtype = "float",
-    params = {},
-    description = [[
-      Returns X coordinate of creature's up foot.
-    ]],
-    callback =
-      function(self)
-        return 0.0
-      end
+    ["float"] = {
+      command = "UFTX",
+      rtype = "float",
+      params = {},
+      description = [[
+        Returns X coordinate of creature's up foot.
+      ]],
+      callback =
+        function(self)
+          return 0.0
+        end
+    }
   },
 
 
   ["UFTY"] = {
-    command = "UFTY",
-    rtype = "float",
-    params = {},
-    description = [[
-      Returns Y coordinate of creature's up foot.
-    ]],
-    callback =
-      function(self)
-        return 0.0
-      end
+    ["float"] = {
+      command = "UFTY",
+      rtype = "float",
+      params = {},
+      description = [[
+        Returns Y coordinate of creature's up foot.
+      ]],
+      callback =
+        function(self)
+          return 0.0
+        end
+    }
   },
 
 
   ["UNCS"] = {
-    lvalue = {
+    ["command"] = {
       command = "UNCS",
       rtype = "command",
       params = {
@@ -3889,7 +4240,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "UNCS",
       rtype = "integer",
       params = {},
@@ -3905,66 +4256,75 @@ CAOS.Machine.commands = {
 
 
   ["URGE SHOU"] = {
-    command = "URGE SHOU",
-    rtype = "command",
-    params = {
-      { "noun_stim", "float" },  { "verb_id", "integer" },  { "verb_stim", "float" } },
-    description = [[
-      Urge all creatures who can hear @OWNR@ to perform the verb_id action on @OWNR@.  Stimuli can range from -
-      1 to 1, ranging from discourage to encourage.
-    ]],
-    callback =
-      function(self, noun_stim, verb_id, verb_stim )
-      end
+    ["command"] = {
+      command = "URGE SHOU",
+      rtype = "command",
+      params = {
+        { "noun_stim", "float" },  { "verb_id", "integer" },  { "verb_stim", "float" } },
+      description = [[
+        Urge all creatures who can hear @OWNR@ to perform the verb_id action on @OWNR@.  Stimuli can range from -
+        1 to 1, ranging from discourage to encourage.
+      ]],
+      callback =
+        function(self, noun_stim, verb_id, verb_stim )
+        end
+    }
   },
 
 
   ["URGE SIGN"] = {
-    command = "URGE SIGN",
-    rtype = "command",
-    params = {
-      { "noun_stim", "float" },  { "verb_id", "integer" },  { "verb_stim", "float" } },
-    description = [[
-      Urge all creatures who can see @OWNR@ to perform an action on @OWNR@.
-    ]],
-    callback =
-      function(self, noun_stim, verb_id, verb_stim )
-      end
+    ["command"] = {
+      command = "URGE SIGN",
+      rtype = "command",
+      params = {
+        { "noun_stim", "float" },  { "verb_id", "integer" },  { "verb_stim", "float" } },
+      description = [[
+        Urge all creatures who can see @OWNR@ to perform an action on @OWNR@.
+      ]],
+      callback =
+        function(self, noun_stim, verb_id, verb_stim )
+        end
+    }
   },
 
 
   ["URGE TACT"] = {
-    command = "URGE TACT",
-    rtype = "command",
-    params = {
-      { "noun_stim", "float" },  { "verb_id", "integer" },  { "verb_stim", "float" } },
-    description = [[
-      Urge all creatures who are touching @OWNR@ to perform an action on @OWNR@.
-    ]],
-    callback =
-      function(self, noun_stim, verb_id, verb_stim )
-      end
+    ["command"] = {
+      command = "URGE TACT",
+      rtype = "command",
+      params = {
+        { "noun_stim", "float" },  { "verb_id", "integer" },  { "verb_stim", "float" } },
+      description = [[
+        Urge all creatures who are touching @OWNR@ to perform an action on @OWNR@.
+      ]],
+      callback =
+        function(self, noun_stim, verb_id, verb_stim )
+        end
+    }
   },
 
 
   ["URGE WRIT"] = {
-    command = "URGE WRIT",
-    rtype = "command",
-    params = {
-      { "creature", "agent" },  { "noun_id", "integer" },  { "noun_stim", "float" },  { "verb_id", "integer" },  { "verb_stim", "float" } },
-    description = [[
-      Urge a specific creature to perform a specific action on a specific noun.  A stimulus greater than 1 
-      will <i>force</i> the Creature to perform an action, or to set its attention (mind control!).  Use 
-      an id -1 and stim greater than 1 to unforce it.
-    ]],
-    callback =
-      function(self, creature, noun_id, noun_stim, verb_id, verb_stim )
-      end
+    ["command"] = {
+      command = "URGE WRIT",
+      rtype = "command",
+      params = {
+        { "creature", "agent" },  { "noun_id", "integer" },  { "noun_stim", "float" },  { "verb_id", "integer" },  { "verb_stim", "float" } },
+      description = [[
+        Urge a specific creature to perform a specific action on a specific noun.  A stimulus greater than 1 
+        will <i>force</i> the Creature to perform an action, or to set its attention (mind control!).  Use 
+        an id -1 and stim greater than 1 to unforce it.
+      ]],
+      callback =
+        function(self, creature, noun_id, noun_stim, verb_id, verb_stim )
+        end
+    }
   },
 
 
   ["VOCB"] = {
-    command = "VOCB",
+    ["command"] = {
+      command = "VOCB",
     rtype = "command",
     params = {},
     description = [[
@@ -3973,11 +4333,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["WALK"] = {
-    command = "WALK",
+    ["command"] = {
+      command = "WALK",
     rtype = "command",
     params = {},
     description = [[
@@ -3987,11 +4349,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["WEAR"] = {
-    command = "WEAR",
+    ["command"] = {
+      command = "WEAR",
     rtype = "command",
     params = {
       { "body_id", "integer" },  { "set_number", "integer" },  { "layer", "integer" } },
@@ -4005,11 +4369,12 @@ CAOS.Machine.commands = {
     callback =
       function(self, body_id, set_number, layer )
       end
+    }
   },
 
 
   ["ZOMB"] = {
-    lvalue = {
+    ["command"] = {
       command = "ZOMB",
       rtype = "command",
       params = {
@@ -4023,7 +4388,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "ZOMB",
       rtype = "integer",
       params = {},
@@ -4039,7 +4404,8 @@ CAOS.Machine.commands = {
 
 
   ["AGNT"] = {
-    command = "AGNT",
+    ["agent"] = {
+      command = "AGNT",
     rtype = "agent",
     params = {
       { "unique_id", "integer" } },
@@ -4053,81 +4419,93 @@ CAOS.Machine.commands = {
       function(self, unique_id )
         return nil
       end
+    }
   },
 
 
   ["APRO"] = {
-    command = "APRO",
-    rtype = "command",
-    params = {
-      { "search_text", "string" } },
-    description = [[
-      Lists all command names whose help contains the text.
-    ]],
-    callback =
-      function(self, search_text )
-      end
+    ["command"] = {
+      command = "APRO",
+      rtype = "command",
+      params = {
+        { "search_text", "string" } },
+      description = [[
+        Lists all command names whose help contains the text.
+      ]],
+      callback =
+        function(self, search_text )
+        end
+    }
   },
 
   -- full
   ["BANG"] = {
-    command = "BANG",
-    rtype = "command",
-    params = {},
-    description = [[
-      Causes a division by zero exception in the processor, to test the engine's error handling routines.
-    ]],
-    callback =
-      function(self)
-        error("BANG! DIVISION BY 0 (but not really)")
-      end
+    ["command"] = {
+      command = "BANG",
+      rtype = "command",
+      params = {},
+      description = [[
+        Causes a division by zero exception in the processor, to test the engine's error handling routines.
+      ]],
+      callback =
+        function(self)
+          error("BANG! DIVISION BY 0 (but not really)")
+        end
+    }
   },
 
 
   ["CODE"] = {
-    command = "CODE",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns event script number currently being run by target. Returns -1 if not running anything.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "CODE",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns event script number currently being run by target. Returns -1 if not running anything.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["CODF"] = {
-    command = "CODF",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns family of script currently being run by target. Returns -1 if not running anything.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "CODF",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns family of script currently being run by target. Returns -1 if not running anything.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["CODG"] = {
-    command = "CODG",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns genus of script currently being run by target. Returns -1 if not running anything.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "CODG",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns genus of script currently being run by target. Returns -1 if not running anything.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["CODP"] = {
-    command = "CODP",
+    ["integer"] = {
+      command = "CODP",
     rtype = "integer",
     params = {},
     description = [[
@@ -4138,25 +4516,29 @@ CAOS.Machine.commands = {
       function(self)
         return 0
       end
+    }
   },
 
 
   ["CODS"] = {
-    command = "CODS",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns species of script currently being run by target. Returns -1 if not running anything.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "CODS",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns species of script currently being run by target. Returns -1 if not running anything.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["DBG#"] = {
-    command = "DBG#",
+    ["string"] = {
+      command = "DBG#",
     rtype = "string",
     params = {
       { "variable", "integer" } },
@@ -4178,11 +4560,13 @@ CAOS.Machine.commands = {
       function(self, variable )
         return ""
       end
+    }
   },
 
   -- full/not sure
   ["DBG: ASRT"] = {
-    command = "DBG: ASRT",
+    ["command"] = {
+      command = "DBG: ASRT",
     rtype = "command",
     params = {
       { "condition", "condition" } },
@@ -4194,11 +4578,13 @@ CAOS.Machine.commands = {
         --TODO eval condition
         assert(condition)
       end
+    }
   },
 
 
   ["DBG: CPRO"] = {
-    command = "DBG: CPRO",
+    ["command"] = {
+      command = "DBG: CPRO",
     rtype = "command",
     params = {},
     description = [[
@@ -4207,11 +4593,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["DBG: FLSH"] = {
-    command = "DBG: FLSH",
+    ["command"] = {
+      command = "DBG: FLSH",
     rtype = "command",
     params = {},
     description = [[
@@ -4220,55 +4608,63 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["DBG: HTML"] = {
-    command = "DBG: HTML",
-    rtype = "command",
-    params = {
-      { "sort_order", "integer" } },
-    description = [[
-      Sends CAOS documentation to the output stream.  Sort order is 0 for alphabetical, 1 for categorical.
-    ]],
-    callback =
-      function(self, sort_order )
-      end
+    ["command"] = {
+      command = "DBG: HTML",
+      rtype = "command",
+      params = {
+        { "sort_order", "integer" } },
+      description = [[
+        Sends CAOS documentation to the output stream.  Sort order is 0 for alphabetical, 1 for categorical.
+      ]],
+      callback =
+        function(self, sort_order )
+        end
+    }
   },
 
   -- full
   ["DBG: OUTS"] = {
-    command = "DBG: OUTS",
-    rtype = "command",
-    params = {
-      { "value", "string" } },
-    description = [[
-      Send a string to the debug log - use @DBG: POLL@ to retrieve.
-    ]],
-    callback =
-      function(self, value )
-        world.logInfo("%s", value)
-      end
+    ["command"] = {
+      command = "DBG: OUTS",
+      rtype = "command",
+      params = {
+        { "value", "string" } },
+      description = [[
+        Send a string to the debug log - use @DBG: POLL@ to retrieve.
+      ]],
+      callback =
+        function(self, value )
+          world.logInfo("%s", value)
+        end
+    }
   },
 
   -- full
   ["DBG: OUTV"] = {
-    command = "DBG: OUTV",
-    rtype = "command",
-    params = {
-      { "value", "decimal" } },
-    description = [[
-      Send a number to the debug log - use @DBG: POLL@ to retrieve.
-    ]],
-    callback =
-      function(self, value )
-        world.logInfo("%s", "" .. value)
-      end
+    ["command"] = {
+      command = "DBG: OUTV",
+      rtype = "command",
+      params = {
+        { "value", "decimal" } },
+      description = [[
+        Send a number to the debug log - use @DBG: POLL@ to retrieve.
+      ]],
+      callback =
+        function(self, value )
+          world.logInfo("%s", "" .. value)
+        end
+    }
   },
 
 
   ["DBG: PAWS"] = {
-    command = "DBG: PAWS",
+    ["command"] = {
+      command = "DBG: PAWS",
     rtype = "command",
     params = {},
     description = [[
@@ -4279,11 +4675,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["DBG: PLAY"] = {
-    command = "DBG: PLAY",
+    ["command"] = {
+      command = "DBG: PLAY",
     rtype = "command",
     params = {},
     description = [[
@@ -4292,11 +4690,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["DBG: POLL"] = {
-    command = "DBG: POLL",
+    ["command"] = {
+      command = "DBG: POLL",
     rtype = "command",
     params = {},
     description = [[
@@ -4306,11 +4706,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["DBG: PROF"] = {
-    command = "DBG: PROF",
+    ["command"] = {
+      command = "DBG: PROF",
     rtype = "command",
     params = {},
     description = [[
@@ -4322,11 +4724,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["DBG: TACK"] = {
-    command = "DBG: TACK",
+    ["command"] = {
+      command = "DBG: TACK",
     rtype = "command",
     params = {
       { "follow", "agent" } },
@@ -4341,11 +4745,13 @@ CAOS.Machine.commands = {
     callback =
       function(self, follow )
       end
+    }
   },
 
 
   ["DBG: TOCK"] = {
-    command = "DBG: TOCK",
+    ["command"] = {
+      command = "DBG: TOCK",
     rtype = "command",
     params = {},
     description = [[
@@ -4355,27 +4761,31 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["DBG: WTIK"] = {
-    command = "DBG: WTIK",
-    rtype = "command",
-    params = {
-      { "new_world_tick", "integer" } },
-    description = [[
-      Changes the world tick @WTIK@ to the given value.  This should only be used for debugging, as it 
-      will potentially leave confusing information in the creature history, and change the time when delayed messages are processed.  
-      Its main use is to jump to different seasons and times of day.
-    ]],
-    callback =
-      function(self, new_world_tick )
-      end
+    ["command"] = {
+      command = "DBG: WTIK",
+      rtype = "command",
+      params = {
+        { "new_world_tick", "integer" } },
+      description = [[
+        Changes the world tick @WTIK@ to the given value.  This should only be used for debugging, as it 
+        will potentially leave confusing information in the creature history, and change the time when delayed messages are processed.  
+        Its main use is to jump to different seasons and times of day.
+      ]],
+      callback =
+        function(self, new_world_tick )
+        end
+    }
   },
 
 
   ["DBGA"] = {
-    command = "DBGA",
+    ["string"] = {
+      command = "DBGA",
     rtype = "string",
     params = {
       { "variable", "integer" } },
@@ -4389,11 +4799,13 @@ CAOS.Machine.commands = {
       function(self, variable )
         return ""
       end
+    }
   },
 
 
   ["HEAP"] = {
-    command = "HEAP",
+    ["integer"] = {
+      command = "HEAP",
     rtype = "integer",
     params = {
       { "index", "integer" } },
@@ -4407,11 +4819,13 @@ CAOS.Machine.commands = {
       function(self, index )
         return 0
       end
+    }
   },
 
 
   ["HELP"] = {
-    command = "HELP",
+    ["command"] = {
+      command = "HELP",
     rtype = "command",
     params = {},
     description = [[
@@ -4420,25 +4834,29 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["MANN"] = {
-    command = "MANN",
-    rtype = "command",
-    params = {
-      { "command", "string" } },
-    description = [[
-      Outputs help on the given command to the output stream.
-    ]],
-    callback =
-      function(self, command )
-      end
+    ["command"] = {
+      command = "MANN",
+      rtype = "command",
+      params = {
+        { "command", "string" } },
+      description = [[
+        Outputs help on the given command to the output stream.
+      ]],
+      callback =
+        function(self, command )
+        end
+    }
   },
 
 
   ["MEMX"] = {
-    command = "MEMX",
+    ["command"] = {
+      command = "MEMX",
     rtype = "command",
     params = {},
     description = [[
@@ -4452,39 +4870,45 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["PAWS"] = {
-    command = "PAWS",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns 1 for debug pawsed, 0 for playing.  See @DBG: PAWS@.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "PAWS",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns 1 for debug pawsed, 0 for playing.  See @DBG: PAWS@.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["TACK"] = {
-    command = "TACK",
-    rtype = "agent",
-    params = {},
-    description = [[
-      Returns the agent currently being @DBG: TACK@ed.
-    ]],
-    callback =
-      function(self)
-        return nil
-      end
+    ["agent"] = {
+      command = "TACK",
+      rtype = "agent",
+      params = {},
+      description = [[
+        Returns the agent currently being @DBG: TACK@ed.
+      ]],
+      callback =
+        function(self)
+          return nil
+        end
+    }
   },
 
 
   ["UNID"] = {
-    command = "UNID",
+    ["integer"] = {
+      command = "UNID",
     rtype = "integer",
     params = {},
     description = [[
@@ -4497,11 +4921,13 @@ CAOS.Machine.commands = {
       function(self)
         return self.target.id()
       end
+    }
   },
 
 
   ["FILE GLOB"] = {
-    command = "FILE GLOB",
+    ["command"] = {
+      command = "FILE GLOB",
     rtype = "command",
     params = {
       { "directory", "integer" },  { "filespec", "string" } },
@@ -4517,11 +4943,13 @@ CAOS.Machine.commands = {
     callback =
       function(self, directory, filespec )
       end
+    }
   },
 
 
   ["FILE ICLO"] = {
-    command = "FILE ICLO",
+    ["command"] = {
+      command = "FILE ICLO",
     rtype = "command",
     params = {},
     description = [[
@@ -4531,11 +4959,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["FILE IOPE"] = {
-    command = "FILE IOPE",
+    ["command"] = {
+      command = "FILE IOPE",
     rtype = "command",
     params = {
       { "directory", "integer" },  { "filename", "string" } },
@@ -4553,27 +4983,31 @@ CAOS.Machine.commands = {
     callback =
       function(self, directory, filename )
       end
+    }
   },
 
 
   ["FILE JDEL"] = {
-    command = "FILE JDEL",
-    rtype = "command",
-    params = {
-      { "directory", "integer" },  { "filename", "string" } },
-    description = [[
-      This deletes the file (filename) specified from the journal directory specified. If directory is zero, this is the 
-      current world's journal directory, otherwise it is the main journal directory.  It deletes the file immediately, rather 
-      than marking it for the attic.
-    ]],
-    callback =
-      function(self, directory, filename )
-      end
+    ["command"] = {
+      command = "FILE JDEL",
+      rtype = "command",
+      params = {
+        { "directory", "integer" },  { "filename", "string" } },
+      description = [[
+        This deletes the file (filename) specified from the journal directory specified. If directory is zero, this is the 
+        current world's journal directory, otherwise it is the main journal directory.  It deletes the file immediately, rather 
+        than marking it for the attic.
+      ]],
+      callback =
+        function(self, directory, filename )
+        end
+    }
   },
 
 
   ["FILE OCLO"] = {
-    command = "FILE OCLO",
+    ["command"] = {
+      command = "FILE OCLO",
     rtype = "command",
     params = {},
     description = [[
@@ -4583,11 +5017,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["FILE OFLU"] = {
-    command = "FILE OFLU",
+    ["command"] = {
+      command = "FILE OFLU",
     rtype = "command",
     params = {},
     description = [[
@@ -4597,11 +5033,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["FILE OOPE"] = {
-    command = "FILE OOPE",
+    ["command"] = {
+      command = "FILE OOPE",
     rtype = "command",
     params = {
       { "directory", "integer" },  { "filename", "string" },  { "append", "integer" } },
@@ -4620,26 +5058,30 @@ CAOS.Machine.commands = {
     callback =
       function(self, directory, filename, append )
       end
+    }
   },
 
 
   ["FVWM"] = {
-    command = "FVWM",
-    rtype = "string",
-    params = {
-      { "name", "string" } },
-    description = [[
-      This returns a guaranteed-safe filename for use in world names, journal file names, etc.
-    ]],
-    callback =
-      function(self, name )
-        return ""
-      end
+    ["string"] = {
+      command = "FVWM",
+      rtype = "string",
+      params = {
+        { "name", "string" } },
+      description = [[
+        This returns a guaranteed-safe filename for use in world names, journal file names, etc.
+      ]],
+      callback =
+        function(self, name )
+          return ""
+        end
+    }
   },
 
 
   ["INNF"] = {
-    command = "INNF",
+    ["float"] = {
+      command = "INNF",
     rtype = "float",
     params = {},
     description = [[
@@ -4650,11 +5092,13 @@ CAOS.Machine.commands = {
       function(self)
         return 0.0
       end
+    }
   },
 
 
   ["INNI"] = {
-    command = "INNI",
+    ["integer"] = {
+      command = "INNI",
     rtype = "integer",
     params = {},
     description = [[
@@ -4665,25 +5109,29 @@ CAOS.Machine.commands = {
       function(self)
         return 0
       end
+    }
   },
 
 
   ["INNL"] = {
-    command = "INNL",
-    rtype = "string",
-    params = {},
-    description = [[
-      Retrieves a line of text from the input stream.
-    ]],
-    callback =
-      function(self)
-        return ""
-      end
+    ["string"] = {
+      command = "INNL",
+      rtype = "string",
+      params = {},
+      description = [[
+        Retrieves a line of text from the input stream.
+      ]],
+      callback =
+        function(self)
+          return ""
+        end
+    }
   },
 
 
   ["INOK"] = {
-    command = "INOK",
+    ["integer"] = {
+      command = "INOK",
     rtype = "integer",
     params = {},
     description = [[
@@ -4695,11 +5143,13 @@ CAOS.Machine.commands = {
       function(self)
         return 0
       end
+    }
   },
 
   -- partial
   ["OUTS"] = {
-    command = "OUTS",
+    ["command"] = {
+      command = "OUTS",
     rtype = "command",
     params = {
       { "text", "string" } },
@@ -4713,26 +5163,30 @@ CAOS.Machine.commands = {
       function(self, text )
         world.logInfo("%s", text)
       end
+    }
   },
 
   -- partial
   ["OUTV"] = {
-    command = "OUTV",
-    rtype = "command",
-    params = {
-      { "value", "decimal" } },
-    description = [[
-      Similar to @OUTS@ only outputs a float or integer as a decimal string.
-    ]],
-    callback =
-      function(self, value )
-        world.logInfo("%s", "" .. value)
-      end
+    ["command"] = {
+      command = "OUTV",
+      rtype = "command",
+      params = {
+        { "value", "decimal" } },
+      description = [[
+        Similar to @OUTS@ only outputs a float or integer as a decimal string.
+      ]],
+      callback =
+        function(self, value )
+          world.logInfo("%s", "" .. value)
+        end
+    }
   },
 
   -- partial
   ["OUTX"] = {
-    command = "OUTX",
+    ["command"] = {
+      command = "OUTX",
     rtype = "command",
     params = {
       { "text", "string" } },
@@ -4753,27 +5207,31 @@ CAOS.Machine.commands = {
       function(self, text )
         world.logInfo("%s", text)
       end
+    }
   },
 
   -- full
   ["WEBB"] = {
-    command = "WEBB",
-    rtype = "command",
-    params = {
-      { "http_url", "string" } },
-    description = [[
-      Launches an external URL in the user's browser. The game engine adds http:// at the beginning to 
-      prevent malicious launching of programs, so you just need to specify the domain name and path.
-    ]],
-    callback =
-      function(self, http_url )
-        world.logInfo("URL: http://", http_url)
-      end
+    ["command"] = {
+      command = "WEBB",
+      rtype = "command",
+      params = {
+        { "http_url", "string" } },
+      description = [[
+        Launches an external URL in the user's browser. The game engine adds http:// at the beginning to 
+        prevent malicious launching of programs, so you just need to specify the domain name and path.
+      ]],
+      callback =
+        function(self, http_url )
+          world.logInfo("URL: http://", http_url)
+        end
+    }
   },
 
 
   ["DOIF"] = {
-    command = "DOIF",
+    ["command"] = {
+      command = "DOIF",
     rtype = "command",
     params = {
       { "condition", "condition" } },
@@ -4796,26 +5254,30 @@ CAOS.Machine.commands = {
     callback =
       function(self, condition )
       end
+    }
   },
 
 
   ["ELIF"] = {
-    command = "ELIF",
-    rtype = "command",
-    params = {
-      { "condition", "condition" } },
-    description = [[
-      ELseIF command to follow a @DOIF@. If the condition in a DOIF is false, each following ELIF command 
-      will be evaluated in turn.  Only the first true condition will have its code block executed.
-    ]],
-    callback =
-      function(self, condition )
-      end
+    ["command"] = {
+      command = "ELIF",
+      rtype = "command",
+      params = {
+        { "condition", "condition" } },
+      description = [[
+        ELseIF command to follow a @DOIF@. If the condition in a DOIF is false, each following ELIF command 
+        will be evaluated in turn.  Only the first true condition will have its code block executed.
+      ]],
+      callback =
+        function(self, condition )
+        end
+    }
   },
 
 
   ["ELSE"] = {
-    command = "ELSE",
+    ["command"] = {
+      command = "ELSE",
     rtype = "command",
     params = {},
     description = [[
@@ -4825,11 +5287,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["ENDI"] = {
-    command = "ENDI",
+    ["command"] = {
+      command = "ENDI",
     rtype = "command",
     params = {},
     description = [[
@@ -4838,11 +5302,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["EVER"] = {
-    command = "EVER",
+    ["command"] = {
+      command = "EVER",
     rtype = "command",
     params = {},
     description = [[
@@ -4851,11 +5317,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["GOTO"] = {
-    command = "GOTO",
+    ["command"] = {
+      command = "GOTO",
     rtype = "command",
     params = {
       { "destination", "label" } },
@@ -4869,26 +5337,30 @@ CAOS.Machine.commands = {
     callback =
       function(self, destination )
       end
+    }
   },
 
 
   ["GSUB"] = {
-    command = "GSUB",
-    rtype = "command",
-    params = {
-      { "destination", "label" } },
-    description = [[
-      Jumps to a subroutine defined by @SUBR@. Execution will continue at the instruction after the GSUB when the 
-      subroutine hits a @RETN@ command.
-    ]],
-    callback =
-      function(self, destination )
-      end
+    ["command"] = {
+      command = "GSUB",
+      rtype = "command",
+      params = {
+        { "destination", "label" } },
+      description = [[
+        Jumps to a subroutine defined by @SUBR@. Execution will continue at the instruction after the GSUB when the 
+        subroutine hits a @RETN@ command.
+      ]],
+      callback =
+        function(self, destination )
+        end
+    }
   },
 
 
   ["LOOP"] = {
-    command = "LOOP",
+    ["command"] = {
+      command = "LOOP",
     rtype = "command",
     params = {},
     description = [[
@@ -4897,11 +5369,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["REPE"] = {
-    command = "REPE",
+    ["command"] = {
+      command = "REPE",
     rtype = "command",
     params = {},
     description = [[
@@ -4910,26 +5384,30 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["REPS"] = {
-    command = "REPS",
-    rtype = "command",
-    params = {
-      { "count", "integer" } },
-    description = [[
-      Loop through a block of code a number of times. Must have a matching @REPE@ command to close 
-      the block.
-    ]],
-    callback =
-      function(self, count )
-      end
+    ["command"] = {
+      command = "REPS",
+      rtype = "command",
+      params = {
+        { "count", "integer" } },
+      description = [[
+        Loop through a block of code a number of times. Must have a matching @REPE@ command to close 
+        the block.
+      ]],
+      callback =
+        function(self, count )
+        end
+    }
   },
 
 
   ["RETN"] = {
-    command = "RETN",
+    ["command"] = {
+      command = "RETN",
     rtype = "command",
     params = {},
     description = [[
@@ -4939,84 +5417,96 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["SUBR"] = {
-    command = "SUBR",
+    ["command"] = {
+      command = "SUBR",
     rtype = "command",
-    params = {},
+    params = { "label", "string" },
     description = [[
       Defines the start of a subroutine. Specify a label after the @SUBR@ command - the label is case sensitive, 
       and should start with a letter. If this instruction is hit during normal program flow, it works as 
-      a @STOP@ instruction.  See @GSUB@ and @RETN@.
+      a @STOP@ instruction. See @GSUB@ and @RETN@.
     ]],
     callback =
-      function(self)
+      function(self, label)
       end
+    }
   },
 
 
   ["UNTL"] = {
-    command = "UNTL",
-    rtype = "command",
-    params = {
-      { "condition", "condition" } },
-    description = [[
-      Forms the end of a @LOOP@..UNTL loop. The loop will execute until the condition is met.  See @
-      DOIF@ for information on the form of the condition.
-    ]],
-    callback =
-      function(self, condition )
-      end
+    ["command"] = {
+      command = "UNTL",
+      rtype = "command",
+      params = {
+        { "condition", "condition" } },
+      description = [[
+        Forms the end of a @LOOP@..UNTL loop. The loop will execute until the condition is met.  See @
+        DOIF@ for information on the form of the condition.
+      ]],
+      callback =
+        function(self, condition )
+        end
+    }
   },
 
 
   ["GENE CLON"] = {
-    command = "GENE CLON",
-    rtype = "command",
-    params = {
-      { "dest_agent", "agent" },  { "dest_slot", "integer" },  { "source_agent", "agent" },  { "source_slot", "integer" } },
-    description = [[
-      Clones a genome, creating a new moniker and copying the genetics file.
-    ]],
-    callback =
-      function(self, dest_agent, dest_slot, source_agent, source_slot )
-      end
+    ["command"] = {
+      command = "GENE CLON",
+      rtype = "command",
+      params = {
+        { "dest_agent", "agent" },  { "dest_slot", "integer" },  { "source_agent", "agent" },  { "source_slot", "integer" } },
+      description = [[
+        Clones a genome, creating a new moniker and copying the genetics file.
+      ]],
+      callback =
+        function(self, dest_agent, dest_slot, source_agent, source_slot )
+        end
+    }
   },
 
 
   ["GENE CROS"] = {
-    command = "GENE CROS",
-    rtype = "command",
-    params = {
-      { "child_agent", "agent" },  { "child_slot", "integer" },  { "mum_agent", "agent" },  { "mum_slot", "integer" },  { "dad_agent", "agent" },  { "dad_slot", "integer" },  { "mum_chance_of_mutation", "integer" },  { "mum_degree_of_mutation", "integer" },  { "dad_chance_of_mutation", "integer" },  { "dad_degree_of_mutation", "integer" } },
-    description = [[
-      Crosses two genomes with mutation, and fills in a child geneme slot.  Mutation variables may be in the 
-      range of 0 to 255.
-    ]],
-    callback =
-      function(self, child_agent, child_slot, mum_agent, mum_slot, dad_agent, dad_slot, mum_chance_of_mutation, mum_degree_of_mutation, dad_chance_of_mutation, dad_degree_of_mutation )
-      end
+    ["command"] = {
+      command = "GENE CROS",
+      rtype = "command",
+      params = {
+        { "child_agent", "agent" },  { "child_slot", "integer" },  { "mum_agent", "agent" },  { "mum_slot", "integer" },  { "dad_agent", "agent" },  { "dad_slot", "integer" },  { "mum_chance_of_mutation", "integer" },  { "mum_degree_of_mutation", "integer" },  { "dad_chance_of_mutation", "integer" },  { "dad_degree_of_mutation", "integer" } },
+      description = [[
+        Crosses two genomes with mutation, and fills in a child geneme slot.  Mutation variables may be in the 
+        range of 0 to 255.
+      ]],
+      callback =
+        function(self, child_agent, child_slot, mum_agent, mum_slot, dad_agent, dad_slot, mum_chance_of_mutation, mum_degree_of_mutation, dad_chance_of_mutation, dad_degree_of_mutation )
+        end
+    }
   },
 
 
   ["GENE KILL"] = {
-    command = "GENE KILL",
-    rtype = "command",
-    params = {
-      { "agent", "agent" },  { "slot", "integer" } },
-    description = [[
-      Clears a genome slot.
-    ]],
-    callback =
-      function(self, agent, slot )
-      end
+    ["command"] = {
+      command = "GENE KILL",
+      rtype = "command",
+      params = {
+        { "agent", "agent" },  { "slot", "integer" } },
+      description = [[
+        Clears a genome slot.
+      ]],
+      callback =
+        function(self, agent, slot )
+        end
+    }
   },
 
 
   ["GENE LOAD"] = {
-    command = "GENE LOAD",
+    ["command"] = {
+      command = "GENE LOAD",
     rtype = "command",
     params = {
       { "agent", "agent" },  { "slot", "integer" },  { "gene_file", "string" } },
@@ -5036,171 +5526,192 @@ CAOS.Machine.commands = {
     callback =
       function(self, agent, slot, gene_file )
       end
+    }
   },
 
 
   ["GENE MOVE"] = {
-    command = "GENE MOVE",
-    rtype = "command",
-    params = {
-      { "dest_agent", "agent" },  { "dest_slot", "integer" },  { "source_agent", "agent" },  { "source_slot", "integer" } },
-    description = [[
-      Moves a genome from one slot to another.
-    ]],
-    callback =
-      function(self, dest_agent, dest_slot, source_agent, source_slot )
-      end
+    ["command"] = {
+      command = "GENE MOVE",
+      rtype = "command",
+      params = {
+        { "dest_agent", "agent" },  { "dest_slot", "integer" },  { "source_agent", "agent" },  { "source_slot", "integer" } },
+      description = [[
+        Moves a genome from one slot to another.
+      ]],
+      callback =
+        function(self, dest_agent, dest_slot, source_agent, source_slot )
+        end
+    }
   },
 
 
   ["GTOS"] = {
-    command = "GTOS",
-    rtype = "string",
-    params = {
-      { "slot", "integer" } },
-    description = [[
-      Returns the target's moniker in the given gene variable slot.  This universally unique identifier is the name 
-      of a genetics file.  Slot 0 is a creature's actual genome.  Other slots are used in pregnant 
-      creatures, eggs and other places.
-    ]],
-    callback =
-      function(self, slot )
-        return ""
-      end
+    ["string"] = {
+      command = "GTOS",
+      rtype = "string",
+      params = {
+        { "slot", "integer" } },
+      description = [[
+        Returns the target's moniker in the given gene variable slot.  This universally unique identifier is the name 
+        of a genetics file.  Slot 0 is a creature's actual genome.  Other slots are used in pregnant 
+        creatures, eggs and other places.
+      ]],
+      callback =
+        function(self, slot )
+          return ""
+        end
+    }
   },
 
 
   ["MTOA"] = {
-    command = "MTOA",
-    rtype = "agent",
-    params = {
-      { "moniker", "string" } },
-    description = [[
-      Returns the agent which references the given moniker.  The moniker could be stored in any of the gene 
-      slots for that agent, including the special slot 0 for a creature.  If the moniker is not currently 
-      used in the game, then returns @NULL@.  This command can be slow - use @MTOC@ if possible.
-    ]],
-    callback =
-      function(self, moniker )
-        return nil
-      end
+    ["agent"] = {
+      command = "MTOA",
+      rtype = "agent",
+      params = {
+        { "moniker", "string" } },
+      description = [[
+        Returns the agent which references the given moniker.  The moniker could be stored in any of the gene 
+        slots for that agent, including the special slot 0 for a creature.  If the moniker is not currently 
+        used in the game, then returns @NULL@.  This command can be slow - use @MTOC@ if possible.
+      ]],
+      callback =
+        function(self, moniker )
+          return nil
+        end
+    }
   },
 
 
   ["MTOC"] = {
-    command = "MTOC",
-    rtype = "agent",
-    params = {
-      { "moniker", "string" } },
-    description = [[
-      Returns the creature with the given moniker.  If there is no agent alive with that moniker, then returns @
-      NULL@.  See also @MTOA@.
-    ]],
-    callback =
-      function(self, moniker )
-        return nil
-      end
+    ["agent"] = {
+      command = "MTOC",
+      rtype = "agent",
+      params = {
+        { "moniker", "string" } },
+      description = [[
+        Returns the creature with the given moniker.  If there is no agent alive with that moniker, then returns @
+        NULL@.  See also @MTOA@.
+      ]],
+      callback =
+        function(self, moniker )
+          return nil
+        end
+    }
   },
 
 
   ["HIST CAGE"] = {
-    command = "HIST CAGE",
-    rtype = "integer",
-    params = {
-      { "moniker", "string" },  { "event_no", "integer" } },
-    description = [[
-      Returns the life stage of the creature when the given life event happened.
-    ]],
-    callback =
-      function(self, moniker, event_no )
-        return 0
-      end
+    ["integer"] = {
+      command = "HIST CAGE",
+      rtype = "integer",
+      params = {
+        { "moniker", "string" },  { "event_no", "integer" } },
+      description = [[
+        Returns the life stage of the creature when the given life event happened.
+      ]],
+      callback =
+        function(self, moniker, event_no )
+          return 0
+        end
+    }
   },
 
 
   ["HIST COUN"] = {
-    command = "HIST COUN",
-    rtype = "integer",
-    params = {
-      { "moniker", "string" } },
-    description = [[
-      Returns the number of life events that there are for the given moniker.  Returns 0 of there are 
-      no events, or the moniker doesn't exist.
-    ]],
-    callback =
-      function(self, moniker )
-        return 0
-      end
+    ["integer"] = {
+      command = "HIST COUN",
+      rtype = "integer",
+      params = {
+        { "moniker", "string" } },
+      description = [[
+        Returns the number of life events that there are for the given moniker.  Returns 0 of there are 
+        no events, or the moniker doesn't exist.
+      ]],
+      callback =
+        function(self, moniker )
+          return 0
+        end
+    }
   },
 
 
   ["HIST CROS"] = {
-    command = "HIST CROS",
-    rtype = "integer",
-    params = {
-      { "moniker", "string" } },
-    description = [[
-      Returns the number of crossover points when the genome was made by splicing its parents genomes.
-    ]],
-    callback =
-      function(self, moniker )
-        return 0
-      end
+    ["integer"] = {
+      command = "HIST CROS",
+      rtype = "integer",
+      params = {
+        { "moniker", "string" } },
+      description = [[
+        Returns the number of crossover points when the genome was made by splicing its parents genomes.
+      ]],
+      callback =
+        function(self, moniker )
+          return 0
+        end
+    }
   },
 
 
   ["HIST EVNT"] = {
-    command = "HIST EVNT",
-    rtype = "command",
-    params = {
-      { "moniker", "string" },  { "event_type", "integer" },  { "related_moniker_1", "string" },  { "related_moniker_2", "string" } },
-    description = [[
-      Triggers a life event of the given type.  Some events are triggered automatically by the engine, some events 
-      need triggering from CAOS, others are custom events that you can use for your own purposes.  See @HIST 
-      TYPE@ for details of the event numbers.  All new events made call the @Life Event@ script.
-    ]],
-    callback =
-      function(self, moniker, event_type, related_moniker_1, related_moniker_2 )
-      end
+    ["command"] = {
+      command = "HIST EVNT",
+      rtype = "command",
+      params = {
+        { "moniker", "string" },  { "event_type", "integer" },  { "related_moniker_1", "string" },  { "related_moniker_2", "string" } },
+      description = [[
+        Triggers a life event of the given type.  Some events are triggered automatically by the engine, some events 
+        need triggering from CAOS, others are custom events that you can use for your own purposes.  See @HIST 
+        TYPE@ for details of the event numbers.  All new events made call the @Life Event@ script.
+      ]],
+      callback =
+        function(self, moniker, event_type, related_moniker_1, related_moniker_2 )
+        end
+    }
   },
 
 
   ["HIST FIND"] = {
-    command = "HIST FIND",
-    rtype = "integer",
-    params = {
-      { "moniker", "string" },  { "event_type", "integer" },  { "from_index", "integer" } },
-    description = [[
-      Searches for a life event of a certain @HIST TYPE@ for the given moniker.  The search begins at 
-      the life event <b>after</b> the from index.  Specify -1 to find the first event.  Returns the 
-      event number, or -1 if there is no matching event.
-    ]],
-    callback =
-      function(self, moniker, event_type, from_index )
-        return 0
-      end
+    ["integer"] = {
+      command = "HIST FIND",
+      rtype = "integer",
+      params = {
+        { "moniker", "string" },  { "event_type", "integer" },  { "from_index", "integer" } },
+      description = [[
+        Searches for a life event of a certain @HIST TYPE@ for the given moniker.  The search begins at 
+        the life event <b>after</b> the from index.  Specify -1 to find the first event.  Returns the 
+        event number, or -1 if there is no matching event.
+      ]],
+      callback =
+        function(self, moniker, event_type, from_index )
+          return 0
+        end
+    }
   },
 
 
   ["HIST FINR"] = {
-    command = "HIST FINR",
-    rtype = "integer",
-    params = {
-      { "moniker", "string" },  { "event_type", "integer" },  { "from_index", "integer" } },
-    description = [[
-      Reverse searches for a life event of a certain @HIST TYPE@ for the given moniker.  The search begins 
-      at the life event <b>before</b> the from index.  Specify -1 to find the last event.  Returns 
-      the event number, or -1 if there is no matching event.
-    ]],
-    callback =
-      function(self, moniker, event_type, from_index )
-        return 0
-      end
+    ["integer"] = {
+      command = "HIST FINR",
+      rtype = "integer",
+      params = {
+        { "moniker", "string" },  { "event_type", "integer" },  { "from_index", "integer" } },
+      description = [[
+        Reverse searches for a life event of a certain @HIST TYPE@ for the given moniker.  The search begins 
+        at the life event <b>before</b> the from index.  Specify -1 to find the last event.  Returns 
+        the event number, or -1 if there is no matching event.
+      ]],
+      callback =
+        function(self, moniker, event_type, from_index )
+          return 0
+        end
+    }
   },
 
 
   ["HIST FOTO"] = {
-    rvalue = {
+    ["string"] = {
       command = "HIST FOTO",
       rtype = "string",
       params = {
@@ -5215,7 +5726,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    lvalue = {
+    ["command"] = {
       command = "HIST FOTO",
       rtype = "command",
       params = {
@@ -5239,84 +5750,94 @@ CAOS.Machine.commands = {
 
 
   ["HIST GEND"] = {
-    command = "HIST GEND",
-    rtype = "integer",
-    params = {
-      { "moniker", "string" } },
-    description = [[
-      Returns the sex that the creature with the given moniker has or had.  1 for male, 2 for 
-      female.  If the creature hasn't been born yet, returns -1.
-    ]],
-    callback =
-      function(self, moniker )
-        return 0
-      end
+    ["integer"] = {
+      command = "HIST GEND",
+      rtype = "integer",
+      params = {
+        { "moniker", "string" } },
+      description = [[
+        Returns the sex that the creature with the given moniker has or had.  1 for male, 2 for 
+        female.  If the creature hasn't been born yet, returns -1.
+      ]],
+      callback =
+        function(self, moniker )
+          return 0
+        end
+    }
   },
 
 
   ["HIST GNUS"] = {
-    command = "HIST GNUS",
-    rtype = "integer",
-    params = {
-      { "moniker", "string" } },
-    description = [[
-      Returns the genus of the moniker.  This is 1 for Norn, 2 for Grendel, 3 for Ettin by 
-      convention.
-    ]],
-    callback =
-      function(self, moniker )
-        return 0
-      end
+    ["integer"] = {
+      command = "HIST GNUS",
+      rtype = "integer",
+      params = {
+        { "moniker", "string" } },
+      description = [[
+        Returns the genus of the moniker.  This is 1 for Norn, 2 for Grendel, 3 for Ettin by 
+        convention.
+      ]],
+      callback =
+        function(self, moniker )
+          return 0
+        end
+    }
   },
 
 
   ["HIST MON1"] = {
-    command = "HIST MON1",
-    rtype = "string",
-    params = {
-      { "moniker", "string" },  { "event_no", "integer" } },
-    description = [[
-      For the given life event, returns the first associated moniker.
-    ]],
-    callback =
-      function(self, moniker, event_no )
-        return ""
-      end
+    ["string"] = {
+      command = "HIST MON1",
+      rtype = "string",
+      params = {
+        { "moniker", "string" },  { "event_no", "integer" } },
+      description = [[
+        For the given life event, returns the first associated moniker.
+      ]],
+      callback =
+        function(self, moniker, event_no )
+          return ""
+        end
+    }
   },
 
 
   ["HIST MON2"] = {
-    command = "HIST MON2",
-    rtype = "string",
-    params = {
-      { "moniker", "string" },  { "event_no", "integer" } },
-    description = [[
-      For the given life event, returns the second associated moniker.
-    ]],
-    callback =
-      function(self, moniker, event_no )
-        return ""
-      end
+    ["string"] = {
+      command = "HIST MON2",
+      rtype = "string",
+      params = {
+        { "moniker", "string" },  { "event_no", "integer" } },
+      description = [[
+        For the given life event, returns the second associated moniker.
+      ]],
+      callback =
+        function(self, moniker, event_no )
+          return ""
+        end
+    }
   },
 
 
   ["HIST MUTE"] = {
-    command = "HIST MUTE",
-    rtype = "integer",
-    params = {
-      { "moniker", "string" } },
-    description = [[
-      Returns the number of point mutations the genome received during crossover from its parents.
-    ]],
-    callback =
-      function(self, moniker )
-        return 0
-      end
+    ["integer"] = {
+      command = "HIST MUTE",
+      rtype = "integer",
+      params = {
+        { "moniker", "string" } },
+      description = [[
+        Returns the number of point mutations the genome received during crossover from its parents.
+      ]],
+      callback =
+        function(self, moniker )
+          return 0
+        end
+    }
   },
 
 
   ["HIST NAME"] = {
-    rvalue = {
+    ["string"] = {
       command = "HIST NAME",
       rtype = "string",
       params = {
@@ -5330,7 +5851,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    lvalue = {
+    ["command"] = {
       command = "HIST NAME",
       rtype = "command",
       params = {
@@ -5346,72 +5867,81 @@ CAOS.Machine.commands = {
 
 
   ["HIST NETU"] = {
-    command = "HIST NETU",
-    rtype = "string",
-    params = {
-      { "moniker", "string" },  { "event_no", "integer" } },
-    description = [[
-      Returns the network identifier of the user when the given life event happened.
-    ]],
-    callback =
-      function(self, moniker, event_no )
-        return ""
-      end
+    ["string"] = {
+      command = "HIST NETU",
+      rtype = "string",
+      params = {
+        { "moniker", "string" },  { "event_no", "integer" } },
+      description = [[
+        Returns the network identifier of the user when the given life event happened.
+      ]],
+      callback =
+        function(self, moniker, event_no )
+          return ""
+        end
+    }
   },
 
 
   ["HIST NEXT"] = {
-    command = "HIST NEXT",
-    rtype = "string",
-    params = {
-      { "moniker", "string" } },
-    description = [[
-      Returns the next moniker which has a history, or an empty string if we're at the end 
-      already.  If the specified moniker is an empty string or doesn't have a history, then the first 
-      moniker with a history entry is returned, or an empty string if there isn't one.
-    ]],
-    callback =
-      function(self, moniker )
-        return ""
-      end
+    ["string"] = {
+      command = "HIST NEXT",
+      rtype = "string",
+      params = {
+        { "moniker", "string" } },
+      description = [[
+        Returns the next moniker which has a history, or an empty string if we're at the end 
+        already.  If the specified moniker is an empty string or doesn't have a history, then the first 
+        moniker with a history entry is returned, or an empty string if there isn't one.
+      ]],
+      callback =
+        function(self, moniker )
+          return ""
+        end
+    }
   },
 
 
   ["HIST PREV"] = {
-    command = "HIST PREV",
-    rtype = "string",
-    params = {
-      { "moniker", "string" } },
-    description = [[
-      Returns the previous moniker which has a history.  If the specified moniker is an empty string or doesn'
-      t have a history, then the last moniker with a history entry is returned, or an empty string 
-      if there isn't one.
-    ]],
-    callback =
-      function(self, moniker )
-        return ""
-      end
+    ["string"] = {
+      command = "HIST PREV",
+      rtype = "string",
+      params = {
+        { "moniker", "string" } },
+      description = [[
+        Returns the previous moniker which has a history.  If the specified moniker is an empty string or doesn'
+        t have a history, then the last moniker with a history entry is returned, or an empty string 
+        if there isn't one.
+      ]],
+      callback =
+        function(self, moniker )
+          return ""
+        end
+    }
   },
 
 
   ["HIST RTIM"] = {
-    command = "HIST RTIM",
-    rtype = "integer",
-    params = {
-      { "moniker", "string" },  { "event_no", "integer" } },
-    description = [[
-      Returns the real world time when the given life event happened.  This is measured in seconds since midnight, 
-      1 January 1970 in UTC.  To display, use @RTIF@.
-    ]],
-    callback =
-      function(self, moniker, event_no )
-        return 0
-      end
+    ["integer"] = {
+      command = "HIST RTIM",
+      rtype = "integer",
+      params = {
+        { "moniker", "string" },  { "event_no", "integer" } },
+      description = [[
+        Returns the real world time when the given life event happened.  This is measured in seconds since midnight, 
+        1 January 1970 in UTC.  To display, use @RTIF@.
+      ]],
+      callback =
+        function(self, moniker, event_no )
+          return 0
+        end
+    }
   },
 
 
   ["HIST TAGE"] = {
-    command = "HIST TAGE",
+    ["integer"] = {
+      command = "HIST TAGE",
     rtype = "integer",
     params = {
       { "moniker", "string" },  { "event_no", "integer" } },
@@ -5425,11 +5955,13 @@ CAOS.Machine.commands = {
       function(self, moniker, event_no )
         return 0
       end
+    }
   },
 
 
   ["HIST TYPE"] = {
-    command = "HIST TYPE",
+    ["integer"] = {
+      command = "HIST TYPE",
     rtype = "integer",
     params = {
       { "moniker", "string" },  { "event_no", "integer" } },
@@ -5464,11 +5996,12 @@ CAOS.Machine.commands = {
       function(self, moniker, event_no )
         return 0
       end
+    }
   },
 
 
   ["HIST UTXT"] = {
-    lvalue = {
+    ["command"] = {
       command = "HIST UTXT",
       rtype = "command",
       params = {
@@ -5481,7 +6014,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["string"] = {
       command = "HIST UTXT",
       rtype = "string",
       params = {
@@ -5498,100 +6031,113 @@ CAOS.Machine.commands = {
 
 
   ["HIST VARI"] = {
-    command = "HIST VARI",
-    rtype = "integer",
-    params = {
-      { "moniker", "string" } },
-    description = [[
-      Returns the variant that the creature with the given moniker has or had.  If the creature hasn't 
-      been born yet, returns -1.
-    ]],
-    callback =
-      function(self, moniker )
-        return 0
-      end
+    ["integer"] = {
+      command = "HIST VARI",
+      rtype = "integer",
+      params = {
+        { "moniker", "string" } },
+      description = [[
+        Returns the variant that the creature with the given moniker has or had.  If the creature hasn't 
+        been born yet, returns -1.
+      ]],
+      callback =
+        function(self, moniker )
+          return 0
+        end
+    }
   },
 
 
   ["HIST WIPE"] = {
-    command = "HIST WIPE",
-    rtype = "command",
-    params = {
-      { "moniker", "string" } },
-    description = [[
-      Purge the creature history for the given moniker.  Only applies if the genome isn't referenced by any 
-      slot, and the creature is fully dead or exported.  Use @OOWW@ to test this first.
-    ]],
-    callback =
-      function(self, moniker )
-      end
+    ["command"] = {
+      command = "HIST WIPE",
+      rtype = "command",
+      params = {
+        { "moniker", "string" } },
+      description = [[
+        Purge the creature history for the given moniker.  Only applies if the genome isn't referenced by any 
+        slot, and the creature is fully dead or exported.  Use @OOWW@ to test this first.
+      ]],
+      callback =
+        function(self, moniker )
+        end
+    }
   },
 
 
   ["HIST WNAM"] = {
-    command = "HIST WNAM",
-    rtype = "string",
-    params = {
-      { "moniker", "string" },  { "event_no", "integer" } },
-    description = [[
-      Returns the name of the world the given life event happened in.
-    ]],
-    callback =
-      function(self, moniker, event_no )
-        return ""
-      end
+    ["string"] = {
+      command = "HIST WNAM",
+      rtype = "string",
+      params = {
+        { "moniker", "string" },  { "event_no", "integer" } },
+      description = [[
+        Returns the name of the world the given life event happened in.
+      ]],
+      callback =
+        function(self, moniker, event_no )
+          return ""
+        end
+    }
   },
 
 
   ["HIST WTIK"] = {
-    command = "HIST WTIK",
-    rtype = "integer",
-    params = {
-      { "moniker", "string" },  { "event_no", "integer" } },
-    description = [[
-      Returns the world tick when the life event happened, for the world that the event happened in. 
-    ]],
-    callback =
-      function(self, moniker, event_no )
-        return 0
-      end
+    ["integer"] = {
+      command = "HIST WTIK",
+      rtype = "integer",
+      params = {
+        { "moniker", "string" },  { "event_no", "integer" } },
+      description = [[
+        Returns the world tick when the life event happened, for the world that the event happened in. 
+      ]],
+      callback =
+        function(self, moniker, event_no )
+          return 0
+        end
+    }
   },
 
 
   ["HIST WUID"] = {
-    command = "HIST WUID",
-    rtype = "string",
-    params = {
-      { "moniker", "string" },  { "event_no", "integer" } },
-    description = [[
-      Returns the unique identifier of the world the given life event happened in.
-    ]],
-    callback =
-      function(self, moniker, event_no )
-        return ""
-      end
+    ["string"] = {
+      command = "HIST WUID",
+      rtype = "string",
+      params = {
+        { "moniker", "string" },  { "event_no", "integer" } },
+      description = [[
+        Returns the unique identifier of the world the given life event happened in.
+      ]],
+      callback =
+        function(self, moniker, event_no )
+          return ""
+        end
+    }
   },
 
 
   ["HIST WVET"] = {
-    command = "HIST WVET",
-    rtype = "integer",
-    params = {
-      { "moniker", "string" } },
-    description = [[
-      Returns 1 if the Creature is a warp hole veteran, 0 otherwise.  The creature is a veteran if 
-      they have ever been exported with @NET: EXPO@.  They must have been the main exported creature - warping as 
-      an embryo doesn't make you a veteran.
-    ]],
-    callback =
-      function(self, moniker )
-        return 0
-      end
+    ["integer"] = {
+      command = "HIST WVET",
+      rtype = "integer",
+      params = {
+        { "moniker", "string" } },
+      description = [[
+        Returns 1 if the Creature is a warp hole veteran, 0 otherwise.  The creature is a veteran if 
+        they have ever been exported with @NET: EXPO@.  They must have been the main exported creature - warping as 
+        an embryo doesn't make you a veteran.
+      ]],
+      callback =
+        function(self, moniker )
+          return 0
+        end
+    }
   },
 
 
   ["OOWW"] = {
-    command = "OOWW",
+    ["integer"] = {
+      command = "OOWW",
     rtype = "integer",
     params = {
       { "moniker", "string" } },
@@ -5610,11 +6156,12 @@ CAOS.Machine.commands = {
       function(self, moniker )
         return 0
       end
+    }
   },
 
 
   ["CLAC"] = {
-    lvalue = {
+    ["command"] = {
       command = "CLAC",
       rtype = "command",
       params = {
@@ -5633,7 +6180,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "CLAC",
       rtype = "integer",
       params = {},
@@ -5650,7 +6197,7 @@ CAOS.Machine.commands = {
 
 
   ["CLIK"] = {
-    lvalue = {
+    ["command"] = {
       command = "CLIK",
       rtype = "command",
       params = {
@@ -5668,7 +6215,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "CLIK",
       rtype = "integer",
       params = {
@@ -5698,7 +6245,8 @@ CAOS.Machine.commands = {
 
 
   ["HOTP"] = {
-    command = "HOTP",
+    ["integer"] = {
+      command = "HOTP",
     rtype = "integer",
     params = {},
     description = [[
@@ -5712,11 +6260,13 @@ CAOS.Machine.commands = {
       function(self)
         return 0
       end
+    }
   },
 
 
   ["HOTS"] = {
-    command = "HOTS",
+    ["agent"] = {
+      command = "HOTS",
     rtype = "agent",
     params = {},
     description = [[
@@ -5727,11 +6277,13 @@ CAOS.Machine.commands = {
       function(self)
         return nil
       end
+    }
   },
 
 
   ["IMSK"] = {
-    command = "IMSK",
+    ["command"] = {
+      command = "IMSK",
     rtype = "command",
     params = {
       { "mask", "integer" } },
@@ -5750,54 +6302,62 @@ CAOS.Machine.commands = {
     callback =
       function(self, mask )
       end
+    }
   },
 
 
   ["KEYD"] = {
-    command = "KEYD",
-    rtype = "integer",
-    params = {
-      { "keycode", "integer" } },
-    description = [[
-      Returns 1 if the specified key is currently pressed down, 0 if not.
-    ]],
-    callback =
-      function(self, keycode )
-        return 0
-      end
+    ["integer"] = {
+      command = "KEYD",
+      rtype = "integer",
+      params = {
+        { "keycode", "integer" } },
+      description = [[
+        Returns 1 if the specified key is currently pressed down, 0 if not.
+      ]],
+      callback =
+        function(self, keycode )
+          return 0
+        end
+    }
   },
 
 
   ["MOPX"] = {
-    command = "MOPX",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns x position of mouse in world coordinates.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "MOPX",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns x position of mouse in world coordinates.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["MOPY"] = {
-    command = "MOPY",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns y position of mouse in world coordinates.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "MOPY",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns y position of mouse in world coordinates.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["MOUS"] = {
-    command = "MOUS",
+    ["command"] = {
+      command = "MOUS",
     rtype = "command",
     params = {
       { "behaviour", "integer" } },
@@ -5810,39 +6370,44 @@ CAOS.Machine.commands = {
     callback =
       function(self, behaviour )
       end
+    }
   },
 
 
   ["MOVX"] = {
-    command = "MOVX",
-    rtype = "float",
-    params = {},
-    description = [[
-      Returns horizontal mouse velocity.
-    ]],
-    callback =
-      function(self)
-        return 0.0
-      end
+    ["float"] = {
+      command = "MOVX",
+      rtype = "float",
+      params = {},
+      description = [[
+        Returns horizontal mouse velocity.
+      ]],
+      callback =
+        function(self)
+          return 0.0
+        end
+    }
   },
 
 
   ["MOVY"] = {
-    command = "MOVY",
-    rtype = "float",
-    params = {},
-    description = [[
-      Returns vertical mouse velocity.
-    ]],
-    callback =
-      function(self)
-        return 0.0
-      end
+    ["float"] = {
+      command = "MOVY",
+      rtype = "float",
+      params = {},
+      description = [[
+        Returns vertical mouse velocity.
+      ]],
+      callback =
+        function(self)
+          return 0.0
+        end
+    }
   },
 
 
   ["PURE"] = {
-    lvalue = {
+    ["command"] = {
       command = "PURE",
       rtype = "command",
       params = {
@@ -5857,7 +6422,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "PURE",
       rtype = "integer",
       params = {},
@@ -5873,98 +6438,111 @@ CAOS.Machine.commands = {
 
 
   ["ADDB"] = {
-    command = "ADDB",
-    rtype = "command",
-    params = {
-      { "metaroom_id", "integer" },  { "background_file", "string" } },
-    description = [[
-      Add a new background to the given metaroom.  Use @BKGD@ to change the current displayed background.
-    ]],
-    callback =
-      function(self, metaroom_id, background_file )
-      end
+    ["command"] = {
+      command = "ADDB",
+      rtype = "command",
+      params = {
+        { "metaroom_id", "integer" },  { "background_file", "string" } },
+      description = [[
+        Add a new background to the given metaroom.  Use @BKGD@ to change the current displayed background.
+      ]],
+      callback =
+        function(self, metaroom_id, background_file )
+        end
+    }
   },
 
 
   ["ADDM"] = {
-    command = "ADDM",
-    rtype = "integer",
-    params = {
-      { "x", "integer" },  { "y", "integer" },  { "width", "integer" },  { "height", "integer" },  { "background", "string" } },
-    description = [[
-      Creates a new metaroom with the given coordinates.  Specifies the starting background file.  Returns the id of the 
-      new metaroom.
-    ]],
-    callback =
-      function(self, x, y, width, height, background )
-        return 0
-      end
+    ["integer"] = {
+      command = "ADDM",
+      rtype = "integer",
+      params = {
+        { "x", "integer" },  { "y", "integer" },  { "width", "integer" },  { "height", "integer" },  { "background", "string" } },
+      description = [[
+        Creates a new metaroom with the given coordinates.  Specifies the starting background file.  Returns the id of the 
+        new metaroom.
+      ]],
+      callback =
+        function(self, x, y, width, height, background )
+          return 0
+        end
+    }
   },
 
 
   ["ADDR"] = {
-    command = "ADDR",
-    rtype = "integer",
-    params = {
-      { "metaroom_id", "integer" },  { "x_left", "integer" },  { "x_right", "integer" },  { "y_left_ceiling", "integer" },  { "y_right_ceiling", "integer" },  { "y_left_floor", "integer" },  { "y_right_floor", "integer" } },
-    description = [[
-      Creates a new room within a metaroom.  Rooms have vertical left and right walls, but potentially sloped floors 
-      and ceilings.  The coordinates specify the exact shape.  Returns the id of the new room.
-    ]],
-    callback =
-      function(self, metaroom_id, x_left, x_right, y_left_ceiling, y_right_ceiling, y_left_floor, y_right_floor )
-        return 0
-      end
+    ["integer"] = {
+      command = "ADDR",
+      rtype = "integer",
+      params = {
+        { "metaroom_id", "integer" },  { "x_left", "integer" },  { "x_right", "integer" },  { "y_left_ceiling", "integer" },  { "y_right_ceiling", "integer" },  { "y_left_floor", "integer" },  { "y_right_floor", "integer" } },
+      description = [[
+        Creates a new room within a metaroom.  Rooms have vertical left and right walls, but potentially sloped floors 
+        and ceilings.  The coordinates specify the exact shape.  Returns the id of the new room.
+      ]],
+      callback =
+        function(self, metaroom_id, x_left, x_right, y_left_ceiling, y_right_ceiling, y_left_floor, y_right_floor )
+          return 0
+        end
+    }
   },
 
 
   ["ALTR"] = {
-    command = "ALTR",
-    rtype = "command",
-    params = {
-      { "room_id", "integer" },  { "ca_index", "integer" },  { "ca_delta", "float" } },
-    description = [[
-      Directly adjusts the level of a CA in a room.  Specify an identifier of -1 to use the 
-      room of the midpoint of the target agent.
-    ]],
-    callback =
-      function(self, room_id, ca_index, ca_delta )
-      end
+    ["command"] = {
+      command = "ALTR",
+      rtype = "command",
+      params = {
+        { "room_id", "integer" },  { "ca_index", "integer" },  { "ca_delta", "float" } },
+      description = [[
+        Directly adjusts the level of a CA in a room.  Specify an identifier of -1 to use the 
+        room of the midpoint of the target agent.
+      ]],
+      callback =
+        function(self, room_id, ca_index, ca_delta )
+        end
+    }
   },
 
 
   ["BKDS"] = {
-    command = "BKDS",
-    rtype = "string",
-    params = {
-      { "metaroom_id", "integer" } },
-    description = [[
-      Returns a string containing all the background names for the specified metaroom in a comma seperated list.
-    ]],
-    callback =
-      function(self, metaroom_id )
-        return ""
-      end
+    ["string"] = {
+      command = "BKDS",
+      rtype = "string",
+      params = {
+        { "metaroom_id", "integer" } },
+      description = [[
+        Returns a string containing all the background names for the specified metaroom in a comma seperated list.
+      ]],
+      callback =
+        function(self, metaroom_id )
+          return ""
+        end
+    }
   },
 
 
   ["CACL"] = {
-    command = "CACL",
-    rtype = "command",
-    params = {
-      { "family", "integer" },  { "genus", "integer" },  { "species", "integer" },  { "ca_index", "integer" } },
-    description = [[
-      This associates the classification specified with the CA specified. This allows the linking of CA's to classifiers 
-      within creatures' brains.
-    ]],
-    callback =
-      function(self, family, genus, species, ca_index )
-      end
+    ["command"] = {
+      command = "CACL",
+      rtype = "command",
+      params = {
+        { "family", "integer" },  { "genus", "integer" },  { "species", "integer" },  { "ca_index", "integer" } },
+      description = [[
+        This associates the classification specified with the CA specified. This allows the linking of CA's to classifiers 
+        within creatures' brains.
+      ]],
+      callback =
+        function(self, family, genus, species, ca_index )
+        end
+    }
   },
 
 
   ["CALC"] = {
-    command = "CALC",
+    ["command"] = {
+      command = "CALC",
     rtype = "command",
     params = {},
     description = [[
@@ -5973,68 +6551,77 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["DELM"] = {
-    command = "DELM",
-    rtype = "command",
-    params = {
-      { "metaroom_id", "integer" } },
-    description = [[
-      Deletes the specified metaroom from the map.
-    ]],
-    callback =
-      function(self, metaroom_id )
-      end
+    ["command"] = {
+      command = "DELM",
+      rtype = "command",
+      params = {
+        { "metaroom_id", "integer" } },
+      description = [[
+        Deletes the specified metaroom from the map.
+      ]],
+      callback =
+        function(self, metaroom_id )
+        end
+    }
   },
 
 
   ["DELR"] = {
-    command = "DELR",
-    rtype = "command",
-    params = {
-      { "room_id", "integer" } },
-    description = [[
-      Deletes the specified room from the map.
-    ]],
-    callback =
-      function(self, room_id )
-      end
+    ["command"] = {
+      command = "DELR",
+      rtype = "command",
+      params = {
+        { "room_id", "integer" } },
+      description = [[
+        Deletes the specified room from the map.
+      ]],
+      callback =
+        function(self, room_id )
+        end
+    }
   },
 
 
   ["DMAP"] = {
-    command = "DMAP",
-    rtype = "command",
-    params = {
-      { "debug_map", "integer" } },
-    description = [[
-      Set to 1 to turn the debug map image on, 0 to turn it off. The debug map 
-      includes vehicle cabin lines.
-    ]],
-    callback =
-      function(self, debug_map )
-      end
+    ["command"] = {
+      command = "DMAP",
+      rtype = "command",
+      params = {
+        { "debug_map", "integer" } },
+      description = [[
+        Set to 1 to turn the debug map image on, 0 to turn it off. The debug map 
+        includes vehicle cabin lines.
+      ]],
+      callback =
+        function(self, debug_map )
+        end
+    }
   },
 
 
   ["DOCA"] = {
-    command = "DOCA",
-    rtype = "command",
-    params = {
-      { "no_of_updates", "integer" } },
-    description = [[
-      Updates all CAs the specified number of times.
-    ]],
-    callback =
-      function(self, no_of_updates )
-      end
+    ["command"] = {
+      command = "DOCA",
+      rtype = "command",
+      params = {
+        { "no_of_updates", "integer" } },
+      description = [[
+        Updates all CAs the specified number of times.
+      ]],
+      callback =
+        function(self, no_of_updates )
+        end
+    }
   },
 
 
   ["DOOR"] = {
-    lvalue = {
+    ["command"] = {
       command = "DOOR",
       rtype = "command",
       params = {
@@ -6048,7 +6635,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "DOOR",
       rtype = "integer",
       params = {
@@ -6065,144 +6652,162 @@ CAOS.Machine.commands = {
 
   -- full
   ["DOWN"] = {
-    command = "DOWN",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the value of the down constant.
-    ]],
-    callback =
-      function(self)
-        return CAOS.DIRECTIONS.DOWN
-      end
+    ["integer"] = {
+      command = "DOWN",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the value of the down constant.
+      ]],
+      callback =
+        function(self)
+          return CAOS.DIRECTIONS.DOWN
+        end
+    }
   },
 
 
   ["EMID"] = {
-    command = "EMID",
-    rtype = "string",
-    params = {},
-    description = [[
-      Returns a string containing all the metaroom ids in the world seperated by spaces.
-    ]],
-    callback =
-      function(self)
-        return ""
-      end
+    ["string"] = {
+      command = "EMID",
+      rtype = "string",
+      params = {},
+      description = [[
+        Returns a string containing all the metaroom ids in the world seperated by spaces.
+      ]],
+      callback =
+        function(self)
+          return ""
+        end
+    }
   },
 
 
   ["EMIT"] = {
-    command = "EMIT",
-    rtype = "command",
-    params = {
-      { "ca_index", "integer" },  { "amount", "float" } },
-    description = [[
-      Target now constantly emits an amount of a CA into the room it is in.
-    ]],
-    callback =
-      function(self, ca_index, amount )
-      end
+    ["command"] = {
+      command = "EMIT",
+      rtype = "command",
+      params = {
+        { "ca_index", "integer" },  { "amount", "float" } },
+      description = [[
+        Target now constantly emits an amount of a CA into the room it is in.
+      ]],
+      callback =
+        function(self, ca_index, amount )
+        end
+    }
   },
 
 
   ["ERID"] = {
-    command = "ERID",
-    rtype = "string",
-    params = {
-      { "metaroom_id", "integer" } },
-    description = [[
-      Returns a string containing all the room ids in the specified metaroom separated by spaces.  Returns all rooms 
-      in the world if metaroom_id is -1.
-    ]],
-    callback =
-      function(self, metaroom_id )
-        return ""
-      end
+    ["string"] = {
+      command = "ERID",
+      rtype = "string",
+      params = {
+        { "metaroom_id", "integer" } },
+      description = [[
+        Returns a string containing all the room ids in the specified metaroom separated by spaces.  Returns all rooms 
+        in the world if metaroom_id is -1.
+      ]],
+      callback =
+        function(self, metaroom_id )
+          return ""
+        end
+    }
   },
 
 
   ["GMAP"] = {
-    command = "GMAP",
-    rtype = "integer",
-    params = {
-      { "x", "float" },  { "y", "float" } },
-    description = [[
-      Returns the metaroom id at point x,y on the map. If the point is outside the room 
-      system, it returns -1.
-    ]],
-    callback =
-      function(self, x, y )
-        return 0
-      end
+    ["integer"] = {
+      command = "GMAP",
+      rtype = "integer",
+      params = {
+        { "x", "float" },  { "y", "float" } },
+      description = [[
+        Returns the metaroom id at point x,y on the map. If the point is outside the room 
+        system, it returns -1.
+      ]],
+      callback =
+        function(self, x, y )
+          return 0
+        end
+    }
   },
 
 
   ["GRAP"] = {
-    command = "GRAP",
-    rtype = "integer",
-    params = {
-      { "x", "float" },  { "y", "float" } },
-    description = [[
-      Returns the room id at point x,y on the map. If the point is outside the room 
-      system, it returns -1.
-    ]],
-    callback =
-      function(self, x, y )
-        return 0
-      end
+    ["integer"] = {
+      command = "GRAP",
+      rtype = "integer",
+      params = {
+        { "x", "float" },  { "y", "float" } },
+      description = [[
+        Returns the room id at point x,y on the map. If the point is outside the room 
+        system, it returns -1.
+      ]],
+      callback =
+        function(self, x, y )
+          return 0
+        end
+    }
   },
 
 
   ["GRID"] = {
-    command = "GRID",
-    rtype = "integer",
-    params = {
-      { "agent", "agent" },  { "direction", "integer" } },
-    description = [[
-      Returns the ID of a room adjacent to the agent in the given direction.  A straight line is 
-      drawn from the centre of the agent until it hits a room.  Directions are @LEFT@, @RGHT@, @_UP_@, or @
-      DOWN@. A value of -1 is returned if no room can be found.
-    ]],
-    callback =
-      function(self, agent, direction )
-        return 0
-      end
+    ["integer"] = {
+      command = "GRID",
+      rtype = "integer",
+      params = {
+        { "agent", "agent" },  { "direction", "integer" } },
+      description = [[
+        Returns the ID of a room adjacent to the agent in the given direction.  A straight line is 
+        drawn from the centre of the agent until it hits a room.  Directions are @LEFT@, @RGHT@, @_UP_@, or @
+        DOWN@. A value of -1 is returned if no room can be found.
+      ]],
+      callback =
+        function(self, agent, direction )
+          return 0
+        end
+    }
   },
 
 
   ["HIRP"] = {
-    command = "HIRP",
-    rtype = "integer",
-    params = {
-      { "room_id", "integer" },  { "ca_index", "integer" },  { "directions", "integer" } },
-    description = [[
-      Returns id of the room adjacent to this one with the highest concentration of the given CA.  direction 
-      is 0 for left/right, 1 for any direction.
-    ]],
-    callback =
-      function(self, room_id, ca_index, directions )
-        return 0
-      end
+    ["integer"] = {
+      command = "HIRP",
+      rtype = "integer",
+      params = {
+        { "room_id", "integer" },  { "ca_index", "integer" },  { "directions", "integer" } },
+      description = [[
+        Returns id of the room adjacent to this one with the highest concentration of the given CA.  direction 
+        is 0 for left/right, 1 for any direction.
+      ]],
+      callback =
+        function(self, room_id, ca_index, directions )
+          return 0
+        end
+    }
   },
 
   -- full
   ["LEFT"] = {
-    command = "LEFT",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the value of the left constant.
-    ]],
-    callback =
-      function(self)
-        return CAOS.DIRECTIONS.LEFT
-      end
+    ["integer"] = {
+      command = "LEFT",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the value of the left constant.
+      ]],
+      callback =
+        function(self)
+          return CAOS.DIRECTIONS.LEFT
+        end
+    }
   },
 
 
   ["LINK"] = {
-    lvalue = {
+    ["command"] = {
       command = "LINK",
       rtype = "command",
       params = {
@@ -6216,7 +6821,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "LINK",
       rtype = "integer",
       params = {
@@ -6233,52 +6838,59 @@ CAOS.Machine.commands = {
 
 
   ["LORP"] = {
-    command = "LORP",
-    rtype = "integer",
-    params = {
-      { "room_id", "integer" },  { "ca_index", "integer" },  { "directions", "integer" } },
-    description = [[
-      Returns id of the room adjacent to this one with the lowest concentration of the given CA.  direction 
-      is 0 for left/right, 1 for any direction.
-    ]],
-    callback =
-      function(self, room_id, ca_index, directions )
-        return 0
-      end
+    ["integer"] = {
+      command = "LORP",
+      rtype = "integer",
+      params = {
+        { "room_id", "integer" },  { "ca_index", "integer" },  { "directions", "integer" } },
+      description = [[
+        Returns id of the room adjacent to this one with the lowest concentration of the given CA.  direction 
+        is 0 for left/right, 1 for any direction.
+      ]],
+      callback =
+        function(self, room_id, ca_index, directions )
+          return 0
+        end
+    }
   },
 
 
   ["MAPD"] = {
-    command = "MAPD",
-    rtype = "command",
-    params = {
-      { "width", "integer" },  { "height", "integer" } },
-    description = [[
-      Sets the dimensions of the map.  These are the maximum world coordinates.  Metarooms are rectangles within this area.
-      
-    ]],
-    callback =
-      function(self, width, height )
-      end
+    ["command"] = {
+      command = "MAPD",
+      rtype = "command",
+      params = {
+        { "width", "integer" },  { "height", "integer" } },
+      description = [[
+        Sets the dimensions of the map.  These are the maximum world coordinates.  Metarooms are rectangles within this area.
+        
+      ]],
+      callback =
+        function(self, width, height )
+        end
+    }
   },
 
 
   ["MAPH"] = {
-    command = "MAPH",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the total height of the map.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "MAPH",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the total height of the map.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["MAPK"] = {
-    command = "MAPK",
+    ["command"] = {
+      command = "MAPK",
     rtype = "command",
     params = {},
     description = [[
@@ -6287,40 +6899,45 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["MAPW"] = {
-    command = "MAPW",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the total width of the map.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "MAPW",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the total width of the map.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["MLOC"] = {
-    command = "MLOC",
-    rtype = "string",
-    params = {
-      { "metaroom_id", "integer" } },
-    description = [[
-      Returns the location of the specified metaroom as a string formated as follows: x y width height.
-    ]],
-    callback =
-      function(self, metaroom_id )
-        return ""
-      end
+    ["string"] = {
+      command = "MLOC",
+      rtype = "string",
+      params = {
+        { "metaroom_id", "integer" } },
+      description = [[
+        Returns the location of the specified metaroom as a string formated as follows: x y width height.
+      ]],
+      callback =
+        function(self, metaroom_id )
+          return ""
+        end
+    }
   },
 
   -- partial/none
   ["PERM"] = {
-    lvalue = {
+    ["command"] = {
       command = "PERM",
       rtype = "command",
       params = {
@@ -6336,7 +6953,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "PERM",
       rtype = "integer",
       params = {},
@@ -6352,7 +6969,7 @@ CAOS.Machine.commands = {
 
   -- partial/none
   ["PROP"] = {
-    lvalue = {
+    ["command"] = {
       command = "PROP",
       rtype = "command",
       params = {
@@ -6366,7 +6983,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["float"] = {
       command = "PROP",
       rtype = "float",
       params = {
@@ -6407,7 +7024,7 @@ CAOS.Machine.commands = {
 
 
   ["RATE"] = {
-    lvalue = {
+    ["command"] = {
       command = "RATE",
       rtype = "command",
       params = {
@@ -6422,7 +7039,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["string"] = {
       command = "RATE",
       rtype = "string",
       params = {
@@ -6439,52 +7056,58 @@ CAOS.Machine.commands = {
 
   -- full
   ["RGHT"] = {
-    command = "RGHT",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the value of the right constant.
-    ]],
-    callback =
-      function(self)
-        return CAOS.DIRECTIONS.RIGHT
-      end
+    ["integer"] = {
+      command = "RGHT",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the value of the right constant.
+      ]],
+      callback =
+        function(self)
+          return CAOS.DIRECTIONS.RIGHT
+        end
+    }
   },
 
 
   ["RLOC"] = {
-    command = "RLOC",
-    rtype = "string",
-    params = {
-      { "room_id", "integer" } },
-    description = [[
-      Returns the location of the specified room as a string formated as follows: xLeft xRight yLeftCeiling yRightCeiling yLeftFloor 
-      yRightFloor.
-    ]],
-    callback =
-      function(self, room_id )
-        return ""
-      end
+    ["string"] = {
+      command = "RLOC",
+      rtype = "string",
+      params = {
+        { "room_id", "integer" } },
+      description = [[
+        Returns the location of the specified room as a string formated as follows: xLeft xRight yLeftCeiling yRightCeiling yLeftFloor 
+        yRightFloor.
+      ]],
+      callback =
+        function(self, room_id )
+          return ""
+        end
+    }
   },
 
 
   ["ROOM"] = {
-    command = "ROOM",
-    rtype = "integer",
-    params = {
-      { "agent", "agent" } },
-    description = [[
-      Returns the id of the room containing the midpoint of the specified agent.
-    ]],
-    callback =
-      function(self, agent )
-        return 0
-      end
+    ["integer"] = {
+      command = "ROOM",
+      rtype = "integer",
+      params = {
+        { "agent", "agent" } },
+      description = [[
+        Returns the id of the room containing the midpoint of the specified agent.
+      ]],
+      callback =
+        function(self, agent )
+          return 0
+        end
+    }
   },
 
 
   ["RTYP"] = {
-    lvalue = {
+    ["command"] = {
       command = "RTYP",
       rtype = "command",
       params = {
@@ -6513,7 +7136,7 @@ CAOS.Machine.commands = {
     -- 8 Fresh Water (heat restrictive)
     -- 9 Salt water (heat restrictive)
     -- 10 Ettin Home (no machinery smell)
-    rvalue = {
+    ["integer"] = {
       command = "RTYP",
       rtype = "integer",
       params = {
@@ -6530,51 +7153,57 @@ CAOS.Machine.commands = {
 
 
   ["TORX"] = {
-    command = "TORX",
-    rtype = "float",
-    params = {
-      { "room_id", "integer" } },
-    description = [[
-      Returns relative X position of the centre of the given room from target's top left corner.
-    ]],
-    callback =
-      function(self, room_id )
-        return 0.0
-      end
+    ["float"] = {
+      command = "TORX",
+      rtype = "float",
+      params = {
+        { "room_id", "integer" } },
+      description = [[
+        Returns relative X position of the centre of the given room from target's top left corner.
+      ]],
+      callback =
+        function(self, room_id )
+          return 0.0
+        end
+    }
   },
 
 
   ["TORY"] = {
-    command = "TORY",
-    rtype = "float",
-    params = {
-      { "room_id", "integer" } },
-    description = [[
-      Returns relative Y position of the centre of the given room from target's top left corner.
-    ]],
-    callback =
-      function(self, room_id )
-        return 0.0
-      end
+    ["float"] = {
+      command = "TORY",
+      rtype = "float",
+      params = {
+        { "room_id", "integer" } },
+      description = [[
+        Returns relative Y position of the centre of the given room from target's top left corner.
+      ]],
+      callback =
+        function(self, room_id )
+          return 0.0
+        end
+    }
   },
 
   -- full
   ["_UP_"] = {
-    command = "_UP_",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the value of the up constant.
-    ]],
-    callback =
-      function(self)
-        return CAOS.DIRECTIONS.UP
-      end
+    ["integer"] = {
+      command = "_UP_",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the value of the up constant.
+      ]],
+      callback =
+        function(self)
+          return CAOS.DIRECTIONS.UP
+        end
+    }
   },
 
 
   ["ACCG"] = {
-    lvalue = {
+    ["command"] = {
       command = "ACCG",
       rtype = "command",
       params = {
@@ -6587,7 +7216,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["float"] = {
       command = "ACCG",
       rtype = "float",
       params = {},
@@ -6603,7 +7232,7 @@ CAOS.Machine.commands = {
 
 
   ["ADMP"] = {
-    lvalue = {
+    ["command"] = {
       command = "ADMP",
       rtype = "command",
       params = {
@@ -6617,7 +7246,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["float"] = {
       command = "ADMP",
       rtype = "float",
       params = {},
@@ -6634,7 +7263,7 @@ CAOS.Machine.commands = {
 
 
   ["AERO"] = {
-    lvalue = {
+    ["command"] = {
       command = "AERO",
       rtype = "command",
       params = {
@@ -6647,7 +7276,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "AERO",
       rtype = "integer",
       params = {},
@@ -6663,7 +7292,8 @@ CAOS.Machine.commands = {
 
   -- full
   ["ANGL"] = {
-    command = "ANGL",
+    ["float"] = {
+      command = "ANGL",
     rtype = "float",
     params = {
       { "x", "float" },  { "y", "float" } },
@@ -6675,11 +7305,12 @@ CAOS.Machine.commands = {
         local pos = self.target.position()
         return math.atan2(pos[2] - y, pos[1] - x) / (2*math.pi)
       end
+    }
   },
 
 
   ["AVEL"] = {
-    lvalue = {
+    ["command"] = {
       command = "AVEL",
       rtype = "command",
       params = {
@@ -6692,7 +7323,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["float"] = {
       command = "AVEL",
       rtype = "float",
       params = {},
@@ -6708,7 +7339,7 @@ CAOS.Machine.commands = {
 
 
   ["ELAS"] = {
-    lvalue = {
+    ["command"] = {
       command = "ELAS",
       rtype = "command",
       params = {
@@ -6722,7 +7353,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "ELAS",
       rtype = "integer",
       params = {},
@@ -6738,7 +7369,8 @@ CAOS.Machine.commands = {
 
   -- full/partial
   ["FALL"] = {
-    command = "FALL",
+    ["integer"] = {
+      command = "FALL",
     rtype = "integer",
     params = {},
     description = [[
@@ -6760,11 +7392,12 @@ CAOS.Machine.commands = {
         end
         return 0
       end
+    }
   },
 
 
   ["FDMP"] = {
-    lvalue = {
+    ["command"] = {
       command = "FDMP",
       rtype = "command",
       params = {
@@ -6778,7 +7411,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["float"] = {
       command = "FDMP",
       rtype = "float",
       params = {},
@@ -6795,7 +7428,8 @@ CAOS.Machine.commands = {
 
   -- progress
   ["FLTO"] = {
-    command = "FLTO",
+    ["command"] = {
+      command = "FLTO",
     rtype = "command",
     params = {
       { "screen_x", "float" },  { "screen_y", "float" } },
@@ -6816,11 +7450,13 @@ CAOS.Machine.commands = {
         
         -- teleport to pos
       end
+    }
   },
 
   -- full
   ["FREL"] = {
-    command = "FREL",
+    ["command"] = {
+      command = "FREL",
     rtype = "command",
     params = {
       { "relative", "agent" } },
@@ -6834,11 +7470,12 @@ CAOS.Machine.commands = {
       function(self, relative )
         CAOS.setVar(self.target, "caos_float_relative")
       end
+    }
   },
 
 
   ["FRIC"] = {
-    lvalue = {
+    ["command"] = {
       command = "FRIC",
       rtype = "command",
       params = {
@@ -6852,7 +7489,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "FRIC",
       rtype = "integer",
       params = {},
@@ -6868,7 +7505,7 @@ CAOS.Machine.commands = {
 
 
   ["FVEL"] = {
-    lvalue = {
+    ["command"] = {
       command = "FVEL",
       rtype = "command",
       params = {
@@ -6881,7 +7518,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["float"] = {
       command = "FVEL",
       rtype = "float",
       params = {},
@@ -6897,134 +7534,150 @@ CAOS.Machine.commands = {
 
 
   ["MOVS"] = {
-    command = "MOVS",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the movement status of the target.  
-      0 Autonomous
-      1 Mouse driven
-      2 Floating
-      3 In vehicle
-      4 Carried
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "MOVS",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the movement status of the target.  
+        0 Autonomous
+        1 Mouse driven
+        2 Floating
+        3 In vehicle
+        4 Carried
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["MVBY"] = {
-    command = "MVBY",
-    rtype = "command",
-    params = {
-      { "delta_x", "float" },  { "delta_y", "float" } },
-    description = [[
-      Move the target agent by relative distances, which can be negative or positive.
-    ]],
-    callback =
-      function(self, delta_x, delta_y )
-      end
+    ["command"] = {
+      command = "MVBY",
+      rtype = "command",
+      params = {
+        { "delta_x", "float" },  { "delta_y", "float" } },
+      description = [[
+        Move the target agent by relative distances, which can be negative or positive.
+      ]],
+      callback =
+        function(self, delta_x, delta_y )
+        end
+    }
   },
 
 
   ["MVSF"] = {
-    command = "MVSF",
-    rtype = "command",
-    params = {
-      { "x", "float" },  { "y", "float" } },
-    description = [[
-      Move the target agent into a safe map location somewhere in the vicinity of x, y. Only works 
-      on autonomous agents - see @MOVS@.  Works like a safe @MVFT@ for creatures.
-    ]],
-    callback =
-      function(self, x, y )
-      end
+    ["command"] = {
+      command = "MVSF",
+      rtype = "command",
+      params = {
+        { "x", "float" },  { "y", "float" } },
+      description = [[
+        Move the target agent into a safe map location somewhere in the vicinity of x, y. Only works 
+        on autonomous agents - see @MOVS@.  Works like a safe @MVFT@ for creatures.
+      ]],
+      callback =
+        function(self, x, y )
+        end
+    }
   },
 
 
   ["MVTO"] = {
-    command = "MVTO",
-    rtype = "command",
-    params = {
-      { "x", "float" },  { "y", "float" } },
-    description = [[
-      Move the top left corner of the target agent to the given world coordinates.  Use @MVFT@ instead to 
-      move creatures.
-    ]],
-    callback =
-      function(self, x, y )
-      end
+    ["command"] = {
+      command = "MVTO",
+      rtype = "command",
+      params = {
+        { "x", "float" },  { "y", "float" } },
+      description = [[
+        Move the top left corner of the target agent to the given world coordinates.  Use @MVFT@ instead to 
+        move creatures.
+      ]],
+      callback =
+        function(self, x, y )
+        end
+    }
   },
 
 
   ["OBST"] = {
-    command = "OBST",
-    rtype = "float",
-    params = {
-      { "direction", "integer" } },
-    description = [[
-      Returns the distance from the agent to the nearest wall that it might collide with in the given 
-      direction. Directions are @LEFT@, @RGHT@, @_UP_@, or @DOWN@. If the distance to the collsion is greater than @RNGE@ 
-      then a very large number is returned.
-    ]],
-    callback =
-      function(self, direction )
-        return 0.0
-      end
+    ["float"] = {
+      command = "OBST",
+      rtype = "float",
+      params = {
+        { "direction", "integer" } },
+      description = [[
+        Returns the distance from the agent to the nearest wall that it might collide with in the given 
+        direction. Directions are @LEFT@, @RGHT@, @_UP_@, or @DOWN@. If the distance to the collsion is greater than @RNGE@ 
+        then a very large number is returned.
+      ]],
+      callback =
+        function(self, direction )
+          return 0.0
+        end
+    }
   },
 
   -- full
   ["RELX"] = {
-    command = "RELX",
-    rtype = "float",
-    params = {
-      { "first", "agent" },  { "second", "agent" } },
-    description = [[
-      Returns the relative X distance of the centre point of the second agent from the centre point of 
-      the first.
-    ]],
-    callback =
-      function(self, first, second )
-        return second.position()[1] - first.position()[1]
-      end
+    ["float"] = {
+      command = "RELX",
+      rtype = "float",
+      params = {
+        { "first", "agent" },  { "second", "agent" } },
+      description = [[
+        Returns the relative X distance of the centre point of the second agent from the centre point of 
+        the first.
+      ]],
+      callback =
+        function(self, first, second )
+          return second.position()[1] - first.position()[1]
+        end
+    }
   },
 
   -- full
   ["RELY"] = {
-    command = "RELY",
-    rtype = "float",
-    params = {
-      { "first", "agent" },  { "second", "agent" } },
-    description = [[
-      Returns the relative Y distance of the centre point of the second agent from the centre point of 
-      the first.
-    ]],
-    callback =
-      function(self, first, second )
-        return second.position()[2] - first.position()[2]
-      end
+    ["float"] = {
+      command = "RELY",
+      rtype = "float",
+      params = {
+        { "first", "agent" },  { "second", "agent" } },
+      description = [[
+        Returns the relative Y distance of the centre point of the second agent from the centre point of 
+        the first.
+      ]],
+      callback =
+        function(self, first, second )
+          return second.position()[2] - first.position()[2]
+        end
+    }
   },
 
 
   ["ROTN"] = {
-    command = "ROTN",
-    rtype = "command",
-    params = {
-      { "no_of_sprites_for_each_rotation", "float" },  { "no_of_rotations", "float" } },
-    description = [[
-      For automatic change of sprite when the agent rotates the engine assumes that the sprite file is stored 
-      with all the sprites for one rotation together starting with pointing north.
-    ]],
-    callback =
-      function(self, no_of_sprites_for_each_rotation, no_of_rotations )
-      end
+    ["command"] = {
+      command = "ROTN",
+      rtype = "command",
+      params = {
+        { "no_of_sprites_for_each_rotation", "float" },  { "no_of_rotations", "float" } },
+      description = [[
+        For automatic change of sprite when the agent rotates the engine assumes that the sprite file is stored 
+        with all the sprites for one rotation together starting with pointing north.
+      ]],
+      callback =
+        function(self, no_of_sprites_for_each_rotation, no_of_rotations )
+        end
+    }
   },
 
 
   ["SDMP"] = {
-    lvalue = {
+    ["command"] = {
       command = "SDMP",
       rtype = "command",
       params = {
@@ -7038,7 +7691,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["float"] = {
       command = "SDMP",
       rtype = "float",
       params = {},
@@ -7055,7 +7708,7 @@ CAOS.Machine.commands = {
 
   -- full (needs verification)
   ["SPIN"] = {
-    lvalue = {
+    ["command"] = {
       command = "SPIN",
       rtype = "command",
       params = {
@@ -7071,7 +7724,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["float"] = {
       command = "SPIN",
       rtype = "float",
       params = {},
@@ -7087,7 +7740,7 @@ CAOS.Machine.commands = {
 
 
   ["SVEL"] = {
-    lvalue = {
+    ["command"] = {
       command = "SVEL",
       rtype = "command",
       params = {
@@ -7100,7 +7753,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["float"] = {
       command = "SVEL",
       rtype = "float",
       params = {},
@@ -7116,53 +7769,59 @@ CAOS.Machine.commands = {
 
 
   ["TMVB"] = {
-    command = "TMVB",
-    rtype = "integer",
-    params = {
-      { "delta_x", "float" },  { "delta_y", "float" } },
-    description = [[
-      Similar to @TMVT@ only tests a @MVBY@.
-    ]],
-    callback =
-      function(self, delta_x, delta_y )
-        return 0
-      end
+    ["integer"] = {
+      command = "TMVB",
+      rtype = "integer",
+      params = {
+        { "delta_x", "float" },  { "delta_y", "float" } },
+      description = [[
+        Similar to @TMVT@ only tests a @MVBY@.
+      ]],
+      callback =
+        function(self, delta_x, delta_y )
+          return 0
+        end
+    }
   },
 
 
   ["TMVF"] = {
-    command = "TMVF",
-    rtype = "integer",
-    params = {
-      { "x", "float" },  { "y", "float" } },
-    description = [[
-      Test if a creature could move it's down foot to position x,y.
-    ]],
-    callback =
-      function(self, x, y )
-        return 0
-      end
+    ["integer"] = {
+      command = "TMVF",
+      rtype = "integer",
+      params = {
+        { "x", "float" },  { "y", "float" } },
+      description = [[
+        Test if a creature could move it's down foot to position x,y.
+      ]],
+      callback =
+        function(self, x, y )
+          return 0
+        end
+    }
   },
 
 
   ["TMVT"] = {
-    command = "TMVT",
-    rtype = "integer",
-    params = {
-      { "x", "float" },  { "y", "float" } },
-    description = [[
-      Test if target can move to the given location and still lie validly within the room system.  Returns 
-      1 if it can, 0 if it can't.
-    ]],
-    callback =
-      function(self, x, y )
-        return 0
-      end
+    ["integer"] = {
+      command = "TMVT",
+      rtype = "integer",
+      params = {
+        { "x", "float" },  { "y", "float" } },
+      description = [[
+        Test if target can move to the given location and still lie validly within the room system.  Returns 
+        1 if it can, 0 if it can't.
+      ]],
+      callback =
+        function(self, x, y )
+          return 0
+        end
+    }
   },
 
 
   ["VARC"] = {
-    lvalue = {
+    ["command"] = {
       command = "VARC",
       rtype = "command",
       params = {
@@ -7175,7 +7834,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["float"] = {
       command = "VARC",
       rtype = "float",
       params = {},
@@ -7191,204 +7850,228 @@ CAOS.Machine.commands = {
 
 
   ["VECX"] = {
-    command = "VECX",
-    rtype = "float",
-    params = {
-      { "angle", "float" } },
-    description = [[
-      Returns a normalised vector for the given angle (X coordinate).
-    ]],
-    callback =
-      function(self, angle )
-        return 0.0
-      end
+    ["float"] = {
+      command = "VECX",
+      rtype = "float",
+      params = {
+        { "angle", "float" } },
+      description = [[
+        Returns a normalised vector for the given angle (X coordinate).
+      ]],
+      callback =
+        function(self, angle )
+          return 0.0
+        end
+    }
   },
 
 
   ["VECY"] = {
-    command = "VECY",
-    rtype = "float",
-    params = {
-      { "angle", "float" } },
-    description = [[
-      Returns a normalised vector for the given angle (Y coordinate).
-    ]],
-    callback =
-      function(self, angle )
-        return 0.0
-      end
+    ["float"] = {
+      command = "VECY",
+      rtype = "float",
+      params = {
+        { "angle", "float" } },
+      description = [[
+        Returns a normalised vector for the given angle (Y coordinate).
+      ]],
+      callback =
+        function(self, angle )
+          return 0.0
+        end
+    }
   },
 
   -- full
   ["VELO"] = {
-    command = "VELO",
-    rtype = "command",
-    params = {
-      { "x_velocity", "float" },  { "y_velocity", "float" } },
-    description = [[
-      Set velocity, measured in pixels per tick.
-    ]],
-    callback =
-      function(self, x_velocity, y_velocity )
-        if ( self.owner.setVelocity ~= nil ) then
-          self.owner.setVelocity(x_velocity, y_velocity)
+    ["command"] = {
+      command = "VELO",
+      rtype = "command",
+      params = {
+        { "x_velocity", "float" },  { "y_velocity", "float" } },
+      description = [[
+        Set velocity, measured in pixels per tick.
+      ]],
+      callback =
+        function(self, x_velocity, y_velocity )
+          if ( self.owner.setVelocity ~= nil ) then
+            self.owner.setVelocity(x_velocity, y_velocity)
+          end
         end
-      end
+    }
   },
 
   -- full
   ["VELX"] = {
-    command = "VELX",
-    rtype = "variable",
-    params = {},
-    description = [[
-      Horizontal velocity in pixels per tick - floating point.
-    ]],
-    callback =
-      function(self)
-        return self.owner.velocity()[1] or 0
-      end
+    ["variable"] = {
+      command = "VELX",
+      rtype = "variable",
+      params = {},
+      description = [[
+        Horizontal velocity in pixels per tick - floating point.
+      ]],
+      callback =
+        function(self)
+          return self.owner.velocity()[1] or 0
+        end
+    }
   },
 
   -- full
   ["VELY"] = {
-    command = "VELY",
-    rtype = "variable",
-    params = {},
-    description = [[
-      Vertical velocity in pixels per tick - floating point.
-    ]],
-    callback =
-      function(self)
-        return self.owner.velocity()[2] or 0
-      end
+    ["variable"] = {
+      command = "VELY",
+      rtype = "variable",
+      params = {},
+      description = [[
+        Vertical velocity in pixels per tick - floating point.
+      ]],
+      callback =
+        function(self)
+          return self.owner.velocity()[2] or 0
+        end
+    }
   },
 
 
   ["WALL"] = {
-    command = "WALL",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the direction of the last wall the agent collided with.  Directions are @LEFT@, @RGHT@, @_UP_@, or @DOWN@.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "WALL",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the direction of the last wall the agent collided with.  Directions are @LEFT@, @RGHT@, @_UP_@, or @DOWN@.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["NET: ERRA"] = {
-    command = "NET: ERRA",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns an error code from the last command.  Currently @NET: LINE@ is the only command to set it.
-      Error codes are:
-      0 - Unknown
-      1 - Connection OK
-      2 - Connection failed, you or the server are offline
-      3 - Connection failed, invalid user name/password
-      4 - Connection failed, you are already logged in elsewhere
-      5 - Connection failed, too many users for server
-      6 - Connection failed, internal error
-      7 - Connection failed, new client version required.
-      Try @NET: RAWE@ for more detailed diagnostic codes.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "NET: ERRA",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns an error code from the last command.  Currently @NET: LINE@ is the only command to set it.
+        Error codes are:
+        0 - Unknown
+        1 - Connection OK
+        2 - Connection failed, you or the server are offline
+        3 - Connection failed, invalid user name/password
+        4 - Connection failed, you are already logged in elsewhere
+        5 - Connection failed, too many users for server
+        6 - Connection failed, internal error
+        7 - Connection failed, new client version required.
+        Try @NET: RAWE@ for more detailed diagnostic codes.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["NET: EXPO"] = {
-    command = "NET: EXPO",
-    rtype = "integer",
-    params = {
-      { "chunk_type", "string" },  { "dest_user_id", "string" } },
-    description = [[
-      Transwarp the target creature to the given user.  The Creature is exported to the warp out directory; this command is very similar to @PRAY EXPO@. Return value is one of the following:
-      0 for success
-      1 if the creature, or if pregnant any of its offspring, are already on disk in some form.  This case won't happen much, if you use a special chunk name like WARP.
-      2 if the user hasn't been online in this world yet / since the user name changed, so 
-      we don't know who they are.
-      When receiving a creature, use @NET: FROM@ to find out 
-      who sent it.
-    ]],
-    callback =
-      function(self, chunk_type, dest_user_id )
-        return 0
-      end
+    ["integer"] = {
+      command = "NET: EXPO",
+      rtype = "integer",
+      params = {
+        { "chunk_type", "string" },  { "dest_user_id", "string" } },
+      description = [[
+        Transwarp the target creature to the given user.  The Creature is exported to the warp out directory; this command is very similar to @PRAY EXPO@. Return value is one of the following:
+        0 for success
+        1 if the creature, or if pregnant any of its offspring, are already on disk in some form.  This case won't happen much, if you use a special chunk name like WARP.
+        2 if the user hasn't been online in this world yet / since the user name changed, so 
+        we don't know who they are.
+        When receiving a creature, use @NET: FROM@ to find out 
+        who sent it.
+      ]],
+      callback =
+        function(self, chunk_type, dest_user_id )
+          return 0
+        end
+    }
   },
 
 
   ["NET: FROM"] = {
-    command = "NET: FROM",
-    rtype = "string",
-    params = {
-      { "resource_name", "string" } },
-    description = [[
-      The user who sent the PRAY file which contains the specified resource.  If the resource did not arrive 
-      as a message over the network via @NET: MAKE@ or @NET: EXPO@, then this returns an empty string. 
-      The user returned by this command is guaranteed in a way that looking at the content of the 
-      PRAY file would not be.  For example, the "Last Network User" attribute in an exported Creature made with @
-      NET: EXPO@ could be faked.
-    ]],
-    callback =
-      function(self, resource_name )
-        return ""
-      end
+    ["string"] = {
+      command = "NET: FROM",
+      rtype = "string",
+      params = {
+        { "resource_name", "string" } },
+      description = [[
+        The user who sent the PRAY file which contains the specified resource.  If the resource did not arrive 
+        as a message over the network via @NET: MAKE@ or @NET: EXPO@, then this returns an empty string. 
+        The user returned by this command is guaranteed in a way that looking at the content of the 
+        PRAY file would not be.  For example, the "Last Network User" attribute in an exported Creature made with @
+        NET: EXPO@ could be faked.
+      ]],
+      callback =
+        function(self, resource_name )
+          return ""
+        end
+    }
   },
 
 
   ["NET: HEAD"] = {
-    command = "NET: HEAD",
-    rtype = "command",
-    params = {},
-    description = [[
-      Dump debugging informatino about who is @NET: HEAR@ing on what channels.
-    ]],
-    callback =
-      function(self)
-      end
+    ["command"] = {
+      command = "NET: HEAD",
+      rtype = "command",
+      params = {},
+      description = [[
+        Dump debugging informatino about who is @NET: HEAR@ing on what channels.
+      ]],
+      callback =
+        function(self)
+        end
+    }
   },
 
 
   ["NET: HEAR"] = {
-    command = "NET: HEAR",
-    rtype = "command",
-    params = {
-      { "channel", "string" } },
-    description = [[
-      The target agent will now accept CAOS messages over the network on the specified channel, and execute their 
-      script as appropriate.  Use @NET: WRIT@ to send the message.
-    ]],
-    callback =
-      function(self, channel )
-      end
+    ["command"] = {
+      command = "NET: HEAR",
+      rtype = "command",
+      params = {
+        { "channel", "string" } },
+      description = [[
+        The target agent will now accept CAOS messages over the network on the specified channel, and execute their 
+        script as appropriate.  Use @NET: WRIT@ to send the message.
+      ]],
+      callback =
+        function(self, channel )
+        end
+    }
   },
 
 
   ["NET: HOST"] = {
-    command = "NET: HOST",
-    rtype = "string",
-    params = {},
-    description = [[
-      Returns the hostname, port, id and friendly name on that host that we are currently connected to, or 
-      empty string if offline.  The fields are space separated, although the last field (friendly name) may contain spaces.
-      
-    ]],
-    callback =
-      function(self)
-        return ""
-      end
+    ["string"] = {
+      command = "NET: HOST",
+      rtype = "string",
+      params = {},
+      description = [[
+        Returns the hostname, port, id and friendly name on that host that we are currently connected to, or 
+        empty string if offline.  The fields are space separated, although the last field (friendly name) may contain spaces.
+        
+      ]],
+      callback =
+        function(self)
+          return ""
+        end
+    }
   },
 
 
   ["NET: LINE"] = {
-    lvalue = {
+    ["command"] = {
       command = "NET: LINE",
       rtype = "command",
       params = {
@@ -7404,7 +8087,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "NET: LINE",
       rtype = "integer",
       params = {},
@@ -7420,7 +8103,7 @@ CAOS.Machine.commands = {
 
 
   ["NET: PASS"] = {
-    rvalue = {
+    ["string"] = {
       command = "NET: PASS",
       rtype = "string",
       params = {},
@@ -7433,7 +8116,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    lvalue = {
+    ["command"] = {
       command = "NET: PASS",
       rtype = "command",
       params = {
@@ -7452,261 +8135,294 @@ CAOS.Machine.commands = {
 
 
   ["NET: RAWE"] = {
-    command = "NET: RAWE",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns an internal error code from Babel.  Only use this for display and diagnostic purpose, use @NET: ERRA@ 
-      for documented error codes which you can rely on.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "NET: RAWE",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns an internal error code from Babel.  Only use this for display and diagnostic purpose, use @NET: ERRA@ 
+        for documented error codes which you can rely on.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["NET: RUSO"] = {
-    command = "NET: RUSO",
-    rtype = "command",
-    params = {
-      { "store_result", "variable" } },
-    description = [[
-      Returns (into store_result) a random user who is currently online.  Returns an empty string if you're offline, 
-      or if you aren't using the Docking Station Babel server module.  Since you're online, it can 
-      return yourself (especially if you're the only person online!).  The user is also only <i>likely</i> 
-      to be online - they could have gone offline since the server replied to you.
-      This is a 
-      command rather than an integer r-value because it is <i>blocking</i>.  This means that it might 
-      take several ticks before the server returns the result.  In this sense it is similar to a command 
-      like @OVER@, so it does not run in an @INST@.  You should use @LOCK@ if you don't 
-      want your script interrupting.
-    ]],
-    callback =
-      function(self, store_result )
-      end
+    ["command"] = {
+      command = "NET: RUSO",
+      rtype = "command",
+      params = {
+        { "store_result", "variable" } },
+      description = [[
+        Returns (into store_result) a random user who is currently online.  Returns an empty string if you're offline, 
+        or if you aren't using the Docking Station Babel server module.  Since you're online, it can 
+        return yourself (especially if you're the only person online!).  The user is also only <i>likely</i> 
+        to be online - they could have gone offline since the server replied to you.
+        This is a 
+        command rather than an integer r-value because it is <i>blocking</i>.  This means that it might 
+        take several ticks before the server returns the result.  In this sense it is similar to a command 
+        like @OVER@, so it does not run in an @INST@.  You should use @LOCK@ if you don't 
+        want your script interrupting.
+      ]],
+      callback =
+        function(self, store_result )
+        end
+    }
   },
 
 
   ["NET: STAT"] = {
-    command = "NET: STAT",
-    rtype = "command",
-    params = {
-      { "time_online", "variable" },  { "users_online", "variable" },  { "bytes_received", "variable" },  { "bytes_sent", "variable" } },
-    description = [[
-      Returns statistics for the current Babel connection, or -1 if offline.  This command can block (doesn't execute in an @INST@).  The statistics are:
-      time_online - Time online in milliseconds
-      users_online - Number of users currently connected to the server
-      bytes_received - Bytes received by the client
-      bytes_sent - Bytes sent from the client
-    ]],
-    callback =
-      function(self, time_online, users_online, bytes_received, bytes_sent )
-      end
+    ["command"] = {
+      command = "NET: STAT",
+      rtype = "command",
+      params = {
+        { "time_online", "variable" },  { "users_online", "variable" },  { "bytes_received", "variable" },  { "bytes_sent", "variable" } },
+      description = [[
+        Returns statistics for the current Babel connection, or -1 if offline.  This command can block (doesn't execute in an @INST@).  The statistics are:
+        time_online - Time online in milliseconds
+        users_online - Number of users currently connected to the server
+        bytes_received - Bytes received by the client
+        bytes_sent - Bytes sent from the client
+      ]],
+      callback =
+        function(self, time_online, users_online, bytes_received, bytes_sent )
+        end
+    }
   },
 
 
   ["NET: ULIN"] = {
-    command = "NET: ULIN",
-    rtype = "integer",
-    params = {
-      { "user_id", "string" } },
-    description = [[
-      Returns 1 if the specified user is online, or 0 if they are offline.  This is slow (i.
-      e. has to call the server) unless the user is in the whose wanted register of any agent.  
-      Use @NET: WHON@ to add a user to the register.
-    ]],
-    callback =
-      function(self, user_id )
-        return 0
-      end
+    ["integer"] = {
+      command = "NET: ULIN",
+      rtype = "integer",
+      params = {
+        { "user_id", "string" } },
+      description = [[
+        Returns 1 if the specified user is online, or 0 if they are offline.  This is slow (i.
+        e. has to call the server) unless the user is in the whose wanted register of any agent.  
+        Use @NET: WHON@ to add a user to the register.
+      ]],
+      callback =
+        function(self, user_id )
+          return 0
+        end
+    }
   },
 
 
   ["NET: UNIK"] = {
-    command = "NET: UNIK",
-    rtype = "command",
-    params = {
-      { "user_id", "string" },  { "store_result", "variable" } },
-    description = [[
-      Returns the specified user's screen or nick name.  Returns empty string if offline, or no such user.  
-      This command can take many ticks to execute while the server is quizzed, like @NET: RUSO@.
-    ]],
-    callback =
-      function(self, user_id, store_result )
-      end
+    ["command"] = {
+      command = "NET: UNIK",
+      rtype = "command",
+      params = {
+        { "user_id", "string" },  { "store_result", "variable" } },
+      description = [[
+        Returns the specified user's screen or nick name.  Returns empty string if offline, or no such user.  
+        This command can take many ticks to execute while the server is quizzed, like @NET: RUSO@.
+      ]],
+      callback =
+        function(self, user_id, store_result )
+        end
+    }
   },
 
 
   ["NET: USER"] = {
-    command = "NET: USER",
-    rtype = "string",
-    params = {},
-    description = [[
-      Returns the user's numeric Babel id, or an empty string if they have never logged in with 
-      this world since they last changed user name.
-    ]],
-    callback =
-      function(self)
-        return ""
-      end
+    ["string"] = {
+      command = "NET: USER",
+      rtype = "string",
+      params = {},
+      description = [[
+        Returns the user's numeric Babel id, or an empty string if they have never logged in with 
+        this world since they last changed user name.
+      ]],
+      callback =
+        function(self)
+          return ""
+        end
+    }
   },
 
 
   ["NET: WHAT"] = {
-    command = "NET: WHAT",
-    rtype = "string",
-    params = {},
-    description = [[
-      For debugging only.  Returns a string describing what the upload/query network thread is currently doing.  For example, 
-      it may be fetching a random online user, or uploading some creature history.  Returns an emptry string if 
-      it is doing nothing.
-    ]],
-    callback =
-      function(self)
-        return ""
-      end
+    ["string"] = {
+      command = "NET: WHAT",
+      rtype = "string",
+      params = {},
+      description = [[
+        For debugging only.  Returns a string describing what the upload/query network thread is currently doing.  For example, 
+        it may be fetching a random online user, or uploading some creature history.  Returns an emptry string if 
+        it is doing nothing.
+      ]],
+      callback =
+        function(self)
+          return ""
+        end
+    }
   },
 
 
   ["NET: WHOD"] = {
-    command = "NET: WHOD",
-    rtype = "command",
-    params = {},
-    description = [[
-      Dump debugging information about the whose wanted register.
-    ]],
-    callback =
-      function(self)
-      end
+    ["command"] = {
+      command = "NET: WHOD",
+      rtype = "command",
+      params = {},
+      description = [[
+        Dump debugging information about the whose wanted register.
+      ]],
+      callback =
+        function(self)
+        end
+    }
   },
 
 
   ["NET: WHOF"] = {
-    command = "NET: WHOF",
-    rtype = "command",
-    params = {
-      { "user", "string" } },
-    description = [[
-      Removes a user from the whose wanted list for the target agent.  See @NET: WHON@.
-    ]],
-    callback =
-      function(self, user )
-      end
+    ["command"] = {
+      command = "NET: WHOF",
+      rtype = "command",
+      params = {
+        { "user", "string" } },
+      description = [[
+        Removes a user from the whose wanted list for the target agent.  See @NET: WHON@.
+      ]],
+      callback =
+        function(self, user )
+        end
+    }
   },
 
 
   ["NET: WHON"] = {
-    command = "NET: WHON",
-    rtype = "command",
-    params = {
-      { "user", "string" } },
-    description = [[
-      Add a user to the whose wanted register for the target agent.  Scripts @User Online@ and @User Offline@ 
-      are now called on this agent when that user goes on or offline, or indeed when the local 
-      user goes offline.  Use @NET: WHOF@ to remove them from the register.  This command is blocking, it can 
-      take several ticks to return.
-    ]],
-    callback =
-      function(self, user )
-      end
+    ["command"] = {
+      command = "NET: WHON",
+      rtype = "command",
+      params = {
+        { "user", "string" } },
+      description = [[
+        Add a user to the whose wanted register for the target agent.  Scripts @User Online@ and @User Offline@ 
+        are now called on this agent when that user goes on or offline, or indeed when the local 
+        user goes offline.  Use @NET: WHOF@ to remove them from the register.  This command is blocking, it can 
+        take several ticks to return.
+      ]],
+      callback =
+        function(self, user )
+        end
+    }
   },
 
 
   ["NET: WHOZ"] = {
-    command = "NET: WHOZ",
-    rtype = "command",
-    params = {},
-    description = [[
-      Zap the target agent's whose wanted register, removing all entries.
-    ]],
-    callback =
-      function(self)
-      end
+    ["command"] = {
+      command = "NET: WHOZ",
+      rtype = "command",
+      params = {},
+      description = [[
+        Zap the target agent's whose wanted register, removing all entries.
+      ]],
+      callback =
+        function(self)
+        end
+    }
   },
 
 
   ["NET: WRIT"] = {
-    command = "NET: WRIT",
-    rtype = "command",
-    params = {
-      { "user_id", "string" },  { "channel", "string" },  { "message_id", "integer" },  { "param_1", "anything" },  { "param_2", "anything" } },
-    description = [[
-      Send a message to a remote machine, as specified by the user identifier.  All agents which are @NET: 
-      HEAR@ing on the given channel will receive the message, and run the appropriate script.  If the specified 
-      user is offline, then the message is discarded.  The @FROM@ variable of the receiving script contains the user 
-      id of the sender, as a string.  See also @MESG WRIT@.
-    ]],
-    callback =
-      function(self, user_id, channel, message_id, param_1, param_2 )
-      end
+    ["command"] = {
+      command = "NET: WRIT",
+      rtype = "command",
+      params = {
+        { "user_id", "string" },  { "channel", "string" },  { "message_id", "integer" },  { "param_1", "anything" },  { "param_2", "anything" } },
+      description = [[
+        Send a message to a remote machine, as specified by the user identifier.  All agents which are @NET: 
+        HEAR@ing on the given channel will receive the message, and run the appropriate script.  If the specified 
+        user is offline, then the message is discarded.  The @FROM@ variable of the receiving script contains the user 
+        id of the sender, as a string.  See also @MESG WRIT@.
+      ]],
+      callback =
+        function(self, user_id, channel, message_id, param_1, param_2 )
+        end
+    }
   },
 
 
   ["ECON"] = {
-    command = "ECON",
-    rtype = "command",
-    params = {
-      { "agent", "agent" } },
-    description = [[
-      Starts an enumeration across all the agents in a connective system, where agent is any agent within the 
-      connective system.
-    ]],
-    callback =
-      function(self, agent )
-      end
+    ["command"] = {
+      command = "ECON",
+      rtype = "command",
+      params = {
+        { "agent", "agent" } },
+      description = [[
+        Starts an enumeration across all the agents in a connective system, where agent is any agent within the 
+        connective system.
+      ]],
+      callback =
+        function(self, agent )
+        end
+    }
   },
 
 
   ["PRT: BANG"] = {
-    command = "PRT: BANG",
-    rtype = "command",
-    params = {
-      { "bang_strength", "integer" } },
-    description = [[
-      Breaks connections randomly with other machines (as if the machine had been 'banged'. Use a bang_strength of 100 
-      to disconnect all ports, 50 to disconnect about half etc.
-    ]],
-    callback =
-      function(self, bang_strength )
-      end
+    ["command"] = {
+      command = "PRT: BANG",
+      rtype = "command",
+      params = {
+        { "bang_strength", "integer" } },
+      description = [[
+        Breaks connections randomly with other machines (as if the machine had been 'banged'. Use a bang_strength of 100 
+        to disconnect all ports, 50 to disconnect about half etc.
+      ]],
+      callback =
+        function(self, bang_strength )
+        end
+    }
   },
 
 
   ["PRT: FRMA"] = {
-    command = "PRT: FRMA",
-    rtype = "agent",
-    params = {
-      { "inputport", "integer" } },
-    description = [[
-      Returns the agent from which the input port is fed. Returns NULLHANDLE if that port does not exist, 
-      or is not connected.
-    ]],
-    callback =
-      function(self, inputport )
-        return nil
-      end
+    ["agent"] = {
+      command = "PRT: FRMA",
+      rtype = "agent",
+      params = {
+        { "inputport", "integer" } },
+      description = [[
+        Returns the agent from which the input port is fed. Returns NULLHANDLE if that port does not exist, 
+        or is not connected.
+      ]],
+      callback =
+        function(self, inputport )
+          return nil
+        end
+    }
   },
 
 
   ["PRT: FROM"] = {
-    command = "PRT: FROM",
-    rtype = "integer",
-    params = {
-      { "inputport", "integer" } },
-    description = [[
-      Returns the output port index on the source agent, feeding that input port on the @TARG@ agent.
-      Return values are -ve for error.
-    ]],
-    callback =
-      function(self, inputport )
-        return 0
-      end
+    ["integer"] = {
+      command = "PRT: FROM",
+      rtype = "integer",
+      params = {
+        { "inputport", "integer" } },
+      description = [[
+        Returns the output port index on the source agent, feeding that input port on the @TARG@ agent.
+        Return values are -ve for error.
+      ]],
+      callback =
+        function(self, inputport )
+          return 0
+        end
+    }
   },
 
   -- N/A
   ["PRT: INEW"] = {
-    command = "PRT: INEW",
+    ["command"] = {
+      command = "PRT: INEW",
     rtype = "command",
     params = {
       { "id", "integer" },  { "name", "string" },  { "description", "string" },  { "x", "integer" },  { "y", "integer" },  { "message_num", "integer" } },
@@ -7719,103 +8435,117 @@ CAOS.Machine.commands = {
     callback =
       function(self, id, name, description, x, y, message_num )
       end
+    }
   },
 
   -- partial
   ["PRT: ITOT"] = {
-    command = "PRT: ITOT",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the number of input ports, assuming they are indexed sequentially.
-    ]],
-    callback =
-      function(self)
-        if ( self.owner.inboundNodeCount ~= nil ) then
-          return self.owner.inboundNodeCount()
+    ["integer"] = {
+      command = "PRT: ITOT",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the number of input ports, assuming they are indexed sequentially.
+      ]],
+      callback =
+        function(self)
+          if ( self.owner.inboundNodeCount ~= nil ) then
+            return self.owner.inboundNodeCount()
+          end
+          return 0
         end
-        return 0
-      end
+    }
   },
 
   -- N/A
   ["PRT: IZAP"] = {
-    command = "PRT: IZAP",
-    rtype = "command",
-    params = {
-      { "id", "integer" } },
-    description = [[
-      Remove the specified input port.
-    ]],
-    callback =
-      function(self, id )
-      end
+    ["command"] = {
+      command = "PRT: IZAP",
+      rtype = "command",
+      params = {
+        { "id", "integer" } },
+      description = [[
+        Remove the specified input port.
+      ]],
+      callback =
+        function(self, id )
+        end
+    }
   },
 
   
   ["PRT: JOIN"] = {
-    command = "PRT: JOIN",
-    rtype = "command",
-    params = {
-      { "source_agent", "agent" },  { "output_id", "integer" },  { "dest_agent", "agent" },  { "input_id", "integer" } },
-    description = [[
-      Connect an output port on the source agent to an input port on the destination. An input may 
-      only be connected to one output at at time, but an output may feed any number of inputs.
-    ]],
-    callback =
-      function(self, source_agent, output_id, dest_agent, input_id )
-      end
+    ["command"] = {
+      command = "PRT: JOIN",
+      rtype = "command",
+      params = {
+        { "source_agent", "agent" },  { "output_id", "integer" },  { "dest_agent", "agent" },  { "input_id", "integer" } },
+      description = [[
+        Connect an output port on the source agent to an input port on the destination. An input may 
+        only be connected to one output at at time, but an output may feed any number of inputs.
+      ]],
+      callback =
+        function(self, source_agent, output_id, dest_agent, input_id )
+        end
+    }
   },
 
 
   ["PRT: KRAK"] = {
-    command = "PRT: KRAK",
-    rtype = "command",
-    params = {
-      { "agent", "agent" },  { "in_or_out", "integer" },  { "port_index", "integer" } },
-    description = [[
-      Breaks a specific connection on a machine. If in_or_out is zero, it is an input port whose connection 
-      is broken, if it is an output port, then all inputs are disconnected.
-    ]],
-    callback =
-      function(self, agent, in_or_out, port_index )
-      end
+    ["command"] = {
+      command = "PRT: KRAK",
+      rtype = "command",
+      params = {
+        { "agent", "agent" },  { "in_or_out", "integer" },  { "port_index", "integer" } },
+      description = [[
+        Breaks a specific connection on a machine. If in_or_out is zero, it is an input port whose connection 
+        is broken, if it is an output port, then all inputs are disconnected.
+      ]],
+      callback =
+        function(self, agent, in_or_out, port_index )
+        end
+    }
   },
 
 
   ["PRT: NAME"] = {
-    command = "PRT: NAME",
-    rtype = "string",
-    params = {
-      { "agent", "agent" },  { "in_or_out", "integer" },  { "port_index", "integer" } },
-    description = [[
-      Returns the name of the indexed port (input port if in_or_out is zero, output port if non-zero) 
-      on the specified agent. Returns "" in error.
-    ]],
-    callback =
-      function(self, agent, in_or_out, port_index )
-        return ""
-      end
+    ["string"] = {
+      command = "PRT: NAME",
+      rtype = "string",
+      params = {
+        { "agent", "agent" },  { "in_or_out", "integer" },  { "port_index", "integer" } },
+      description = [[
+        Returns the name of the indexed port (input port if in_or_out is zero, output port if non-zero) 
+        on the specified agent. Returns "" in error.
+      ]],
+      callback =
+        function(self, agent, in_or_out, port_index )
+          return ""
+        end
+    }
   },
 
 
   ["PRT: ONEW"] = {
-    command = "PRT: ONEW",
-    rtype = "command",
-    params = {
-      { "id", "integer" },  { "name", "string" },  { "description", "string" },  { "x", "integer" },  { "y", "integer" } },
-    description = [[
-      Create a new output port on target. You should number input port ids starting at 0.  The port'
-      s relative position is given by x, y.
-    ]],
-    callback =
-      function(self, id, name, description, x, y )
-      end
+    ["command"] = {
+      command = "PRT: ONEW",
+      rtype = "command",
+      params = {
+        { "id", "integer" },  { "name", "string" },  { "description", "string" },  { "x", "integer" },  { "y", "integer" } },
+      description = [[
+        Create a new output port on target. You should number input port ids starting at 0.  The port'
+        s relative position is given by x, y.
+      ]],
+      callback =
+        function(self, id, name, description, x, y )
+        end
+    }
   },
 
   -- partial
   ["PRT: OTOT"] = {
-    command = "PRT: OTOT",
+    ["integer"] = {
+      command = "PRT: OTOT",
     rtype = "integer",
     params = {},
     description = [[
@@ -7828,122 +8558,138 @@ CAOS.Machine.commands = {
         end
         return 0
       end
+    }
   },
 
 
   ["PRT: OZAP"] = {
-    command = "PRT: OZAP",
-    rtype = "command",
-    params = {
-      { "id", "integer" } },
-    description = [[
-      Remove the specified output port.
-    ]],
-    callback =
-      function(self, id )
-      end
+    ["command"] = {
+      command = "PRT: OZAP",
+      rtype = "command",
+      params = {
+        { "id", "integer" } },
+      description = [[
+        Remove the specified output port.
+      ]],
+      callback =
+        function(self, id )
+        end
+    }
   },
 
   -- partial/broken
   ["PRT: SEND"] = {
-    command = "PRT: SEND",
-    rtype = "command",
-    params = {
-      { "id", "integer" },  { "data", "anything" } },
-    description = [[
-      Send a signal from the specified output port to all connected inputs.  The data can be any integer.
-    ]],
-    callback =
-      function(self, id, data )
-        if ( self.owner.setOutboundNodeLevel ~= nil ) then
-          self.owner.setOutboundNodeLevel(id, (data > 0))
+    ["command"] = {
+      command = "PRT: SEND",
+      rtype = "command",
+      params = {
+        { "id", "integer" },  { "data", "anything" } },
+      description = [[
+        Send a signal from the specified output port to all connected inputs.  The data can be any integer.
+      ]],
+      callback =
+        function(self, id, data )
+          if ( self.owner.setOutboundNodeLevel ~= nil ) then
+            self.owner.setOutboundNodeLevel(id, (data > 0))
+          end
         end
-      end
+    }
   },
 
 
   ["NET: MAKE"] = {
-    command = "NET: MAKE",
-    rtype = "integer",
-    params = {
-      { "which_journal_spot", "integer" },  { "journal_name", "string" },  { "user", "string" },  { "report_destination", "variable" } },
-    description = [[
-      Like @PRAY MAKE@, only sends the made pray file to the specified user. This will arrive in their 
-      inbox, where it can be read with normal PRAY commands and deleted with @PRAY KILL@.
-    ]],
-    callback =
-      function(self, which_journal_spot, journal_name, user, report_destination )
-        return 0
-      end
+    ["integer"] = {
+      command = "NET: MAKE",
+      rtype = "integer",
+      params = {
+        { "which_journal_spot", "integer" },  { "journal_name", "string" },  { "user", "string" },  { "report_destination", "variable" } },
+      description = [[
+        Like @PRAY MAKE@, only sends the made pray file to the specified user. This will arrive in their 
+        inbox, where it can be read with normal PRAY commands and deleted with @PRAY KILL@.
+      ]],
+      callback =
+        function(self, which_journal_spot, journal_name, user, report_destination )
+          return 0
+        end
+    }
   },
 
 
   ["PRAY AGTI"] = {
-    command = "PRAY AGTI",
-    rtype = "integer",
-    params = {
-      { "resource_name", "string" },  { "integer_tag", "string" },  { "default_value", "integer" } },
-    description = [[
-      This returns the value of the integer tag associated with the named resource. If the resource does not 
-      contain such a tag, then the default value specified is returned. This call pairs with @PRAY AGTS@.
-    ]],
-    callback =
-      function(self, resource_name, integer_tag, default_value )
-        return 0
-      end
+    ["integer"] = {
+      command = "PRAY AGTI",
+      rtype = "integer",
+      params = {
+        { "resource_name", "string" },  { "integer_tag", "string" },  { "default_value", "integer" } },
+      description = [[
+        This returns the value of the integer tag associated with the named resource. If the resource does not 
+        contain such a tag, then the default value specified is returned. This call pairs with @PRAY AGTS@.
+      ]],
+      callback =
+        function(self, resource_name, integer_tag, default_value )
+          return 0
+        end
+    }
   },
 
 
   ["PRAY AGTS"] = {
-    command = "PRAY AGTS",
-    rtype = "string",
-    params = {
-      { "resource_name", "string" },  { "string_tag", "string" },  { "default_value", "string" } },
-    description = [[
-      This returns the value of the string tag associated with the named resource. If the resource does not 
-      contain such a tag, then the default value specified is returned. This call pairs with @PRAY AGTI@.
-    ]],
-    callback =
-      function(self, resource_name, string_tag, default_value )
-        return ""
-      end
+    ["string"] = {
+      command = "PRAY AGTS",
+      rtype = "string",
+      params = {
+        { "resource_name", "string" },  { "string_tag", "string" },  { "default_value", "string" } },
+      description = [[
+        This returns the value of the string tag associated with the named resource. If the resource does not 
+        contain such a tag, then the default value specified is returned. This call pairs with @PRAY AGTI@.
+      ]],
+      callback =
+        function(self, resource_name, string_tag, default_value )
+          return ""
+        end
+    }
   },
 
 
   ["PRAY BACK"] = {
-    command = "PRAY BACK",
-    rtype = "string",
-    params = {
-      { "resource_type", "string" },  { "last_known", "string" } },
-    description = [[
-      Like @PRAY PREV@, only doesn't loop at the end.  If you go beyond the first entry then 
-      it returns an empty string.
-    ]],
-    callback =
-      function(self, resource_type, last_known )
-        return ""
-      end
+    ["string"] = {
+      command = "PRAY BACK",
+      rtype = "string",
+      params = {
+        { "resource_type", "string" },  { "last_known", "string" } },
+      description = [[
+        Like @PRAY PREV@, only doesn't loop at the end.  If you go beyond the first entry then 
+        it returns an empty string.
+      ]],
+      callback =
+        function(self, resource_type, last_known )
+          return ""
+        end
+    }
   },
 
 
   ["PRAY COUN"] = {
-    command = "PRAY COUN",
-    rtype = "integer",
-    params = {
-      { "resource_type", "string" } },
-    description = [[
-      This returns the number of resource chunks which are tagged with the resource type passed in. Resource types 
-      are four characters only. Anything over that length will be silently truncated.
-    ]],
-    callback =
-      function(self, resource_type )
-        return 0
-      end
+    ["integer"] = {
+      command = "PRAY COUN",
+      rtype = "integer",
+      params = {
+        { "resource_type", "string" } },
+      description = [[
+        This returns the number of resource chunks which are tagged with the resource type passed in. Resource types 
+        are four characters only. Anything over that length will be silently truncated.
+      ]],
+      callback =
+        function(self, resource_type )
+          return 0
+        end
+    }
   },
 
 
   ["PRAY DEPS"] = {
-    command = "PRAY DEPS",
+    ["integer"] = {
+      command = "PRAY DEPS",
     rtype = "integer",
     params = {
       { "resource_name", "string" },  { "do_install", "integer" } },
@@ -7961,606 +8707,669 @@ CAOS.Machine.commands = {
       function(self, resource_name, do_install )
         return 0
       end
+    }
   },
 
 
   ["PRAY EXPO"] = {
-    command = "PRAY EXPO",
-    rtype = "integer",
-    params = {
-      { "chunk_type", "string" } },
-    description = [[
-      This function exports the target creature. If the creature is exported successfully then it has been removed from the world. Returns value is one of the following:
-      0 for success
-      1 if the creature, or if pregnant any of its offspring, are already on disk in some form.
-      The chunk type should be used to find the creature again to import it.  In Creatures 3, most exported creatures have a chunk type EXPC, and the starter family uses SFAM.
-      For new games, you should not use SFAM, as its data would get confused with that of an EXPC with the same moniker. This is for backwards compatibility with Creatures 3's use of SFAM, which works because the CAOS code guarantees different monikers.
-      For other chunk names, creatures exported with a different type are kept entirely separately, and will not get confused with each other. The chunk type is added to the end of the moniker to form the chunk name.
-      The exported creature has some fields associated with it, that can be read by @PRAY AGTI@ or @PRAY AGTS@ before importing:
-      "Exported At World Time" <i>integer</i>	
-      "Creature Age In Ticks" <i>integer</i>	
-      "Exported At Real Time" <i>integer</i>	
-      "Creature Life Stage" <i>integer</i>	
-      "Exported From World Name" <i>string</i>	
-      "Exported From World UID" <i>string</i>	
-      "Native Network User" <i>string</i>	
-      "Last Network User" (could be faked, @NET: FROM@ is safer) <i>string</i>	
-      "Creature Name" <i>string</i>	
-      "Gender" <i>integer</i>	
-      "Genus" <i>integer</i>	
-      "Variant" <i>integer</i>	
-      "Head Gallery" <i>string</i> (this is calculated on the sending computer, so the file may be missing on the receiving one - try @LIMB@ instead)
-      "Pregnancy Status" <i>integer</i>
-      In addition you can add custom fields by setting @NAME@ variables on the Creature before export.  Any strings or integers whose name begin "Pray Extra " are added as entries to the export file.
-    ]],
-    callback =
-      function(self, chunk_type )
-        return 0
-      end
+    ["integer"] = {
+      command = "PRAY EXPO",
+      rtype = "integer",
+      params = {
+        { "chunk_type", "string" } },
+      description = [[
+        This function exports the target creature. If the creature is exported successfully then it has been removed from the world. Returns value is one of the following:
+        0 for success
+        1 if the creature, or if pregnant any of its offspring, are already on disk in some form.
+        The chunk type should be used to find the creature again to import it.  In Creatures 3, most exported creatures have a chunk type EXPC, and the starter family uses SFAM.
+        For new games, you should not use SFAM, as its data would get confused with that of an EXPC with the same moniker. This is for backwards compatibility with Creatures 3's use of SFAM, which works because the CAOS code guarantees different monikers.
+        For other chunk names, creatures exported with a different type are kept entirely separately, and will not get confused with each other. The chunk type is added to the end of the moniker to form the chunk name.
+        The exported creature has some fields associated with it, that can be read by @PRAY AGTI@ or @PRAY AGTS@ before importing:
+        "Exported At World Time" <i>integer</i>	
+        "Creature Age In Ticks" <i>integer</i>	
+        "Exported At Real Time" <i>integer</i>	
+        "Creature Life Stage" <i>integer</i>	
+        "Exported From World Name" <i>string</i>	
+        "Exported From World UID" <i>string</i>	
+        "Native Network User" <i>string</i>	
+        "Last Network User" (could be faked, @NET: FROM@ is safer) <i>string</i>	
+        "Creature Name" <i>string</i>	
+        "Gender" <i>integer</i>	
+        "Genus" <i>integer</i>	
+        "Variant" <i>integer</i>	
+        "Head Gallery" <i>string</i> (this is calculated on the sending computer, so the file may be missing on the receiving one - try @LIMB@ instead)
+        "Pregnancy Status" <i>integer</i>
+        In addition you can add custom fields by setting @NAME@ variables on the Creature before export.  Any strings or integers whose name begin "Pray Extra " are added as entries to the export file.
+      ]],
+      callback =
+        function(self, chunk_type )
+          return 0
+        end
+    }
   },
 
 
   ["PRAY FILE"] = {
-    command = "PRAY FILE",
-    rtype = "integer",
-    params = {
-      { "resource_name", "string" },  { "resource_type", "integer" },  { "do_install", "integer" } },
-    description = [[
-      This performs the "installation" of one file from the resource files. The resource_type is defined in the agent 
-      resource guide. If do_install is zero, the command simply checks if the file install should succeed. Return value 
-      is 0 for success, 1 for error.
-    ]],
-    callback =
-      function(self, resource_name, resource_type, do_install )
-        return 0
-      end
+    ["integer"] = {
+      command = "PRAY FILE",
+      rtype = "integer",
+      params = {
+        { "resource_name", "string" },  { "resource_type", "integer" },  { "do_install", "integer" } },
+      description = [[
+        This performs the "installation" of one file from the resource files. The resource_type is defined in the agent 
+        resource guide. If do_install is zero, the command simply checks if the file install should succeed. Return value 
+        is 0 for success, 1 for error.
+      ]],
+      callback =
+        function(self, resource_name, resource_type, do_install )
+          return 0
+        end
+    }
   },
 
 
   ["PRAY FORE"] = {
-    command = "PRAY FORE",
-    rtype = "string",
-    params = {
-      { "resource_type", "string" },  { "last_known", "string" } },
-    description = [[
-      Like @PRAY NEXT@, only doesn't loop at the end.  If you go beyond the last entry then 
-      it returns an empty string.
-    ]],
-    callback =
-      function(self, resource_type, last_known )
-        return ""
-      end
+    ["string"] = {
+      command = "PRAY FORE",
+      rtype = "string",
+      params = {
+        { "resource_type", "string" },  { "last_known", "string" } },
+      description = [[
+        Like @PRAY NEXT@, only doesn't loop at the end.  If you go beyond the last entry then 
+        it returns an empty string.
+      ]],
+      callback =
+        function(self, resource_type, last_known )
+          return ""
+        end
+    }
   },
 
 
   ["PRAY GARB"] = {
-    command = "PRAY GARB",
-    rtype = "command",
-    params = {
-      { "force", "integer" } },
-    description = [[
-      This command clears the manager's cached resource data. Execute this after a lot of resource accesses (E.
-      g. installing an agent) to clean up the memory used during the process. If you don't do 
-      this, excess memory can be held for a while, If the parameter is zero (the most usual) then 
-      the manager will only forget resources which are not in use at the moment. If force is non-
-      zero, then the manager will forget all the previously loaded resources. As the resources currently in use go 
-      out of scope, they are automatically garbage collected.
-    ]],
-    callback =
-      function(self, force )
-      end
+    ["command"] = {
+      command = "PRAY GARB",
+      rtype = "command",
+      params = {
+        { "force", "integer" } },
+      description = [[
+        This command clears the manager's cached resource data. Execute this after a lot of resource accesses (E.
+        g. installing an agent) to clean up the memory used during the process. If you don't do 
+        this, excess memory can be held for a while, If the parameter is zero (the most usual) then 
+        the manager will only forget resources which are not in use at the moment. If force is non-
+        zero, then the manager will forget all the previously loaded resources. As the resources currently in use go 
+        out of scope, they are automatically garbage collected.
+      ]],
+      callback =
+        function(self, force )
+        end
+    }
   },
 
 
   ["PRAY IMPO"] = {
-    command = "PRAY IMPO",
-    rtype = "integer",
-    params = {
-      { "moniker_chunk", "string" },  { "actually_do_it", "integer" },  { "keep_file", "integer" } },
-    description = [[
-      This function imports the creature with the requested moniker and chunk type. Returns one of the following codes:
-      0 - success
-      1 - couldn't reconcile histories so creature was cloned
-      2 - moniker not found in PRAY system
-      3 - unused error code
-      4 - internal / file format error
-      Set actually_do_it to 1 to try and perform the import, or 0 
-      to perform a query giving just the return value.  You can use the query to test if the 
-      creature is available, and if the creature would have to be cloned upon importing, and warn the user.  
-      The new creature is @TARG@etted after import.  If you set keep file to 1, then the exported 
-      file won't be deleted (moved to the porch).  The creature will appear in the same place that 
-      it was exported, but as with @NEW: CREA@, it will be in limbo, and won't function until 
-      moved to a valid place.
-    ]],
-    callback =
-      function(self, moniker_chunk, actually_do_it, keep_file )
-        return 0
-      end
+    ["integer"] = {
+      command = "PRAY IMPO",
+      rtype = "integer",
+      params = {
+        { "moniker_chunk", "string" },  { "actually_do_it", "integer" },  { "keep_file", "integer" } },
+      description = [[
+        This function imports the creature with the requested moniker and chunk type. Returns one of the following codes:
+        0 - success
+        1 - couldn't reconcile histories so creature was cloned
+        2 - moniker not found in PRAY system
+        3 - unused error code
+        4 - internal / file format error
+        Set actually_do_it to 1 to try and perform the import, or 0 
+        to perform a query giving just the return value.  You can use the query to test if the 
+        creature is available, and if the creature would have to be cloned upon importing, and warn the user.  
+        The new creature is @TARG@etted after import.  If you set keep file to 1, then the exported 
+        file won't be deleted (moved to the porch).  The creature will appear in the same place that 
+        it was exported, but as with @NEW: CREA@, it will be in limbo, and won't function until 
+        moved to a valid place.
+      ]],
+      callback =
+        function(self, moniker_chunk, actually_do_it, keep_file )
+          return 0
+        end
+    }
   },
 
 
   ["PRAY INJT"] = {
-    command = "PRAY INJT",
-    rtype = "integer",
-    params = {
-      { "resource_name", "string" },  { "do_install", "integer" },  { "report_var", "variable" } },
-    description = [[
-      This command injects an agent. The agent must be in the chunk named. If do_install is zero, the command simply checks for the presence of the required scripts and dependencies. If non-zero, it attempts to inject the agent. The report var is a string variable, and is set to the name of the offending script if the injection/check fails. 
-      Return is 0 for success, -1 for "Script not found" and if injecting, -2 for "Injection failed". 
-      Return value -3 indicates that a dependency evaluation failed, and in this case, the report var is the 
-      return code from @PRAY DEPS@
-    ]],
-    callback =
-      function(self, resource_name, do_install, report_var )
-        return 0
-      end
+    ["integer"] = {
+      command = "PRAY INJT",
+      rtype = "integer",
+      params = {
+        { "resource_name", "string" },  { "do_install", "integer" },  { "report_var", "variable" } },
+      description = [[
+        This command injects an agent. The agent must be in the chunk named. If do_install is zero, the command simply checks for the presence of the required scripts and dependencies. If non-zero, it attempts to inject the agent. The report var is a string variable, and is set to the name of the offending script if the injection/check fails. 
+        Return is 0 for success, -1 for "Script not found" and if injecting, -2 for "Injection failed". 
+        Return value -3 indicates that a dependency evaluation failed, and in this case, the report var is the 
+        return code from @PRAY DEPS@
+      ]],
+      callback =
+        function(self, resource_name, do_install, report_var )
+          return 0
+        end
+    }
   },
 
 
   ["PRAY KILL"] = {
-    command = "PRAY KILL",
-    rtype = "integer",
-    params = {
-      { "resource_name", "string" } },
-    description = [[
-      Deletes the resource file which contains the specified chunk. This is permanent and irreversible. Returns 1 if there 
-      was such a chunk and file, or 0 if there wasn't.
-    ]],
-    callback =
-      function(self, resource_name )
-        return 0
-      end
+    ["integer"] = {
+      command = "PRAY KILL",
+      rtype = "integer",
+      params = {
+        { "resource_name", "string" } },
+      description = [[
+        Deletes the resource file which contains the specified chunk. This is permanent and irreversible. Returns 1 if there 
+        was such a chunk and file, or 0 if there wasn't.
+      ]],
+      callback =
+        function(self, resource_name )
+          return 0
+        end
+    }
   },
 
 
   ["PRAY MAKE"] = {
-    command = "PRAY MAKE",
-    rtype = "integer",
-    params = {
-      { "which_journal_spot", "integer" },  { "journal_name", "string" },  { "which_pray_spot", "integer" },  { "pray_name", "string" },  { "report_destination", "variable" } },
-    description = [[
-      <b>Please see the documentation accompanying the praybuilder on CDN</b>
-      Suffice it to say: return value is zero for success, otherwise non-zero, and report is set to the praybuilder output for you
-      Also, the which_journal_spot is zero for world journal, 1 for global journal. Also the which_pray_spot is zero for "My Agents" and 1 for "My Creatures"
-    ]],
-    callback =
-      function(self, which_journal_spot, journal_name, which_pray_spot, pray_name, report_destination )
-        return 0
-      end
+    ["integer"] = {
+      command = "PRAY MAKE",
+      rtype = "integer",
+      params = {
+        { "which_journal_spot", "integer" },  { "journal_name", "string" },  { "which_pray_spot", "integer" },  { "pray_name", "string" },  { "report_destination", "variable" } },
+      description = [[
+        <b>Please see the documentation accompanying the praybuilder on CDN</b>
+        Suffice it to say: return value is zero for success, otherwise non-zero, and report is set to the praybuilder output for you
+        Also, the which_journal_spot is zero for world journal, 1 for global journal. Also the which_pray_spot is zero for "My Agents" and 1 for "My Creatures"
+      ]],
+      callback =
+        function(self, which_journal_spot, journal_name, which_pray_spot, pray_name, report_destination )
+          return 0
+        end
+    }
   },
 
 
   ["PRAY NEXT"] = {
-    command = "PRAY NEXT",
-    rtype = "string",
-    params = {
-      { "resource_type", "string" },  { "last_known", "string" } },
-    description = [[
-      This returns the name of the resource chunk directly after the named one, given that they are of 
-      the same type. It loops when it reaches the end.  If the named resource cannot be found in 
-      the list of resources of the type specified, then the last resource of that type is returned. This 
-      call pairs with @PRAY PREV@.  Compare @PRAY FORE@.
-    ]],
-    callback =
-      function(self, resource_type, last_known )
-        return ""
-      end
+    ["string"] = {
+      command = "PRAY NEXT",
+      rtype = "string",
+      params = {
+        { "resource_type", "string" },  { "last_known", "string" } },
+      description = [[
+        This returns the name of the resource chunk directly after the named one, given that they are of 
+        the same type. It loops when it reaches the end.  If the named resource cannot be found in 
+        the list of resources of the type specified, then the last resource of that type is returned. This 
+        call pairs with @PRAY PREV@.  Compare @PRAY FORE@.
+      ]],
+      callback =
+        function(self, resource_type, last_known )
+          return ""
+        end
+    }
   },
 
 
   ["PRAY PREV"] = {
-    command = "PRAY PREV",
-    rtype = "string",
-    params = {
-      { "resource_type", "string" },  { "last_known", "string" } },
-    description = [[
-      This returns the name of the resource chunk directly before the named one, given that they are of 
-      the same type. It loops when it reaches the end.  If the named resource cannot be found in 
-      the list of resources of the type specified, then the first resource of that type is returned. This 
-      call pairs with @PRAY NEXT@.  Compare @PRAY BACK@.
-    ]],
-    callback =
-      function(self, resource_type, last_known )
-        return ""
-      end
+    ["string"] = {
+      command = "PRAY PREV",
+      rtype = "string",
+      params = {
+        { "resource_type", "string" },  { "last_known", "string" } },
+      description = [[
+        This returns the name of the resource chunk directly before the named one, given that they are of 
+        the same type. It loops when it reaches the end.  If the named resource cannot be found in 
+        the list of resources of the type specified, then the first resource of that type is returned. This 
+        call pairs with @PRAY NEXT@.  Compare @PRAY BACK@.
+      ]],
+      callback =
+        function(self, resource_type, last_known )
+          return ""
+        end
+    }
   },
 
 
   ["PRAY REFR"] = {
-    command = "PRAY REFR",
-    rtype = "command",
-    params = {},
-    description = [[
-      This command refreshes the engine's view of the Resource directory. Execute this if you have reason to 
-      believe that the files in the directory may have changed. It only detects changes if there is a 
-      new file or a deleted file - if a file has only changed it won't notice.  This is 
-      awkward during development, you can use @PRAY KILL@ to kill the old file before copying the new one 
-      over.  PRAY REFR forces a @PRAY GARB@ to happen automatically.
-    ]],
-    callback =
-      function(self)
-      end
+    ["command"] = {
+      command = "PRAY REFR",
+      rtype = "command",
+      params = {},
+      description = [[
+        This command refreshes the engine's view of the Resource directory. Execute this if you have reason to 
+        believe that the files in the directory may have changed. It only detects changes if there is a 
+        new file or a deleted file - if a file has only changed it won't notice.  This is 
+        awkward during development, you can use @PRAY KILL@ to kill the old file before copying the new one 
+        over.  PRAY REFR forces a @PRAY GARB@ to happen automatically.
+      ]],
+      callback =
+        function(self)
+        end
+    }
   },
 
 
   ["PRAY TEST"] = {
-    command = "PRAY TEST",
-    rtype = "integer",
-    params = {
-      { "resource_name", "string" } },
-    description = [[
-      This checks for the existence of a chunk, returning zero if it is not found, and a value from 1-3 indicating the cost to load if it is.
-      Return values are currently defined as:
-      0 - Chunk not available at this time
-      1 - Chunk Available, Cached and ready for use
-      2 - Chunk available, on disk uncompressed and fine for loading
-      3 - Chunk available, on disk compressed and ready for loading. 
-      Thus the return value could be thought 
-      of as the cost of loading, where 1 is no cost, and 3 is high cost.
-    ]],
-    callback =
-      function(self, resource_name )
-        return 0
-      end
+    ["integer"] = {
+      command = "PRAY TEST",
+      rtype = "integer",
+      params = {
+        { "resource_name", "string" } },
+      description = [[
+        This checks for the existence of a chunk, returning zero if it is not found, and a value from 1-3 indicating the cost to load if it is.
+        Return values are currently defined as:
+        0 - Chunk not available at this time
+        1 - Chunk Available, Cached and ready for use
+        2 - Chunk available, on disk uncompressed and fine for loading
+        3 - Chunk available, on disk compressed and ready for loading. 
+        Thus the return value could be thought 
+        of as the cost of loading, where 1 is no cost, and 3 is high cost.
+      ]],
+      callback =
+        function(self, resource_name )
+          return 0
+        end
+    }
   },
 
 
   ["CAOS"] = {
-    command = "CAOS",
-    rtype = "string",
-    params = {
-      { "inline", "integer" },  { "state_trans", "integer" },  { "p1", "anything" },  { "p2", "anything" },  { "commands", "string" },  { "throws", "integer" },  { "catches", "integer" },  { "report", "variable" } },
-    description = [[
-      Executes the specified CAOS commands instantly. The local environment (@_IT_@ @VAxx@ @TARG@ @OWNR@ etc.) will be promoted to 
-      the script's environment if inline is non-zero. If state_trans is non-zero, then @FROM@ and @OWNR@ 
-      are propogated, if zero, then the script is run orphaned. CAOS returns the output of the script. As 
-      you can put multiple scripts through in one call, the output is potentially concatenated. Note that all sets 
-      of scripts are executed in the same virtual machine if inline is non-zero, otherwise the virtual machine 
-      is reset before each script is passed. The params _p0_ and _p1_ are passed in as the parameters 
-      to the script, even when inline.  You can execute "outv 7 endm scrp 3 7 11 6 outv 
-      3 endm outv 9", which will make a script 3 7 11 6 and return "79". 
-      If 
-      throws is non-zero then the system will throw exceptions, otherwise it will return "***" with report set to 
-      the exception sid in the CAOS catalogue TAG. If catches is non-zero then the system will catch 
-      any run errors encountered and return them in report, having set the return value to "###" first.
-    ]],
-    callback =
-      function(self, inline, state_trans, p1, p2, commands, throws, catches, report )
-        return ""
-      end
+    ["string"] = {
+      command = "CAOS",
+      rtype = "string",
+      params = {
+        { "inline", "integer" },  { "state_trans", "integer" },  { "p1", "anything" },  { "p2", "anything" },  { "commands", "string" },  { "throws", "integer" },  { "catches", "integer" },  { "report", "variable" } },
+      description = [[
+        Executes the specified CAOS commands instantly. The local environment (@_IT_@ @VAxx@ @TARG@ @OWNR@ etc.) will be promoted to 
+        the script's environment if inline is non-zero. If state_trans is non-zero, then @FROM@ and @OWNR@ 
+        are propogated, if zero, then the script is run orphaned. CAOS returns the output of the script. As 
+        you can put multiple scripts through in one call, the output is potentially concatenated. Note that all sets 
+        of scripts are executed in the same virtual machine if inline is non-zero, otherwise the virtual machine 
+        is reset before each script is passed. The params _p0_ and _p1_ are passed in as the parameters 
+        to the script, even when inline.  You can execute "outv 7 endm scrp 3 7 11 6 outv 
+        3 endm outv 9", which will make a script 3 7 11 6 and return "79". 
+        If 
+        throws is non-zero then the system will throw exceptions, otherwise it will return "***" with report set to 
+        the exception sid in the CAOS catalogue TAG. If catches is non-zero then the system will catch 
+        any run errors encountered and return them in report, having set the return value to "###" first.
+      ]],
+      callback =
+        function(self, inline, state_trans, p1, p2, commands, throws, catches, report )
+          return ""
+        end
+    }
   },
 
   -- full
   ["GIDS FMLY"] = {
-    command = "GIDS FMLY",
-    rtype = "command",
-    params = {
-      { "family", "integer" } },
-    description = [[
-      Output the genus numbers for which there are scripts in the scriptorium for the given family.  List is 
-      space delimited.
-    ]],
-    callback =
-      function(self, family )
-        if ( self:script_exists(family) ) then
-        
-          local keyset = {}
-          local n = 0
-
-          for k,v in pairs(self.scriptorium[family]) do
-            n = n+1
-            keyset[n] = k
-          end
+    ["command"] = {
+      command = "GIDS FMLY",
+      rtype = "command",
+      params = {
+        { "family", "integer" } },
+      description = [[
+        Output the genus numbers for which there are scripts in the scriptorium for the given family.  List is 
+        space delimited.
+      ]],
+      callback =
+        function(self, family )
+          if ( CAOS.script_exists(family) ) then
           
-          world.logInfo("%s", table.concat(keyset, " "))
+            local keyset = {}
+            local n = 0
+
+            for k,v in pairs(self.scriptorium[family]) do
+              n = n+1
+              keyset[n] = k
+            end
+            
+            world.logInfo("%s", table.concat(keyset, " "))
+          end
         end
-      end
+    }
   },
 
   -- full
   ["GIDS GNUS"] = {
-    command = "GIDS GNUS",
-    rtype = "command",
-    params = {
-      { "family", "integer" },  { "genus", "integer" } },
-    description = [[
-      Output the species numbers for which there are scripts in the scriptorium for the given family and genus.  
-      List is space delimited.
-    ]],
-    callback =
-      function(self, family, genus )
-        if ( self:script_exists(family, genus) ) then
-        
-          local keyset = {}
-          local n = 0
-
-          for k,v in pairs(self.scriptorium[family][genus]) do
-            n = n+1
-            keyset[n] = k
-          end
+    ["command"] = {
+      command = "GIDS GNUS",
+      rtype = "command",
+      params = {
+        { "family", "integer" },  { "genus", "integer" } },
+      description = [[
+        Output the species numbers for which there are scripts in the scriptorium for the given family and genus.  
+        List is space delimited.
+      ]],
+      callback =
+        function(self, family, genus )
+          if ( CAOS.script_exists(family, genus) ) then
           
-          world.logInfo("%s", table.concat(keyset, " "))
+            local keyset = {}
+            local n = 0
+
+            for k,v in pairs(self.scriptorium[family][genus]) do
+              n = n+1
+              keyset[n] = k
+            end
+            
+            world.logInfo("%s", table.concat(keyset, " "))
+          end
         end
-      end
+    }
   },
 
   -- full
   ["GIDS ROOT"] = {
-    command = "GIDS ROOT",
-    rtype = "command",
-    params = {},
-    description = [[
-      Output the family numbers for which there are scripts in the scriptorium.  List is space delimited.
-    ]],
-    callback =
-      function(self)
-        if ( self:script_exists() ) then
-        
-          local keyset = {}
-          local n = 0
-
-          for k,v in pairs(self.scriptorium) do
-            n = n+1
-            keyset[n] = k
-          end
+    ["command"] = {
+      command = "GIDS ROOT",
+      rtype = "command",
+      params = {},
+      description = [[
+        Output the family numbers for which there are scripts in the scriptorium.  List is space delimited.
+      ]],
+      callback =
+        function(self)
+          if ( CAOS.script_exists() ) then
           
-          world.logInfo("%s", table.concat(keyset, " "))
+            local keyset = {}
+            local n = 0
+
+            for k,v in pairs(self.scriptorium) do
+              n = n+1
+              keyset[n] = k
+            end
+            
+            world.logInfo("%s", table.concat(keyset, " "))
+          end
         end
-      end
+    }
   },
 
   -- full
   ["GIDS SPCS"] = {
-    command = "GIDS SPCS",
-    rtype = "command",
-    params = {
-      { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
-    description = [[
-      Output the event numbers of scripts in the scriptorium for the given classifier.  List is space delimited.
-    ]],
-    callback =
-      function(self, family, genus, species )
-        if ( self:script_exists(family, genus, species) ) then
-        
-          local keyset = {}
-          local n = 0
-
-          for k,v in pairs(self.scriptorium[family][genus][species]) do
-            n = n+1
-            keyset[n] = k
-          end
+    ["command"] = {
+      command = "GIDS SPCS",
+      rtype = "command",
+      params = {
+        { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
+      description = [[
+        Output the event numbers of scripts in the scriptorium for the given classifier.  List is space delimited.
+      ]],
+      callback =
+        function(self, family, genus, species )
+          if ( CAOS.script_exists(family, genus, species) ) then
           
-          world.logInfo("%s", table.concat(keyset, " "))
+            local keyset = {}
+            local n = 0
+
+            for k,v in pairs(self.scriptorium[family][genus][species]) do
+              n = n+1
+              keyset[n] = k
+            end
+            
+            world.logInfo("%s", table.concat(keyset, " "))
+          end
         end
-      end
+    }
   },
 
   -- full
   ["INST"] = {
-    command = "INST",
-    rtype = "command",
-    params = {},
-    description = [[
-      This command indicates that the following commands should execute in a single tick - ie the script cannot be 
-      interrupted by the script 'scheduler'. This can be important for certain tasks which might leave an agent in 
-      an undefined (and dangerous) state if interrupted. The INST state is broken either manually, using a @SLOW@ command, 
-      or implictly, if a blocking instruction is encountered (eg @WAIT@). Blocking instructions force the remainder of the script'
-      s timeslice to be discarded.
-    ]],
-    callback =
-      function(self)
-        o.instant_execution = true
-      end
+    ["command"] = {
+      command = "INST",
+      rtype = "command",
+      params = {},
+      description = [[
+        This command indicates that the following commands should execute in a single tick - ie the script cannot be 
+        interrupted by the script 'scheduler'. This can be important for certain tasks which might leave an agent in 
+        an undefined (and dangerous) state if interrupted. The INST state is broken either manually, using a @SLOW@ command, 
+        or implictly, if a blocking instruction is encountered (eg @WAIT@). Blocking instructions force the remainder of the script'
+        s timeslice to be discarded.
+      ]],
+      callback =
+        function(self)
+          o.instant_execution = true
+        end
+    }
   },
 
 
   ["JECT"] = {
-    command = "JECT",
-    rtype = "command",
-    params = {
-      { "cos_file", "string" },  { "flags", "integer" } },
-    description = [[
-      Injects a COS file from the bootstrap directory.  The file is searched for (case insensitively) in all bootstrap subdirectories.  You must specify the file extension (it doesn't have to be .cos).  Flags is a combination of what you want to inject:
-      1 - Remove sctipt
-      2 - Event scripts
-      4 - Install script
-      The scripts (if present) are injected in that order.  So, setting flags to 7 
-      will fully uninstall and reinstall the cos file.  Error messages and output are written to the current output 
-      stream.
-    ]],
-    callback =
-      function(self, cos_file, flags )
-      end
+    ["command"] = {
+      command = "JECT",
+      rtype = "command",
+      params = {
+        { "cos_file", "string" },  { "flags", "integer" } },
+      description = [[
+        Injects a COS file from the bootstrap directory.  The file is searched for (case insensitively) in all bootstrap subdirectories.  You must specify the file extension (it doesn't have to be .cos).  Flags is a combination of what you want to inject:
+        1 - Remove sctipt
+        2 - Event scripts
+        4 - Install script
+        The scripts (if present) are injected in that order.  So, setting flags to 7 
+        will fully uninstall and reinstall the cos file.  Error messages and output are written to the current output 
+        stream.
+      ]],
+      callback =
+        function(self, cos_file, flags )
+        end
+    }
   },
 
   -- full
   ["LOCK"] = {
-    command = "LOCK",
-    rtype = "command",
-    params = {},
-    description = [[
-      Prevent the current script being interrupted until @UNLK@.  Normally, events other than timer scripts interrupt (abort) currently running 
-      scripts.  You can also use @INST@ for similar, stronger protection.
-    ]],
-    callback =
-      function(self)
-        o.no_interrupt = true
-      end
+    ["command"] = {
+      command = "LOCK",
+      rtype = "command",
+      params = {},
+      description = [[
+        Prevent the current script being interrupted until @UNLK@.  Normally, events other than timer scripts interrupt (abort) currently running 
+        scripts.  You can also use @INST@ for similar, stronger protection.
+      ]],
+      callback =
+        function(self)
+          o.no_interrupt = true
+        end
+    }
   },
 
   -- full
   ["SCRX"] = {
-    command = "SCRX",
-    rtype = "command",
-    params = {
-      { "family", "integer" },  { "genus", "integer" },  { "species", "integer" },  { "event", "integer" } },
-    description = [[
-      Remove specified script from the scriptorium.
-    ]],
-    callback =
-      function(self, family, genus, species, event )
-        if ( self:script_exists(family, genus, species, event) ) then
-          self.scriptorium[family][genus][species][event] = nil
+    ["command"] = {
+      command = "SCRX",
+      rtype = "command",
+      params = {
+        { "family", "integer" },  { "genus", "integer" },  { "species", "integer" },  { "event", "integer" } },
+      description = [[
+        Remove specified script from the scriptorium.
+      ]],
+      callback =
+        function(self, family, genus, species, event )
+          if ( CAOS.script_exists(family, genus, species, event) ) then
+            self.scriptorium[family][genus][species][event] = nil
+          end
         end
-      end
+    }
   },
 
   -- full
   ["SLOW"] = {
-    command = "SLOW",
-    rtype = "command",
-    params = {},
-    description = [[
-      Turn off @INST@ state.
-    ]],
-    callback =
-      function(self)
-        o.instant_execution = false
-      end
+    ["command"] = {
+      command = "SLOW",
+      rtype = "command",
+      params = {},
+      description = [[
+        Turn off @INST@ state.
+      ]],
+      callback =
+        function(self)
+          o.instant_execution = false
+        end
+    }
   },
 
   -- full
   ["SORC"] = {
-    command = "SORC",
-    rtype = "string",
-    params = {
-      { "family", "integer" },  { "genus", "integer" },  { "species", "integer" },  { "event", "integer" } },
-    description = [[
-      Returns the source code for the specified script.  Use the @GIDS@ commands to find available scripts.
-    ]],
-    callback =
-      function(self, family, genus, species, event )
-        if ( self:script_exists(family, genus, species, event) ) then
-          return self.scriptorium[family][genus][species][event]["source"]
+    ["string"] = {
+      command = "SORC",
+      rtype = "string",
+      params = {
+        { "family", "integer" },  { "genus", "integer" },  { "species", "integer" },  { "event", "integer" } },
+      description = [[
+        Returns the source code for the specified script.  Use the @GIDS@ commands to find available scripts.
+      ]],
+      callback =
+        function(self, family, genus, species, event )
+          if ( CAOS.script_exists(family, genus, species, event) ) then
+            return self.scriptorium[family][genus][species][event]["source"]
+          end
+          return ""
         end
-        return ""
-      end
+    }
   },
 
   -- full
   ["SORQ"] = {
-    command = "SORQ",
-    rtype = "integer",
-    params = {
-      { "family", "integer" },  { "genus", "integer" },  { "species", "integer" },  { "event", "integer" } },
-    description = [[
-      Returns 1 if the script is in the scriptorium, or if there is a general event script for 
-      the entire genus, or family.  Returns 0 if there is no matching script.
-    ]],
-    callback =
-      function(self, family, genus, species, event )
-        if ( self:script_exists(family, genus, species, event)
-              or self:script_exists(family, genus, 0, event)
-              or self:script_exists(family, 0, 0, event) ) then
-          return 1
+    ["integer"] = {
+      command = "SORQ",
+      rtype = "integer",
+      params = {
+        { "family", "integer" },  { "genus", "integer" },  { "species", "integer" },  { "event", "integer" } },
+      description = [[
+        Returns 1 if the script is in the scriptorium, or if there is a general event script for 
+        the entire genus, or family.  Returns 0 if there is no matching script.
+      ]],
+      callback =
+        function(self, family, genus, species, event )
+          if ( CAOS.script_exists(family, genus, species, event)
+                or CAOS.script_exists(family, genus, 0, event)
+                or CAOS.script_exists(family, 0, 0, event) ) then
+            return 1
+          end
+          return 0
         end
-        return 0
-      end
+    }
   },
 
   -- full
   ["STOP"] = {
-    command = "STOP",
-    rtype = "command",
-    params = {},
-    description = [[
-      Stops running the current script.  Compare @STPT@.
-    ]],
-    callback =
-      function(self)
-        self.stopped = true
-      end
+    ["command"] = {
+      command = "STOP",
+      rtype = "command",
+      params = {},
+      description = [[
+        Stops running the current script.  Compare @STPT@.
+      ]],
+      callback =
+        function(self)
+          self.stopped = true
+        end
+    }
   },
 
   -- full
   ["STPT"] = {
-    command = "STPT",
-    rtype = "command",
-    params = {},
-    description = [[
-      Stops any currently running script in the target agent.  See also @STOP@.
-    ]],
-    callback =
-      function(self)
-        local vm = CAOS.getVar(self.target, "caos_vm")
-        vm.stopped = true
-      end
+    ["command"] = {
+      command = "STPT",
+      rtype = "command",
+      params = {},
+      description = [[
+        Stops any currently running script in the target agent.  See also @STOP@.
+      ]],
+      callback =
+        function(self)
+          local vm = CAOS.getVar(self.target, "caos_vm")
+          vm.stopped = true
+        end
+    }
   },
 
   -- full
   ["UNLK"] = {
-    command = "UNLK",
-    rtype = "command",
-    params = {},
-    description = [[
-      End the @LOCK@ section.
-    ]],
-    callback =
-      function(self)
-        o.no_interrupt = false
-      end
+    ["command"] = {
+      command = "UNLK",
+      rtype = "command",
+      params = {},
+      description = [[
+        End the @LOCK@ section.
+      ]],
+      callback =
+        function(self)
+          o.no_interrupt = false
+        end
+    }
   },
 
   -- full
   ["WAIT"] = {
-    command = "WAIT",
-    rtype = "command",
-    params = {
-      { "ticks", "integer" } },
-    description = [[
-      Block the script for the specified number of ticks. This command does an implicit @SLOW@.
-    ]],
-    callback =
-      function(self, ticks )
-        o.instant_execution = false
-        o.wait_time = ticks
-      end
+    ["command"] = {
+      command = "WAIT",
+      rtype = "command",
+      params = {
+        { "ticks", "integer" } },
+      description = [[
+        Block the script for the specified number of ticks. This command does an implicit @SLOW@.
+      ]],
+      callback =
+        function(self, ticks )
+          o.instant_execution = false
+          o.wait_time = ticks
+        end
+    }
   },
 
   -- N/A
   ["FADE"] = {
-    command = "FADE",
-    rtype = "command",
-    params = {},
-    description = [[
-      Fade out a controlled sound.
-    ]],
-    callback =
-      function(self)
-      end
+    ["command"] = {
+      command = "FADE",
+      rtype = "command",
+      params = {},
+      description = [[
+        Fade out a controlled sound.
+      ]],
+      callback =
+        function(self)
+        end
+    }
   },
 
   -- N/A ?
   ["MCLR"] = {
-    command = "MCLR",
-    rtype = "command",
-    params = {
-      { "x", "integer" },  { "y", "integer" } },
-    description = [[
-      Clear the music for the metaroom at the given location.
-    ]],
-    callback =
-      function(self, x, y )
-      end
+    ["command"] = {
+      command = "MCLR",
+      rtype = "command",
+      params = {
+        { "x", "integer" },  { "y", "integer" } },
+      description = [[
+        Clear the music for the metaroom at the given location.
+      ]],
+      callback =
+        function(self, x, y )
+        end
+    }
   },
 
   -- N/A or needs workaround
   ["MIDI"] = {
-    command = "MIDI",
-    rtype = "command",
-    params = {
-      { "midi_file", "string" } },
-    description = [[
-      Plays a MIDI file.  Set to an empty string to stop the MIDI player.
-    ]],
-    callback =
-      function(self, midi_file )
-      end
+    ["command"] = {
+      command = "MIDI",
+      rtype = "command",
+      params = {
+        { "midi_file", "string" } },
+      description = [[
+        Plays a MIDI file.  Set to an empty string to stop the MIDI player.
+      ]],
+      callback =
+        function(self, midi_file )
+        end
+    }
   },
 
   -- needs workaround?
   ["MMSC"] = {
-    lvalue = {
+    ["command"] = {
       command = "MMSC",
       rtype = "command",
       params = {
@@ -8573,7 +9382,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["string"] = {
       command = "MMSC",
       rtype = "string",
       params = {
@@ -8590,42 +9399,46 @@ CAOS.Machine.commands = {
 
   -- N/A
   ["MUTE"] = {
-    command = "MUTE",
-    rtype = "integer",
-    params = {
-      { "andMask", "integer" },  { "eorMask", "integer" } },
-    description = [[
-      This returns (and potentially sets) the mute values for the sound managers in the game. Sensible settings for the parameters are as follows:
-      <table border=1><tr><th>andMask</th><th>eorMask</th><th>returns</th></tr><tr><td>0</td><td>3</td><td>3 - Mutes both sound and music</td></tr><tr><td>3</td><td>0</td><td>0 for no mute
-      1 for sound muted
-      2 for music muted
-      3 for both muted
-      Sets nothing</td></tr><tr><td>1</td><td>2</td><td>Returns 2 for music muted, or 3 for both muted
-      Only sets mute on music, leaves sound alone</td></tr></table>
-    ]],
-    callback =
-      function(self, andMask, eorMask )
-        return 0
-      end
+    ["integer"] = {
+      command = "MUTE",
+      rtype = "integer",
+      params = {
+        { "andMask", "integer" },  { "eorMask", "integer" } },
+      description = [[
+        This returns (and potentially sets) the mute values for the sound managers in the game. Sensible settings for the parameters are as follows:
+        <table border=1><tr><th>andMask</th><th>eorMask</th><th>returns</th></tr><tr><td>0</td><td>3</td><td>3 - Mutes both sound and music</td></tr><tr><td>3</td><td>0</td><td>0 for no mute
+        1 for sound muted
+        2 for music muted
+        3 for both muted
+        Sets nothing</td></tr><tr><td>1</td><td>2</td><td>Returns 2 for music muted, or 3 for both muted
+        Only sets mute on music, leaves sound alone</td></tr></table>
+      ]],
+      callback =
+        function(self, andMask, eorMask )
+          return 0
+        end
+    }
   },
 
   -- N/A ?
   ["RCLR"] = {
-    command = "RCLR",
-    rtype = "command",
-    params = {
-      { "x", "integer" },  { "y", "integer" } },
-    description = [[
-      Clear the music for the room at the given location.
-    ]],
-    callback =
-      function(self, x, y )
-      end
+    ["command"] = {
+      command = "RCLR",
+      rtype = "command",
+      params = {
+        { "x", "integer" },  { "y", "integer" } },
+      description = [[
+        Clear the music for the room at the given location.
+      ]],
+      callback =
+        function(self, x, y )
+        end
+    }
   },
 
   -- needs workaround?
   ["RMSC"] = {
-    lvalue = {
+    ["command"] = {
       command = "RMSC",
       rtype = "command",
       params = {
@@ -8639,7 +9452,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["string"] = {
       command = "RMSC",
       rtype = "string",
       params = {
@@ -8656,7 +9469,8 @@ CAOS.Machine.commands = {
 
   -- partial
   ["SEZZ"] = {
-    command = "SEZZ",
+    ["command"] = {
+      command = "SEZZ",
     rtype = "command",
     params = {
       { "text", "string" } },
@@ -8678,120 +9492,135 @@ CAOS.Machine.commands = {
           world.logInfo("%s says \"%s\"", world.entityName(self.target.id()), text)
         end
       end
+    }
   },
 
   -- full
   ["SNDC"] = {
-    command = "SNDC",
-    rtype = "command",
-    params = {
-      { "sound_file", "string" } },
-    description = [[
-      Plays a controlled sound effect emitted from the target.  Updates volume and panning 
-      as the agent moves.
-    ]],
-    callback =
-      function(self, sound_file )
-        if ( self.target.playSound ~= nil ) then
-          self.target.playSound(sound_file)
+    ["command"] = {
+      command = "SNDC",
+      rtype = "command",
+      params = {
+        { "sound_file", "string" } },
+      description = [[
+        Plays a controlled sound effect emitted from the target.  Updates volume and panning 
+        as the agent moves.
+      ]],
+      callback =
+        function(self, sound_file )
+          if ( self.target.playSound ~= nil ) then
+            self.target.playSound(sound_file)
+          end
         end
-      end
+    }
   },
 
   -- full
   ["SNDE"] = {
-    command = "SNDE",
-    rtype = "command",
-    params = {
-      { "sound_file", "string" } },
-    description = [[
-      Play a sound effect audible as if emitted from target's current location.
-    ]],
-    callback =
-      function(self, sound_file )
-        if ( self.target.playSound ~= nil ) then
-          self.target.playSound(sound_file)
+    ["command"] = {
+      command = "SNDE",
+      rtype = "command",
+      params = {
+        { "sound_file", "string" } },
+      description = [[
+        Play a sound effect audible as if emitted from target's current location.
+      ]],
+      callback =
+        function(self, sound_file )
+          if ( self.target.playSound ~= nil ) then
+            self.target.playSound(sound_file)
+          end
         end
-      end
+    }
   },
 
 
   ["SNDL"] = {
-    command = "SNDL",
-    rtype = "command",
-    params = {
-      { "sound_file", "string" } },
-    description = [[
-      Play a sound effect as in @SNDC@, only the sound is looped.
-    ]],
-    callback =
-      function(self, sound_file )
-      end
+    ["command"] = {
+      command = "SNDL",
+      rtype = "command",
+      params = {
+        { "sound_file", "string" } },
+      description = [[
+        Play a sound effect as in @SNDC@, only the sound is looped.
+      ]],
+      callback =
+        function(self, sound_file )
+        end
+    }
   },
 
   -- partial, uncommon
   ["SNDQ"] = {
-    command = "SNDQ",
-    rtype = "command",
-    params = {
-      { "sound_file", "string" },  { "delay", "integer" } },
-    description = [[
-      As @SNDE@, only with a delay before playing.
-    ]],
-    callback =
-      function(self, sound_file, delay )
-        if ( self.target.playSound ~= nil ) then
-          self.target.playSound(sound_file)
+    ["command"] = {
+      command = "SNDQ",
+      rtype = "command",
+      params = {
+        { "sound_file", "string" },  { "delay", "integer" } },
+      description = [[
+        As @SNDE@, only with a delay before playing.
+      ]],
+      callback =
+        function(self, sound_file, delay )
+          if ( self.target.playSound ~= nil ) then
+            self.target.playSound(sound_file)
+          end
         end
-      end
+    }
   },
 
   -- N/A ?
   ["STPC"] = {
-    command = "STPC",
-    rtype = "command",
-    params = {},
-    description = [[
-      Stops a controlled sound.
-    ]],
-    callback =
-      function(self)
-      end
+    ["command"] = {
+      command = "STPC",
+      rtype = "command",
+      params = {},
+      description = [[
+        Stops a controlled sound.
+      ]],
+      callback =
+        function(self)
+        end
+    }
   },
 
 
   ["STRK"] = {
-    command = "STRK",
-    rtype = "command",
-    params = {
-      { "latency", "integer" },  { "track", "string" } },
-    description = [[
-      This triggers the music track specified. The track will play for at least latency seconds before being overridden 
-      by room or metaroom music.
-    ]],
-    callback =
-      function(self, latency, track )
-      end
+    ["command"] = {
+      command = "STRK",
+      rtype = "command",
+      params = {
+        { "latency", "integer" },  { "track", "string" } },
+      description = [[
+        This triggers the music track specified. The track will play for at least latency seconds before being overridden 
+        by room or metaroom music.
+      ]],
+      callback =
+        function(self, latency, track )
+        end
+    }
   },
 
 
   ["VOIC"] = {
-    command = "VOIC",
-    rtype = "command",
-    params = {
-      { "genus", "integer" },  { "gender", "integer" },  { "age", "integer" } },
-    description = [[
-      This sets the @TARG@ agent's voice to the specified creature voice, using standard cascade techniques to select 
-      the nearest match.  On failure, "DefaultVoice" will be reloaded.  Use @SEZZ@ to actually say something.
-    ]],
-    callback =
-      function(self, genus, gender, age )
-      end
+    ["command"] = {
+      command = "VOIC",
+      rtype = "command",
+      params = {
+        { "genus", "integer" },  { "gender", "integer" },  { "age", "integer" } },
+      description = [[
+        This sets the @TARG@ agent's voice to the specified creature voice, using standard cascade techniques to select 
+        the nearest match.  On failure, "DefaultVoice" will be reloaded.  Use @SEZZ@ to actually say something.
+      ]],
+      callback =
+        function(self, genus, gender, age )
+        end
+    }
   },
 
   -- full
   ["VOIS"] = {
-    lvalue = {
+    ["command"] = {
       command = "VOIS",
       rtype = "command",
       params = {
@@ -8806,7 +9635,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["string"] = {
       command = "VOIS",
       rtype = "string",
       params = {},
@@ -8824,7 +9653,7 @@ CAOS.Machine.commands = {
 
   -- N/A
   ["VOLM"] = {
-    lvalue = {
+    ["command"] = {
       command = "VOLM",
       rtype = "command",
       params = {
@@ -8838,7 +9667,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "VOLM",
       rtype = "integer",
       params = {
@@ -8856,7 +9685,7 @@ CAOS.Machine.commands = {
 
   -- full/partial
   ["BUZZ"] = {
-    lvalue = {
+    ["command"] = {
       command = "BUZZ",
       rtype = "command",
       params = {
@@ -8873,7 +9702,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "BUZZ",
       rtype = "integer",
       params = {},
@@ -8889,7 +9718,8 @@ CAOS.Machine.commands = {
 
   -- full
   ["DATE"] = {
-    command = "DATE",
+    ["integer"] = {
+      command = "DATE",
     rtype = "integer",
     params = {},
     description = [[
@@ -8904,117 +9734,133 @@ CAOS.Machine.commands = {
         
         return math.floor(world.day()) % days_in_season
       end
+    }
   },
 
 
   ["DAYT"] = {
-    command = "DAYT",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the current day of the month
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "DAYT",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the current day of the month
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
   -- full
   ["ETIK"] = {
-    command = "ETIK",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the number of ticks since the engine was loaded in.
-    ]],
-    callback =
-      function(self)
-        return os.clock()
-      end
+    ["integer"] = {
+      command = "ETIK",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the number of ticks since the engine was loaded in.
+      ]],
+      callback =
+        function(self)
+          return os.clock()
+        end
+    }
   },
 
 
   ["HIST DATE"] = {
-    command = "HIST DATE",
-    rtype = "integer",
-    params = {
-      { "world_tick", "integer" } },
-    description = [[
-      Returns the day within the current season.  This is the same as @DATE@.  See also @WTIK@ and @HIST 
-      WTIK@.
-    ]],
-    callback =
-      function(self, world_tick )
-        return 0
-      end
+    ["integer"] = {
+      command = "HIST DATE",
+      rtype = "integer",
+      params = {
+        { "world_tick", "integer" } },
+      description = [[
+        Returns the day within the current season.  This is the same as @DATE@.  See also @WTIK@ and @HIST 
+        WTIK@.
+      ]],
+      callback =
+        function(self, world_tick )
+          return 0
+        end
+    }
   },
 
 
   ["HIST SEAN"] = {
-    command = "HIST SEAN",
-    rtype = "integer",
-    params = {
-      { "world_tick", "integer" } },
-    description = [[
-      Returns the current season for a given world tick.  This is the same as @SEAN@.  See also @WTIK@ 
-      and @HIST WTIK@.
-    ]],
-    callback =
-      function(self, world_tick )
-        return 0
-      end
+    ["integer"] = {
+      command = "HIST SEAN",
+      rtype = "integer",
+      params = {
+        { "world_tick", "integer" } },
+      description = [[
+        Returns the current season for a given world tick.  This is the same as @SEAN@.  See also @WTIK@ 
+        and @HIST WTIK@.
+      ]],
+      callback =
+        function(self, world_tick )
+          return 0
+        end
+    }
   },
 
 
   ["HIST TIME"] = {
-    command = "HIST TIME",
-    rtype = "integer",
-    params = {
-      { "world_tick", "integer" } },
-    description = [[
-      Returns the time of day for a given world tick.  This is the same as @TIME@.  See also @
-      WTIK@ and @HIST WTIK@.
-    ]],
-    callback =
-      function(self, world_tick )
-        return 0
-      end
+    ["integer"] = {
+      command = "HIST TIME",
+      rtype = "integer",
+      params = {
+        { "world_tick", "integer" } },
+      description = [[
+        Returns the time of day for a given world tick.  This is the same as @TIME@.  See also @
+        WTIK@ and @HIST WTIK@.
+      ]],
+      callback =
+        function(self, world_tick )
+          return 0
+        end
+    }
   },
 
 
   ["HIST YEAR"] = {
-    command = "HIST YEAR",
-    rtype = "integer",
-    params = {
-      { "world_tick", "integer" } },
-    description = [[
-      Returns the number of game years elapsed for a given world tick.  This is the same as @YEAR@.  
-      See also @WTIK@ and @HIST WTIK@.
-    ]],
-    callback =
-      function(self, world_tick )
-        return 0
-      end
+    ["integer"] = {
+      command = "HIST YEAR",
+      rtype = "integer",
+      params = {
+        { "world_tick", "integer" } },
+      description = [[
+        Returns the number of game years elapsed for a given world tick.  This is the same as @YEAR@.  
+        See also @WTIK@ and @HIST WTIK@.
+      ]],
+      callback =
+        function(self, world_tick )
+          return 0
+        end
+    }
   },
 
 
   ["MONT"] = {
-    command = "MONT",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the month of the year
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "MONT",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the month of the year
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
   -- full
   ["MSEC"] = {
-    command = "MSEC",
+    ["integer"] = {
+      command = "MSEC",
     rtype = "integer",
     params = {},
     description = [[
@@ -9025,214 +9871,231 @@ CAOS.Machine.commands = {
       function(self)
         return os.clock()
       end
+    }
   },
 
 
   ["PACE"] = {
-    command = "PACE",
-    rtype = "float",
-    params = {},
-    description = [[
-      Returns the tick rate satisfaction factor.
-      Factor 1 - ticks are taking the time we would expect them to, which is set by @BUZZ@.
-      Factor more than 1 - the engine is running too slowly.
-      Factor less than 1 - the engine is leaving spare processing time.
-      This is averaged over the last 10 ticks.
-      Agents can look at this to adjust the resources 
-      they use according to current spare processing time.  For example, if you have a random snowflake generator in 
-      winter, you could increase the chance of generation if PACE is low, and decrease the chance if PACE 
-      is high.  When you do this remember that computers will be arbitarily faster in the future, so you 
-      should place an extra upper limit on the number of snowflakes to stop them filling the whole screen.<
-      p>Note that PACE only measures the time the engine takes for tick processing, not for handling requests 
-      from external applications, or adding Windows events to its internal queue.  Because of this, you should aim for 
-      a value which is a bit less than 1.
-      Compare @RACE@.
-    ]],
-    callback =
-      function(self)
-        return 0.0
-      end
+    ["float"] = {
+      command = "PACE",
+      rtype = "float",
+      params = {},
+      description = [[
+        Returns the tick rate satisfaction factor.
+        Factor 1 - ticks are taking the time we would expect them to, which is set by @BUZZ@.
+        Factor more than 1 - the engine is running too slowly.
+        Factor less than 1 - the engine is leaving spare processing time.
+        This is averaged over the last 10 ticks.
+        Agents can look at this to adjust the resources 
+        they use according to current spare processing time.  For example, if you have a random snowflake generator in 
+        winter, you could increase the chance of generation if PACE is low, and decrease the chance if PACE 
+        is high.  When you do this remember that computers will be arbitarily faster in the future, so you 
+        should place an extra upper limit on the number of snowflakes to stop them filling the whole screen.<
+        p>Note that PACE only measures the time the engine takes for tick processing, not for handling requests 
+        from external applications, or adding Windows events to its internal queue.  Because of this, you should aim for 
+        a value which is a bit less than 1.
+        Compare @RACE@.
+      ]],
+      callback =
+        function(self)
+          return 0.0
+        end
+    }
   },
 
 
   ["RACE"] = {
-    command = "RACE",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the time in milliseconds which the last tick took overall.  This differs from @PACE@ in that on 
-      fast machines it will have a minimum of 50 milliseconds, or the value set by @BUZZ@.  It accounts 
-      for all the time in the tick, including event handling and window processing.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "RACE",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the time in milliseconds which the last tick took overall.  This differs from @PACE@ in that on 
+        fast machines it will have a minimum of 50 milliseconds, or the value set by @BUZZ@.  It accounts 
+        for all the time in the tick, including event handling and window processing.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
   ["RTIF"] = {
-    command = "RTIF",
-    rtype = "string",
-    params = {
-      { "real_time", "integer" },  { "format", "string" } },
-    description = [[
-      Takes a real world time, as returned by @RTIM@ or @HIST RTIM@ and converts it to	a localised string for display.  The format string is made up of any text, with the following special codes:
-      %a - Abbreviated weekday name
-      %A - Full weekday name
-      %b - Abbreviated month name
-      %B - Full month name
-      %c - Date and time representation appropriate for locale
-      %d - Day of month as decimal number (01 - 31)
-      %H - Hour in 24-hour format (00 - 23)
-      %I - Hour in 12-hour format (01 - 12)
-      %j - Day of year as decimal number (001 - 366)
-      %m - Month as decimal number (01 - 12)
-      %M - Minute as decimal number (00 - 59)
-      %p - Current locale’s AM/PM indicator for 12-hour clock
-      %S - Second as decimal number (00 - 59)
-      %U - Week of year as decimal number, with Sunday as first day of week (00 - 53)
-      %w - Weekday as decimal number (0 - 6; Sunday is 0)
-      %W - Week of year as decimal number, with Monday as first day of week (00 - 53)
-      %x - Date representation for current locale
-      %X - Time representation for current locale
-      %y - Year without century, as decimal number (00 - 99)
-      %Y - Year with century, as decimal number
-      %z, %Z - Time-zone name or abbreviation; no characters if time zone is unknown
-      %% - Percent sign
-      The # flag may prefix any formatting code, having the following meanings:
-      %#a, %#A, %#b, %#B, %#p, %#X, %#z, %#Z, %#% # flag is ignored. 
-      %#c Long date and time representation, appropriate for current locale. For example: Tuesday, March 14, 1995, 12:41:29. 
-      %#x Long date representation, appropriate to current locale. For example: Tuesday, March 14, 1995. 
-      %#d, %#H, %#I, %#j, %#m, %#M, %#S, %#U, %#w, %#W, %#y, %#Y Remove leading zeros (if any).
-      You probably want to @READ@ any formatted string you use from a catalogue file.
-    ]],
-    callback =
-      function(self, real_time, format_ )
-        return ""
-      end
+    ["string"] = {
+      command = "RTIF",
+      rtype = "string",
+      params = {
+        { "real_time", "integer" },  { "format", "string" } },
+      description = [[
+        Takes a real world time, as returned by @RTIM@ or @HIST RTIM@ and converts it to	a localised string for display.  The format string is made up of any text, with the following special codes:
+        %a - Abbreviated weekday name
+        %A - Full weekday name
+        %b - Abbreviated month name
+        %B - Full month name
+        %c - Date and time representation appropriate for locale
+        %d - Day of month as decimal number (01 - 31)
+        %H - Hour in 24-hour format (00 - 23)
+        %I - Hour in 12-hour format (01 - 12)
+        %j - Day of year as decimal number (001 - 366)
+        %m - Month as decimal number (01 - 12)
+        %M - Minute as decimal number (00 - 59)
+        %p - Current locale’s AM/PM indicator for 12-hour clock
+        %S - Second as decimal number (00 - 59)
+        %U - Week of year as decimal number, with Sunday as first day of week (00 - 53)
+        %w - Weekday as decimal number (0 - 6; Sunday is 0)
+        %W - Week of year as decimal number, with Monday as first day of week (00 - 53)
+        %x - Date representation for current locale
+        %X - Time representation for current locale
+        %y - Year without century, as decimal number (00 - 99)
+        %Y - Year with century, as decimal number
+        %z, %Z - Time-zone name or abbreviation; no characters if time zone is unknown
+        %% - Percent sign
+        The # flag may prefix any formatting code, having the following meanings:
+        %#a, %#A, %#b, %#B, %#p, %#X, %#z, %#Z, %#% # flag is ignored. 
+        %#c Long date and time representation, appropriate for current locale. For example: Tuesday, March 14, 1995, 12:41:29. 
+        %#x Long date representation, appropriate to current locale. For example: Tuesday, March 14, 1995. 
+        %#d, %#H, %#I, %#j, %#m, %#M, %#S, %#U, %#w, %#W, %#y, %#Y Remove leading zeros (if any).
+        You probably want to @READ@ any formatted string you use from a catalogue file.
+      ]],
+      callback =
+        function(self, real_time, format_ )
+          return ""
+        end
+    }
   },
 
   -- full
   ["RTIM"] = {
-    command = "RTIM",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the current real world time.  This is measured in seconds since midnight, 1 January 1970 in UTC. 
-      To display, use @RTIF@.
-    ]],
-    callback =
-      function(self)
-        return os.time()
-      end
+    ["integer"] = {
+      command = "RTIM",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the current real world time.  This is measured in seconds since midnight, 1 January 1970 in UTC. 
+        To display, use @RTIF@.
+      ]],
+      callback =
+        function(self)
+          return os.time()
+        end
+    }
   },
 
 
   ["SCOL"] = {
-    command = "SCOL",
-    rtype = "integer",
-    params = {
-      { "and_mask", "integer" },  { "eor_mask", "integer" },  { "up_speeds", "byte-string" },  { "down_speeds", "byte-string" } },
-    description = [[
-      Set an AND and an EOR mask, to control the following scrolling functions:
-      1 - Screen edge nudgy scrolling
-      2 - Keyboard scrolling
-      4 - Middle mouse button screen dragging
-      8 - Mouse wheel screen scrolling
-      The byte strings is used for nudgy and keyboard scrolling.  The defaults 
-      are [1 2 4 8 16 32 64] and [0 1 2 4 8 16 32].  They represent 
-      the number of pixels scrolled each consecutive tick, as the scrolling gets slower and faster.
-      If you use [] for a byte string, then the string won't be changed at all.
-    ]],
-    callback =
-      function(self, and_mask, eor_mask, up_speeds, down_speeds )
-        return 0
-      end
+    ["integer"] = {
+      command = "SCOL",
+      rtype = "integer",
+      params = {
+        { "and_mask", "integer" },  { "eor_mask", "integer" },  { "up_speeds", "byte-string" },  { "down_speeds", "byte-string" } },
+      description = [[
+        Set an AND and an EOR mask, to control the following scrolling functions:
+        1 - Screen edge nudgy scrolling
+        2 - Keyboard scrolling
+        4 - Middle mouse button screen dragging
+        8 - Mouse wheel screen scrolling
+        The byte strings is used for nudgy and keyboard scrolling.  The defaults 
+        are [1 2 4 8 16 32 64] and [0 1 2 4 8 16 32].  They represent 
+        the number of pixels scrolled each consecutive tick, as the scrolling gets slower and faster.
+        If you use [] for a byte string, then the string won't be changed at all.
+      ]],
+      callback =
+        function(self, and_mask, eor_mask, up_speeds, down_speeds )
+          return 0
+        end
+    }
   },
 
   -- full
   ["SEAN"] = {
-    command = "SEAN",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the current season.  This can be
-      0 - spring
-      1 - summer
-      2 - autumn
-      3 - winter
-      The @GAME@ variable engine_LengthOfSeasonInDays sets the season length.  See also @HIST SEAN@.
-    ]],
-    callback =
-      function(self)
-        local days_in_season = self:get_game_var("engine_LengthOfSeasonInDays")
-        if ( days_in_season <= 0 ) then
-          days_in_season = 4
+    ["integer"] = {
+      command = "SEAN",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the current season.  This can be
+        0 - spring
+        1 - summer
+        2 - autumn
+        3 - winter
+        The @GAME@ variable engine_LengthOfSeasonInDays sets the season length.  See also @HIST SEAN@.
+      ]],
+      callback =
+        function(self)
+          local days_in_season = self:get_game_var("engine_LengthOfSeasonInDays")
+          if ( days_in_season <= 0 ) then
+            days_in_season = 4
+          end
+          
+          local seasons_in_year = self:get_game_var("engine_NumberOfSeasons")
+          if ( seasons_in_year <= 0 ) then
+            seasons_in_year = 4
+          end
+          
+          return math.floor(world.day() / days_in_season) % seasons_in_year
         end
-        
-        local seasons_in_year = self:get_game_var("engine_NumberOfSeasons")
-        if ( seasons_in_year <= 0 ) then
-          seasons_in_year = 4
-        end
-        
-        return math.floor(world.day() / days_in_season) % seasons_in_year
-      end
+    }
   },
 
   -- full
   ["TIME"] = {
-    command = "TIME",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the time of day.  This can be
-      0 - dawn
-      1 - morning
-      2 - afternoon
-      3 - evening
-      4 - night
-      The @GAME@ variable engine_LengthOfDayInMinutes sets the day length.  See also @HIST TIME@.
-    ]],
-    callback =
-      function(self)
-        local elapsed = world.timeOfDay()      -- from 0.0 to 1.0
-        
-        if ( elapsed < 0.2 ) then
-          return CAOS.TIME_OF_DAY.DAWN
-        elseif ( elapsed < 0.4 ) then
-          return CAOS.TIME_OF_DAY.MORNING
-        elseif ( elapsed < 0.6 ) then
-          return CAOS.TIME_OF_DAY.AFTERNOON
-        elseif ( elapsed < 0.8 ) then
-          return CAOS.TIME_OF_DAY.EVENING
-        else
-          return CAOS.TIME_OF_DAY.NIGHT
+    ["integer"] = {
+      command = "TIME",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the time of day.  This can be
+        0 - dawn
+        1 - morning
+        2 - afternoon
+        3 - evening
+        4 - night
+        The @GAME@ variable engine_LengthOfDayInMinutes sets the day length.  See also @HIST TIME@.
+      ]],
+      callback =
+        function(self)
+          local elapsed = world.timeOfDay()      -- from 0.0 to 1.0
+          
+          if ( elapsed < 0.2 ) then
+            return CAOS.TIME_OF_DAY.DAWN
+          elseif ( elapsed < 0.4 ) then
+            return CAOS.TIME_OF_DAY.MORNING
+          elseif ( elapsed < 0.6 ) then
+            return CAOS.TIME_OF_DAY.AFTERNOON
+          elseif ( elapsed < 0.8 ) then
+            return CAOS.TIME_OF_DAY.EVENING
+          else
+            return CAOS.TIME_OF_DAY.NIGHT
+          end
         end
-      end
+    }
   },
 
   -- N/A (don't care)
   ["WOLF"] = {
-    command = "WOLF",
-    rtype = "integer",
-    params = {
-      { "kanga_mask", "integer" },  { "eeyore_mask", "integer" } },
-    description = [[
-      Provides various functions to distort space-time and otherwise help with wolfing runs.  Set an AND and an EOR mask, to control the following bits:
-      1 - Display rendering.  Turning it off speeds the game up.
-      2 - Fastest ticks.  The game usually runs at a maximum of 20 frames per second.  If this is set, it instead runs as fast as it can.
-      4 - Refresh display at end of tick.  If set, then the display is updated at the end of the tick, and the flag is cleared.
-      8 - Autokill.  If set, agents which generate run errors are automatically killed, as the command line option.
-    ]],
-    callback =
-      function(self, kanga_mask, eeyore_mask )
-        return 0
-      end
+    ["integer"] = {
+      command = "WOLF",
+      rtype = "integer",
+      params = {
+        { "kanga_mask", "integer" },  { "eeyore_mask", "integer" } },
+      description = [[
+        Provides various functions to distort space-time and otherwise help with wolfing runs.  Set an AND and an EOR mask, to control the following bits:
+        1 - Display rendering.  Turning it off speeds the game up.
+        2 - Fastest ticks.  The game usually runs at a maximum of 20 frames per second.  If this is set, it instead runs as fast as it can.
+        4 - Refresh display at end of tick.  If set, then the display is updated at the end of the tick, and the flag is cleared.
+        8 - Autokill.  If set, agents which generate run errors are automatically killed, as the command line option.
+      ]],
+      callback =
+        function(self, kanga_mask, eeyore_mask )
+          return 0
+        end
+    }
   },
 
 
   ["WPAU"] = {
-    lvalue = {
+    ["command"] = {
       command = "WPAU",
       rtype = "command",
       params = {
@@ -9247,7 +10110,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "WPAU",
       rtype = "integer",
       params = {},
@@ -9263,7 +10126,8 @@ CAOS.Machine.commands = {
 
   -- full
   ["WTIK"] = {
-    command = "WTIK",
+    ["integer"] = {
+      command = "WTIK",
     rtype = "integer",
     params = {},
     description = [[
@@ -9274,159 +10138,178 @@ CAOS.Machine.commands = {
       function(self)
         return world.time()
       end
+    }
   },
 
   -- full
   ["YEAR"] = {
-    command = "YEAR",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the number of game years elapsed.  The @GAME@ variable engine_NumberOfSeasons sets the year length.  See also @HIST 
-      YEAR@.
-    ]],
-    callback =
-      function(self)
-        local days_in_season = self:get_game_var("engine_LengthOfSeasonInDays")
-        if ( days_in_season <= 0 ) then
-          days_in_season = 4
+    ["integer"] = {
+      command = "YEAR",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the number of game years elapsed.  The @GAME@ variable engine_NumberOfSeasons sets the year length.  See also @HIST 
+        YEAR@.
+      ]],
+      callback =
+        function(self)
+          local days_in_season = self:get_game_var("engine_LengthOfSeasonInDays")
+          if ( days_in_season <= 0 ) then
+            days_in_season = 4
+          end
+          
+          local seasons_in_year = self:get_game_var("engine_NumberOfSeasons")
+          if ( seasons_in_year <= 0 ) then
+            seasons_in_year = 4
+          end
+          
+          return math.floor(world.day() / (days_in_season * seasons_in_year))
         end
-        
-        local seasons_in_year = self:get_game_var("engine_NumberOfSeasons")
-        if ( seasons_in_year <= 0 ) then
-          seasons_in_year = 4
-        end
-        
-        return math.floor(world.day() / (days_in_season * seasons_in_year))
-      end
+    }
   },
 
   -- full
   ["ABSV"] = {
-    command = "ABSV",
-    rtype = "command",
-    params = {
-      { "var", "variable" } },
-    description = [[
-      Makes a variable positive (its absolute value), so if var is negative var = 0 - var, otherwise var is 
-      left alone.
-    ]],
-    callback =
-      function(self, var )
-        var.value = math.abs(var.value)
-      end
+    ["command"] = {
+      command = "ABSV",
+      rtype = "command",
+      params = {
+        { "var", "variable" } },
+      description = [[
+        Makes a variable positive (its absolute value), so if var is negative var = 0 - var, otherwise var is 
+        left alone.
+      ]],
+      callback =
+        function(self, var )
+          var.value = math.abs(var.value)
+        end
+    }
   },
 
   -- full
   ["ACOS"] = {
-    command = "ACOS",
-    rtype = "float",
-    params = {
-      { "x", "float" } },
-    description = [[
-      Returns arccosine of x in degrees.
-    ]],
-    callback =
-      function(self, x )
-        return math.acos(x) * 180.0 / math.pi
-      end
+    ["float"] = {
+      command = "ACOS",
+      rtype = "float",
+      params = {
+        { "x", "float" } },
+      description = [[
+        Returns arccosine of x in degrees.
+      ]],
+      callback =
+        function(self, x )
+          return math.acos(x) * 180.0 / math.pi
+        end
+    }
   },
 
   -- full
   ["ADDS"] = {
-    command = "ADDS",
-    rtype = "command",
-    params = {
-      { "var", "variable" },  { "append", "string" } },
-    description = [[
-      Concatenates two strings, so var = var + append.
-    ]],
-    callback =
-      function(self, var, append )
-        var.value = var.value .. append
-      end
+    ["command"] = {
+      command = "ADDS",
+      rtype = "command",
+      params = {
+        { "var", "variable" },  { "append", "string" } },
+      description = [[
+        Concatenates two strings, so var = var + append.
+      ]],
+      callback =
+        function(self, var, append )
+          var.value = var.value .. append
+        end
+    }
   },
 
   -- full
   ["ADDV"] = {
-    command = "ADDV",
-    rtype = "command",
-    params = {
-      { "var", "variable" },  { "sum", "decimal" } },
-    description = [[
-      Adds two integers or floats, so var = var + sum.
-    ]],
-    callback =
-      function(self, var, sum )
-        var.value = var.value + sum
-      end
+    ["command"] = {
+      command = "ADDV",
+      rtype = "command",
+      params = {
+        { "var", "variable" },  { "sum", "decimal" } },
+      description = [[
+        Adds two integers or floats, so var = var + sum.
+      ]],
+      callback =
+        function(self, var, sum )
+          var.value = var.value + sum
+        end
+    }
   },
 
   -- full
   ["ANDV"] = {
-    command = "ANDV",
-    rtype = "command",
-    params = {
-      { "var", "variable" },  { "value", "integer" } },
-    description = [[
-      Peform a bitwise AND on an integer variable, so var = var & value.
-    ]],
-    callback =
-      function(self, var, value )
-        var.value = bit32.band(var.value, value)
-      end
+    ["command"] = {
+      command = "ANDV",
+      rtype = "command",
+      params = {
+        { "var", "variable" },  { "value", "integer" } },
+      description = [[
+        Peform a bitwise AND on an integer variable, so var = var & value.
+      ]],
+      callback =
+        function(self, var, value )
+          var.value = bit32.band(var.value, value)
+        end
+    }
   },
 
   -- full
   ["ASIN"] = {
-    command = "ASIN",
-    rtype = "float",
-    params = {
-      { "x", "float" } },
-    description = [[
-      Returns arcsine of x in degrees.
-    ]],
-    callback =
-      function(self, x )
-        return math.asin(x) * 180.0 / math.pi
-      end
+    ["float"] = {
+      command = "ASIN",
+      rtype = "float",
+      params = {
+        { "x", "float" } },
+      description = [[
+        Returns arcsine of x in degrees.
+      ]],
+      callback =
+        function(self, x )
+          return math.asin(x) * 180.0 / math.pi
+        end
+    }
   },
 
   -- full
   ["ATAN"] = {
-    command = "ATAN",
-    rtype = "float",
-    params = {
-      { "x", "float" } },
-    description = [[
-      Returns arctangent of x in degrees.
-    ]],
-    callback =
-      function(self, x )
-        return math.atan(x) * 180.0 / math.pi
-      end
+    ["float"] = {
+      command = "ATAN",
+      rtype = "float",
+      params = {
+        { "x", "float" } },
+      description = [[
+        Returns arctangent of x in degrees.
+      ]],
+      callback =
+        function(self, x )
+          return math.atan(x) * 180.0 / math.pi
+        end
+    }
   },
 
 
   ["AVAR"] = {
-    command = "AVAR",
-    rtype = "variable",
-    params = {
-      { "agent", "agent" },  { "index", "integer" } },
-    description = [[
-      This is the OVnn variable of the agent passed in.  It is equivalent to target agent, OVnn, but 
-      means that you don't need to target it first :)  You can also use them to implement primitive 
-      arrays.
-    ]],
-    callback =
-      function(self, agent, index )
-        return nil
-      end
+    ["variable"] = {
+      command = "AVAR",
+      rtype = "variable",
+      params = {
+        { "agent", "agent" },  { "index", "integer" } },
+      description = [[
+        This is the OVnn variable of the agent passed in.  It is equivalent to target agent, OVnn, but 
+        means that you don't need to target it first :)  You can also use them to implement primitive 
+        arrays.
+      ]],
+      callback =
+        function(self, agent, index )
+          return nil
+        end
+    }
   },
 
   -- full (needs verification)
   ["CHAR"] = {
-    lvalue = {
+    ["command"] = {
       command = "CHAR",
       rtype = "command",
       params = {
@@ -9440,7 +10323,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "CHAR",
       rtype = "integer",
       params = {
@@ -9457,665 +10340,750 @@ CAOS.Machine.commands = {
 
   -- full
   ["COS_"] = {
-    command = "COS_",
-    rtype = "float",
-    params = {
-      { "theta", "float" } },
-    description = [[
-      Returns cosine of theta. Theta should be in degrees.
-    ]],
-    callback =
-      function(self, theta )
-        return math.cos(theta * math.pi / 180.0)
-      end
+    ["float"] = {
+      command = "COS_",
+      rtype = "float",
+      params = {
+        { "theta", "float" } },
+      description = [[
+        Returns cosine of theta. Theta should be in degrees.
+      ]],
+      callback =
+        function(self, theta )
+          return math.cos(theta * math.pi / 180.0)
+        end
+    }
   },
 
   -- full
   ["DELE"] = {
-    command = "DELE",
-    rtype = "command",
-    params = {
-      { "variable_name", "string" } },
-    description = [[
-      Deletes the specified @EAME@ variable.
-    ]],
-    callback =
-      function(self, variable_name )
-        self:get_engine_var(variable_name).value = nil
-      end
+    ["command"] = {
+      command = "DELE",
+      rtype = "command",
+      params = {
+        { "variable_name", "string" } },
+      description = [[
+        Deletes the specified @EAME@ variable.
+      ]],
+      callback =
+        function(self, variable_name )
+          self:get_engine_var(variable_name).value = nil
+        end
+    }
   },
 
   -- full
   ["DELG"] = {
-    command = "DELG",
-    rtype = "command",
-    params = {
-      { "variable_name", "string" } },
-    description = [[
-      Deletes the specified @GAME@ variable.
-    ]],
-    callback =
-      function(self, variable_name )
-        self:get_game_var(variable_name).value = nil
-      end
+    ["command"] = {
+      command = "DELG",
+      rtype = "command",
+      params = {
+        { "variable_name", "string" } },
+      description = [[
+        Deletes the specified @GAME@ variable.
+      ]],
+      callback =
+        function(self, variable_name )
+          self:get_game_var(variable_name).value = nil
+        end
+    }
   },
 
   -- full
   ["DELN"] = {
-    command = "DELN",
-    rtype = "command",
-    params = {
-      { "variable_name", "anything" } },
-    description = [[
-      Deletes the specified @NAME@ variable on @TARG@.
-    ]],
-    callback =
-      function(self, variable_name )
-        self:get_target_var(variable_name).value = nil
-      end
+    ["command"] = {
+      command = "DELN",
+      rtype = "command",
+      params = {
+        { "variable_name", "anything" } },
+      description = [[
+        Deletes the specified @NAME@ variable on @TARG@.
+      ]],
+      callback =
+        function(self, variable_name )
+          self:get_target_var(variable_name).value = nil
+        end
+    }
   },
 
   -- full
   ["DIVV"] = {
-    command = "DIVV",
-    rtype = "command",
-    params = {
-      { "var", "variable" },  { "div", "decimal" } },
-    description = [[
-      Divides a variable by an integer or float, so var = var / div.  Uses integer division if both numbers 
-      are integers, or floating point division otherwise.
-    ]],
-    callback =
-      function(self, var, div )
-        var.value = var.value / div
-      end
+    ["command"] = {
+      command = "DIVV",
+      rtype = "command",
+      params = {
+        { "var", "variable" },  { "div", "decimal" } },
+      description = [[
+        Divides a variable by an integer or float, so var = var / div.  Uses integer division if both numbers 
+        are integers, or floating point division otherwise.
+      ]],
+      callback =
+        function(self, var, div )
+          var.value = var.value / div
+        end
+    }
   },
 
   -- full
   ["EAME"] = {
-    command = "EAME",
-    rtype = "variable",
-    params = {
-      { "variable_name", "string" } },
-    description = [[
-      Very similar to @GAME@ variables only they aren't saved or loaded with the world; they keep their 
-      value between worlds for one session of the engine.  The E in EAME stands for for Engine.  See 
-      the table of engine @Eame Variables@.
-    ]],
-    callback =
-      function(self, variable_name )
-        return self:get_engine_var(variable_name)
-      end
+    ["variable"] = {
+      command = "EAME",
+      rtype = "variable",
+      params = {
+        { "variable_name", "string" } },
+      description = [[
+        Very similar to @GAME@ variables only they aren't saved or loaded with the world; they keep their 
+        value between worlds for one session of the engine.  The E in EAME stands for for Engine.  See 
+        the table of engine @Eame Variables@.
+      ]],
+      callback =
+        function(self, variable_name )
+          return self:get_engine_var(variable_name)
+        end
+    }
   },
 
 
   ["EAMN"] = {
-    command = "EAMN",
-    rtype = "string",
-    params = {
-      { "previous", "string" } },
-    description = [[
-      Enumerates through @EAME@ variable names, roughly as @GAMN@ does through @GAME@ variables.  Start and end with an empty 
-      string.
-    ]],
-    callback =
-      function(self, previous )
-        return ""
-      end
+    ["string"] = {
+      command = "EAMN",
+      rtype = "string",
+      params = {
+        { "previous", "string" } },
+      description = [[
+        Enumerates through @EAME@ variable names, roughly as @GAMN@ does through @GAME@ variables.  Start and end with an empty 
+        string.
+      ]],
+      callback =
+        function(self, previous )
+          return ""
+        end
+    }
   },
 
   -- full
   ["FTOI"] = {
-    command = "FTOI",
-    rtype = "integer",
-    params = {
-      { "number_to_convert", "float" } },
-    description = [[
-      Converts a floating-point value into its integer equivalent.
-    ]],
-    callback =
-      function(self, number_to_convert )
-        return math.floor(number_to_convert)
-      end
+    ["integer"] = {
+      command = "FTOI",
+      rtype = "integer",
+      params = {
+        { "number_to_convert", "float" } },
+      description = [[
+        Converts a floating-point value into its integer equivalent.
+      ]],
+      callback =
+        function(self, number_to_convert )
+          return math.floor(number_to_convert)
+        end
+    }
   },
 
   -- full
   ["GAME"] = {
-    command = "GAME",
-    rtype = "variable",
-    params = {
-      { "variable_name", "string" } },
-    description = [[
-      A game variable is a global variable which can be referenced by name.  <blockquote>eg: SETV GAME "pi" 3.142</blockquote>Game variables are stored as part of the world and so will be saved out in the world file. If a script uses a non-existant game variable, that variable will be created automatically (with value integer zero).  Agents, integers, floats and strings can be stored in game variables.  Variable names are case sensitive.  When a new world is loaded, all the game variables are cleared.
-      There are some conventions for the variable names:
-       engine_ for Creatures Engine
-       cav_ for Creatures Adventures
-       c3_	for Creatures 3
-      It's important to follow these, as 3rd party developers will just use whatever names they fancy.  @DELG@ deletes a game variable.  See also the table of engine @Game Variables@.
-    ]],
-    callback =
-      function(self, variable_name )
-        return self:get_game_var(variable_name)
-      end
+    ["variable"] = {
+      command = "GAME",
+      rtype = "variable",
+      params = {
+        { "variable_name", "string" } },
+      description = [[
+        A game variable is a global variable which can be referenced by name.  <blockquote>eg: SETV GAME "pi" 3.142</blockquote>Game variables are stored as part of the world and so will be saved out in the world file. If a script uses a non-existant game variable, that variable will be created automatically (with value integer zero).  Agents, integers, floats and strings can be stored in game variables.  Variable names are case sensitive.  When a new world is loaded, all the game variables are cleared.
+        There are some conventions for the variable names:
+         engine_ for Creatures Engine
+         cav_ for Creatures Adventures
+         c3_	for Creatures 3
+        It's important to follow these, as 3rd party developers will just use whatever names they fancy.  @DELG@ deletes a game variable.  See also the table of engine @Game Variables@.
+      ]],
+      callback =
+        function(self, variable_name )
+          return self:get_game_var(variable_name)
+        end
+    }
   },
 
 
   ["GAMN"] = {
-    command = "GAMN",
-    rtype = "string",
-    params = {
-      { "previous", "string" } },
-    description = [[
-      Enumerates through game variable names.  Pass in an empty string to find the first one, and then the 
-      previous one to find the next.  Empty string is returned at the end.
-    ]],
-    callback =
-      function(self, previous )
-        return ""
-      end
+    ["string"] = {
+      command = "GAMN",
+      rtype = "string",
+      params = {
+        { "previous", "string" } },
+      description = [[
+        Enumerates through game variable names.  Pass in an empty string to find the first one, and then the 
+        previous one to find the next.  Empty string is returned at the end.
+      ]],
+      callback =
+        function(self, previous )
+          return ""
+        end
+    }
   },
 
   -- full
   ["GNAM"] = {
-    command = "GNAM",
-    rtype = "string",
-    params = {},
-    description = [[
-      Returns the game name.  For example "Creatures 3".
-    ]],
-    callback =
-      function(self)
-        return CAOS.name_of_game or "Starbound"
-      end
+    ["string"] = {
+      command = "GNAM",
+      rtype = "string",
+      params = {},
+      description = [[
+        Returns the game name.  For example "Creatures 3".
+      ]],
+      callback =
+        function(self)
+          return CAOS.name_of_game or "Starbound"
+        end
+    }
   },
 
   -- full
   ["ITOF"] = {
-    command = "ITOF",
-    rtype = "float",
-    params = {
-      { "number_to_convert", "integer" } },
-    description = [[
-      Converts an integer value into its floating-point equivalent.
-    ]],
-    callback =
-      function(self, number_to_convert )
-        return number_to_convert
-      end
+    ["float"] = {
+      command = "ITOF",
+      rtype = "float",
+      params = {
+        { "number_to_convert", "integer" } },
+      description = [[
+        Converts an integer value into its floating-point equivalent.
+      ]],
+      callback =
+        function(self, number_to_convert )
+          return number_to_convert
+        end
+    }
   },
 
   -- full
   ["LOWA"] = {
-    command = "LOWA",
-    rtype = "string",
-    params = {
-      { "any_old", "string" } },
-    description = [[
-      Converts the given string into all lower case letters.
-    ]],
-    callback =
-      function(self, any_old )
-        return string.lower(any_old)
-      end
+    ["string"] = {
+      command = "LOWA",
+      rtype = "string",
+      params = {
+        { "any_old", "string" } },
+      description = [[
+        Converts the given string into all lower case letters.
+      ]],
+      callback =
+        function(self, any_old )
+          return string.lower(any_old)
+        end
+    }
   },
 
   -- full
   ["MAME"] = {
-    command = "MAME",
-    rtype = "variable",
-    params = {
-      { "variable_name", "anything" } },
-    description = [[
-      Machine variable version of @NAME@. Accesses the same variables, only via @OWNR@ rather than @TARG@.  This is the 
-      same difference as between @MVxx@ and @OVxx@.
-    ]],
-    callback =
-      function(self, variable_name )
-        return self:get_owner_var(variable_name)
-      end
+    ["variable"] = {
+      command = "MAME",
+      rtype = "variable",
+      params = {
+        { "variable_name", "anything" } },
+      description = [[
+        Machine variable version of @NAME@. Accesses the same variables, only via @OWNR@ rather than @TARG@.  This is the 
+        same difference as between @MVxx@ and @OVxx@.
+      ]],
+      callback =
+        function(self, variable_name )
+          return self:get_owner_var(variable_name)
+        end
+    }
   },
 
 
   ["MODU"] = {
-    command = "MODU",
-    rtype = "string",
-    params = {},
-    description = [[
-      Returns a string listed the loaded modules, and the display engine type.  You can use @SINS@ to parse 
-      this for particular values.
-    ]],
-    callback =
-      function(self)
-        return ""
-      end
+    ["string"] = {
+      command = "MODU",
+      rtype = "string",
+      params = {},
+      description = [[
+        Returns a string listed the loaded modules, and the display engine type.  You can use @SINS@ to parse 
+        this for particular values.
+      ]],
+      callback =
+        function(self)
+          return ""
+        end
+    }
   },
 
   -- full
   ["MODV"] = {
-    command = "MODV",
-    rtype = "command",
-    params = {
-      { "var", "variable" },  { "mod", "integer" } },
-    description = [[
-      Gives the remainder (or modulus) when a variable is divided by an integer, so var = var % mod.  Both 
-      values should to be integers.
-    ]],
-    callback =
-      function(self, var, mod_ )
-        var.value = var.value % mod_
-      end
+    ["command"] = {
+      command = "MODV",
+      rtype = "command",
+      params = {
+        { "var", "variable" },  { "mod", "integer" } },
+      description = [[
+        Gives the remainder (or modulus) when a variable is divided by an integer, so var = var % mod.  Both 
+        values should to be integers.
+      ]],
+      callback =
+        function(self, var, mod_ )
+          var.value = var.value % mod_
+        end
+    }
   },
 
   -- full
   ["MULV"] = {
-    command = "MULV",
-    rtype = "command",
-    params = {
-      { "var", "variable" },  { "mul", "decimal" } },
-    description = [[
-      Multiplies a variable by an integer or float, so var = var * mul.
-    ]],
-    callback =
-      function(self, var, mul )
-        var.value = var.value * mul
-      end
+    ["command"] = {
+      command = "MULV",
+      rtype = "command",
+      params = {
+        { "var", "variable" },  { "mul", "decimal" } },
+      description = [[
+        Multiplies a variable by an integer or float, so var = var * mul.
+      ]],
+      callback =
+        function(self, var, mul )
+          var.value = var.value * mul
+        end
+    }
   },
 
 
   ["MVxx"] = {
-    command = "MVxx",
-    rtype = "variable",
-    params = {},
-    description = [[
-      MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of 
-      the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If 
-      owner and targ are the same, then OV23 is MV23, for example.
-    ]],
-    callback =
-      function(self)
-        return nil
-      end
+    ["variable"] = {
+      command = "MVxx",
+      rtype = "variable",
+      params = {},
+      description = [[
+        MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of 
+        the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If 
+        owner and targ are the same, then OV23 is MV23, for example.
+      ]],
+      callback =
+        function(self)
+          return nil
+        end
+    }
   },
 
   -- full
   ["NAME"] = {
-    command = "NAME",
-    rtype = "variable",
-    params = {
-      { "variable_name", "anything" } },
-    description = [[
-      This is a named variable, similar to a @GAME@ variable, only local to the target agent.  See also @
-      MAME@. The "name" of the variable is not limited to strings, but can be anything stored in a 
-      variable. i.e. integer, float, string, even an agent.
-    ]],
-    callback =
-      function(self, variable_name )
-        return self:get_target_var(variable_name)
-      end
+    ["variable"] = {
+      command = "NAME",
+      rtype = "variable",
+      params = {
+        { "variable_name", "anything" } },
+      description = [[
+        This is a named variable, similar to a @GAME@ variable, only local to the target agent.  See also @
+        MAME@. The "name" of the variable is not limited to strings, but can be anything stored in a 
+        variable. i.e. integer, float, string, even an agent.
+      ]],
+      callback =
+        function(self, variable_name )
+          return self:get_target_var(variable_name)
+        end
+    }
   },
 
 
   ["NAMN"] = {
-    command = "NAMN",
-    rtype = "command",
-    params = {
-      { "previous", "variable" } },
-    description = [[
-      Enumerates through @NAME@ variable names, roughly as @GAMN@ does through @GAME@ variables.  Start and end with an empty 
-      string.
-    ]],
-    callback =
-      function(self, previous )
-      end
+    ["command"] = {
+      command = "NAMN",
+      rtype = "command",
+      params = {
+        { "previous", "variable" } },
+      description = [[
+        Enumerates through @NAME@ variable names, roughly as @GAMN@ does through @GAME@ variables.  Start and end with an empty 
+        string.
+      ]],
+      callback =
+        function(self, previous )
+        end
+    }
   },
 
   -- full
   ["NEGV"] = {
-    command = "NEGV",
-    rtype = "command",
-    params = {
-      { "var", "variable" } },
-    description = [[
-      Reverse the sign of the given integer or float variable, so var = 0 - var.
-    ]],
-    callback =
-      function(self, var )
-        var.value = 0 - var.value
-      end
+    ["command"] = {
+      command = "NEGV",
+      rtype = "command",
+      params = {
+        { "var", "variable" } },
+      description = [[
+        Reverse the sign of the given integer or float variable, so var = 0 - var.
+      ]],
+      callback =
+        function(self, var )
+          var.value = 0 - var.value
+        end
+    }
   },
 
   -- full
   ["NOTV"] = {
-    command = "NOTV",
-    rtype = "command",
-    params = {
-      { "var", "variable" } },
-    description = [[
-      Peform a bitwise NOT on an integer variable.
-    ]],
-    callback =
-      function(self, var )
-        var.value = bit32.bnot(var.value)
-      end
+    ["command"] = {
+      command = "NOTV",
+      rtype = "command",
+      params = {
+        { "var", "variable" } },
+      description = [[
+        Peform a bitwise NOT on an integer variable.
+      ]],
+      callback =
+        function(self, var )
+          var.value = bit32.bnot(var.value)
+        end
+    }
   },
 
   -- full
   ["ORRV"] = {
-    command = "ORRV",
-    rtype = "command",
-    params = {
-      { "var", "variable" },  { "value", "integer" } },
-    description = [[
-      Peform a bitwise OR on an integer variable, so var = var | value.
-    ]],
-    callback =
-      function(self, var, value )
-        var.value = bit32.bor(var.value, value)
-      end
+    ["command"] = {
+      command = "ORRV",
+      rtype = "command",
+      params = {
+        { "var", "variable" },  { "value", "integer" } },
+      description = [[
+        Peform a bitwise OR on an integer variable, so var = var | value.
+      ]],
+      callback =
+        function(self, var, value )
+          var.value = bit32.bor(var.value, value)
+        end
+    }
   },
 
 
   ["OVxx"] = {
-    command = "OVxx",
-    rtype = "variable",
-    params = {},
-    description = [[
-      OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You 
-      can also access these same variables via owner using @MVxx@.
-    ]],
-    callback =
-      function(self)
-        return nil
-      end
+    ["variable"] = {
+      command = "OVxx",
+      rtype = "variable",
+      params = {},
+      description = [[
+        OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You 
+        can also access these same variables via owner using @MVxx@.
+      ]],
+      callback =
+        function(self)
+          return nil
+        end
+    }
   },
 
   -- full
   ["RAND"] = {
-    command = "RAND",
-    rtype = "integer",
-    params = {
-      { "value1", "integer" },  { "value2", "integer" } },
-    description = [[
-      Returns a random integer between value1 and value2 inclusive of both values.  You can use negative values, and 
-      have them either way round.
-    ]],
-    callback =
-      function(self, value1, value2 )
-        return math.random(math.min(value1,value2), math.max(value1,value2))
-      end
+    ["integer"] = {
+      command = "RAND",
+      rtype = "integer",
+      params = {
+        { "value1", "integer" },  { "value2", "integer" } },
+      description = [[
+        Returns a random integer between value1 and value2 inclusive of both values.  You can use negative values, and 
+        have them either way round.
+      ]],
+      callback =
+        function(self, value1, value2 )
+          return math.random(math.min(value1,value2), math.max(value1,value2))
+        end
+    }
   },
 
   -- full
   ["RNDV"] = {
-    command = "RNDV",
-    rtype = "command",
-    params = {
-      { "variable", "variable" }, { "min", "integer" },  { "max", "integer" } },
-    description = [[
-      DEPRECATED (Creatures 2)
-      Set a variable to a random number between min and max.
-    ]],
-    callback =
-      function(self, variable, min_, max_ )
-        variable.value = math.random(math.min(min_,max_), math.max(min_,max_))
-      end
+    ["command"] = {
+      command = "RNDV",
+      rtype = "command",
+      params = {
+        { "variable", "variable" }, { "min", "integer" },  { "max", "integer" } },
+      description = [[
+        DEPRECATED (Creatures 2)
+        Set a variable to a random number between min and max.
+      ]],
+      callback =
+        function(self, variable, min_, max_ )
+          variable.value = math.random(math.min(min_,max_), math.max(min_,max_))
+        end
+    }
   },
 
 
   ["READ"] = {
-    command = "READ",
-    rtype = "string",
-    params = {
-      { "catalogue_tag", "string" },  { "offset", "integer" } },
-    description = [[
-      Returns a string from the catalogue.  This is used for localisation.  offset 0 is the first string after 
-      the TAG command in the catalogue file.  See also @REAN@ and @WILD@.
-    ]],
-    callback =
-      function(self, catalogue_tag, offset )
-        return ""
-      end
+    ["string"] = {
+      command = "READ",
+      rtype = "string",
+      params = {
+        { "catalogue_tag", "string" },  { "offset", "integer" } },
+      description = [[
+        Returns a string from the catalogue.  This is used for localisation.  offset 0 is the first string after 
+        the TAG command in the catalogue file.  See also @REAN@ and @WILD@.
+      ]],
+      callback =
+        function(self, catalogue_tag, offset )
+          return ""
+        end
+    }
   },
 
 
   ["REAF"] = {
-    command = "REAF",
-    rtype = "command",
-    params = {},
-    description = [[
-      Refreshes the catalogue from files on disk, from the main catalogue directory and the world catalogue directory.  These 
-      are normally read in at startup, when a new world is read in, or when the PRAY resources 
-      system installs a catalogue file.  Use while developing CAOS programs to refresh the catalogue as you add entries.
-      
-    ]],
-    callback =
-      function(self)
-      end
+    ["command"] = {
+      command = "REAF",
+      rtype = "command",
+      params = {},
+      description = [[
+        Refreshes the catalogue from files on disk, from the main catalogue directory and the world catalogue directory.  These 
+        are normally read in at startup, when a new world is read in, or when the PRAY resources 
+        system installs a catalogue file.  Use while developing CAOS programs to refresh the catalogue as you add entries.
+        
+      ]],
+      callback =
+        function(self)
+        end
+    }
   },
 
 
   ["REAN"] = {
-    command = "REAN",
-    rtype = "integer",
-    params = {
-      { "catalogue_tag", "string" } },
-    description = [[
-      Returns the number of entries in the catalogue for the given tag.  For the same tag, you can @
-      READ@ values from 0 to one less than REAN returns.
-    ]],
-    callback =
-      function(self, catalogue_tag )
-        return 0
-      end
+    ["integer"] = {
+      command = "REAN",
+      rtype = "integer",
+      params = {
+        { "catalogue_tag", "string" } },
+      description = [[
+        Returns the number of entries in the catalogue for the given tag.  For the same tag, you can @
+        READ@ values from 0 to one less than REAN returns.
+      ]],
+      callback =
+        function(self, catalogue_tag )
+          return 0
+        end
+    }
   },
 
 
   ["REAQ"] = {
-    command = "REAQ",
-    rtype = "integer",
-    params = {
-      { "catalogue_tag", "string" } },
-    description = [[
-      Returns 1 if the catalogue tag is present, 0 if not.
-    ]],
-    callback =
-      function(self, catalogue_tag )
-        return 0
-      end
+    ["integer"] = {
+      command = "REAQ",
+      rtype = "integer",
+      params = {
+        { "catalogue_tag", "string" } },
+      description = [[
+        Returns 1 if the catalogue tag is present, 0 if not.
+      ]],
+      callback =
+        function(self, catalogue_tag )
+          return 0
+        end
+    }
   },
 
   -- full
   ["SETA"] = {
-    command = "SETA",
-    rtype = "command",
-    params = {
-      { "var", "variable" },  { "value", "agent" } },
-    description = [[
-      Stores a reference to an agent in a variable.
-    ]],
-    callback =
-      function(self, var, value )
-        var.value = value
-      end
+    ["command"] = {
+      command = "SETA",
+      rtype = "command",
+      params = {
+        { "var", "variable" },  { "value", "agent" } },
+      description = [[
+        Stores a reference to an agent in a variable.
+      ]],
+      callback =
+        function(self, var, value )
+          var.value = value
+        end
+    }
   },
 
   -- full
   ["SETS"] = {
-    command = "SETS",
-    rtype = "command",
-    params = {
-      { "var", "variable" },  { "value", "string" } },
-    description = [[
-      Sets a variable to a string value.
-    ]],
-    callback =
-      function(self, var, value )
-        var.value = value
-      end
+    ["command"] = {
+      command = "SETS",
+      rtype = "command",
+      params = {
+        { "var", "variable" },  { "value", "string" } },
+      description = [[
+        Sets a variable to a string value.
+      ]],
+      callback =
+        function(self, var, value )
+          var.value = value
+        end
+    }
   },
 
   -- full
   ["SETV"] = {
-    command = "SETV",
-    rtype = "command",
-    params = {
-      { "var", "variable" },  { "value", "decimal" } },
-    description = [[
-      Stores an integer or float in a variable.
-    ]],
-    callback =
-      function(self, var, value )
-        var.value = value
-      end
+    ["command"] = {
+      command = "SETV",
+      rtype = "command",
+      params = {
+        { "var", "variable" },  { "value", "decimal" } },
+      description = [[
+        Stores an integer or float in a variable.
+      ]],
+      callback =
+        function(self, var, value )
+          var.value = value
+        end
+    }
   },
 
   -- full
   ["SINS"] = {
-    command = "SINS",
-    rtype = "integer",
-    params = {
-      { "main", "string" },  { "index_to_search_from", "integer" },  { "search", "string" } },
-    description = [[
-      Looks for the search string as an exact substring of the main string (<b>s</b>tring <b>
-      in</b> <b>s</b>tring).  Starts searching at the given index into the main string - to find 
-      the first occurence, set this to 1.  String indices begin at 1.  Returns the index of the position 
-      of the substring, if found, or -1 otherwise.  The search is case sensitive - use @UPPA@ and @LOWA@ to 
-      convert all strings first, for a case insensitive search.
-    ]],
-    callback =
-      function(self, main, index_to_search_from, search )
-        local result = string.find(main, search, index_to_search_from, true)
-        return result or -1
-      end
+    ["integer"] = {
+      command = "SINS",
+      rtype = "integer",
+      params = {
+        { "main", "string" },  { "index_to_search_from", "integer" },  { "search", "string" } },
+      description = [[
+        Looks for the search string as an exact substring of the main string (<b>s</b>tring <b>
+        in</b> <b>s</b>tring).  Starts searching at the given index into the main string - to find 
+        the first occurence, set this to 1.  String indices begin at 1.  Returns the index of the position 
+        of the substring, if found, or -1 otherwise.  The search is case sensitive - use @UPPA@ and @LOWA@ to 
+        convert all strings first, for a case insensitive search.
+      ]],
+      callback =
+        function(self, main, index_to_search_from, search )
+          local result = string.find(main, search, index_to_search_from, true)
+          return result or -1
+        end
+    }
   },
 
   -- full
   ["SIN_"] = {
-    command = "SIN_",
-    rtype = "float",
-    params = {
-      { "theta", "float" } },
-    description = [[
-      Returns sine of theta. Theta should be in degrees.
-    ]],
-    callback =
-      function(self, theta )
-        return math.sin(theta * math.pi / 180.0)
-      end
+    ["float"] = {
+      command = "SIN_",
+      rtype = "float",
+      params = {
+        { "theta", "float" } },
+      description = [[
+        Returns sine of theta. Theta should be in degrees.
+      ]],
+      callback =
+        function(self, theta )
+          return math.sin(theta * math.pi / 180.0)
+        end
+    }
   },
 
   -- full
   ["SQRT"] = {
-    command = "SQRT",
-    rtype = "float",
-    params = {
-      { "value", "float" } },
-    description = [[
-      Calculates a square root.
-    ]],
-    callback =
-      function(self, value )
-        return math.sqrt(value)
-      end
+    ["float"] = {
+      command = "SQRT",
+      rtype = "float",
+      params = {
+        { "value", "float" } },
+      description = [[
+        Calculates a square root.
+      ]],
+      callback =
+        function(self, value )
+          return math.sqrt(value)
+        end
+    }
   },
 
   -- full
   ["STOF"] = {
-    command = "STOF",
-    rtype = "float",
-    params = {
-      { "value", "string" } },
-    description = [[
-      Converts a string in decimal to a floating point number.  Characters in the string after an initial number 
-      are quietly ignored.  If there is no obvious number then zero is returned.
-    ]],
-    callback =
-      function(self, value )
-        return tonumber(value)
-      end
+    ["float"] = {
+      command = "STOF",
+      rtype = "float",
+      params = {
+        { "value", "string" } },
+      description = [[
+        Converts a string in decimal to a floating point number.  Characters in the string after an initial number 
+        are quietly ignored.  If there is no obvious number then zero is returned.
+      ]],
+      callback =
+        function(self, value )
+          return tonumber(value)
+        end
+    }
   },
 
   -- full
   ["STOI"] = {
-    command = "STOI",
-    rtype = "integer",
-    params = {
-      { "value", "string" } },
-    description = [[
-      Converts a string in decimal to an integer.  Characters in the string after an initial number are quietly 
-      ignored.  If there is no obvious number then zero is returned.
-    ]],
-    callback =
-      function(self, value )
-        return math.floor(tonumber(value))
-      end
+    ["integer"] = {
+      command = "STOI",
+      rtype = "integer",
+      params = {
+        { "value", "string" } },
+      description = [[
+        Converts a string in decimal to an integer.  Characters in the string after an initial number are quietly 
+        ignored.  If there is no obvious number then zero is returned.
+      ]],
+      callback =
+        function(self, value )
+          return math.floor(tonumber(value))
+        end
+    }
   },
 
   -- full
   ["STRL"] = {
-    command = "STRL",
-    rtype = "integer",
-    params = {
-      { "string", "string" } },
-    description = [[
-      Returns the length of a string.
-    ]],
-    callback =
-      function(self, string_ )
-        return string.len(string_)
-      end
+    ["integer"] = {
+      command = "STRL",
+      rtype = "integer",
+      params = {
+        { "string", "string" } },
+      description = [[
+        Returns the length of a string.
+      ]],
+      callback =
+        function(self, string_ )
+          return string.len(string_)
+        end
+    }
   },
 
   -- full
   ["SUBS"] = {
-    command = "SUBS",
-    rtype = "string",
-    params = {
-      { "value", "string" },  { "start", "integer" },  { "count", "integer" } },
-    description = [[
-      Slices up a string, returning the substring starting at position start, with length count.  String indices begin at 
-      1.
-    ]],
-    callback =
-      function(self, value, start, count )
-        return ""
-      end
+    ["string"] = {
+      command = "SUBS",
+      rtype = "string",
+      params = {
+        { "value", "string" },  { "start", "integer" },  { "count", "integer" } },
+      description = [[
+        Slices up a string, returning the substring starting at position start, with length count.  String indices begin at 
+        1.
+      ]],
+      callback =
+        function(self, value, start, count )
+          return ""
+        end
+    }
   },
 
   -- full
   ["SUBV"] = {
-    command = "SUBV",
-    rtype = "command",
-    params = {
-      { "var", "variable" },  { "sub", "decimal" } },
-    description = [[
-      Subtracts an integer or float from a variable, so var = var - sub.
-    ]],
-    callback =
-      function(self, var, sub )
-        var.value = var.value - sub
-      end
+    ["command"] = {
+      command = "SUBV",
+      rtype = "command",
+      params = {
+        { "var", "variable" },  { "sub", "decimal" } },
+      description = [[
+        Subtracts an integer or float from a variable, so var = var - sub.
+      ]],
+      callback =
+        function(self, var, sub )
+          var.value = var.value - sub
+        end
+    }
   },
 
   -- full
   ["TAN_"] = {
-    command = "TAN_",
-    rtype = "float",
-    params = {
-      { "theta", "float" } },
-    description = [[
-      Returns tangent of theta. Theta should be in degrees. Watch out for those nasty discontinuities at 90 and 
-      270.
-    ]],
-    callback =
-      function(self, theta )
-        return math.tan(theta * math.pi / 180.0)
-      end
+    ["float"] = {
+      command = "TAN_",
+      rtype = "float",
+      params = {
+        { "theta", "float" } },
+      description = [[
+        Returns tangent of theta. Theta should be in degrees. Watch out for those nasty discontinuities at 90 and 
+        270.
+      ]],
+      callback =
+        function(self, theta )
+          return math.tan(theta * math.pi / 180.0)
+        end
+    }
   },
 
   -- full
   ["TYPE"] = {
-    command = "TYPE",
+    ["integer"] = {
+      command = "TYPE",
     rtype = "integer",
     params = {
       { "something", "anything" } },
@@ -10154,11 +11122,13 @@ CAOS.Machine.commands = {
           return -2
         end
       end
+    }
   },
 
 
   ["UFOS"] = {
-    command = "UFOS",
+    ["string"] = {
+      command = "UFOS",
     rtype = "string",
     params = {},
     description = [[
@@ -10169,156 +11139,177 @@ CAOS.Machine.commands = {
       function(self)
         return ""
       end
+    }
   },
 
   -- full
   ["UPPA"] = {
-    command = "UPPA",
-    rtype = "string",
-    params = {
-      { "any_old", "string" } },
-    description = [[
-      Converts the given string into all upper case letters.
-    ]],
-    callback =
-      function(self, any_old )
-        return string.upper(any_old)
-      end
+    ["string"] = {
+      command = "UPPA",
+      rtype = "string",
+      params = {
+        { "any_old", "string" } },
+      description = [[
+        Converts the given string into all upper case letters.
+      ]],
+      callback =
+        function(self, any_old )
+          return string.upper(any_old)
+        end
+    }
   },
 
 
   ["VAxx"] = {
-    command = "VAxx",
-    rtype = "variable",
-    params = {},
-    description = [[
-      VA00 to VA99 are local variables, whose values are lost when the current script ends.
-    ]],
-    callback =
-      function(self)
-        return nil
-      end
+    ["variable"] = {
+      command = "VAxx",
+      rtype = "variable",
+      params = {},
+      description = [[
+        VA00 to VA99 are local variables, whose values are lost when the current script ends.
+      ]],
+      callback =
+        function(self)
+          return nil
+        end
+    }
   },
 
 
   ["VMJR"] = {
-    command = "VMJR",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the major version number of the engine.
-    ]],
-    callback =
-      function(self)
-        return 1
-      end
+    ["integer"] = {
+      command = "VMJR",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the major version number of the engine.
+      ]],
+      callback =
+        function(self)
+          return 1
+        end
+    }
   },
 
 
   ["VMNR"] = {
-    command = "VMNR",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the minor version number of the engine.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "VMNR",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the minor version number of the engine.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
   -- full
   ["VTOS"] = {
-    command = "VTOS",
-    rtype = "string",
-    params = {
-      { "value", "decimal" } },
-    description = [[
-      Converts an integer or float into a string in decimal.
-    ]],
-    callback =
-      function(self, value )
-        return tostring(value)
-      end
+    ["string"] = {
+      command = "VTOS",
+      rtype = "string",
+      params = {
+        { "value", "decimal" } },
+      description = [[
+        Converts an integer or float into a string in decimal.
+      ]],
+      callback =
+        function(self, value )
+          return tostring(value)
+        end
+    }
   },
 
   -- full
   ["_P1_"] = {
-    command = "_P1_",
-    rtype = "variable",
-    params = {},
-    description = [[
-      Returns the first parameter sent to a script.
-    ]],
-    callback =
-      function(self)
-        return self.message_param_1
-      end
+    ["variable"] = {
+      command = "_P1_",
+      rtype = "variable",
+      params = {},
+      description = [[
+        Returns the first parameter sent to a script.
+      ]],
+      callback =
+        function(self)
+          return self.message_param_1
+        end
+    }
   },
 
   -- full
   ["_P2_"] = {
-    command = "_P2_",
-    rtype = "variable",
-    params = {},
-    description = [[
-      Returns the second parameter sent to a script.
-    ]],
-    callback =
-      function(self)
-        return self.message_param_2
-      end
+    ["variable"] = {
+      command = "_P2_",
+      rtype = "variable",
+      params = {},
+      description = [[
+        Returns the second parameter sent to a script.
+      ]],
+      callback =
+        function(self)
+          return self.message_param_2
+        end
+    }
   },
 
 
   ["CABB"] = {
-    command = "CABB",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns relative position of bottom side of cabin.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "CABB",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns relative position of bottom side of cabin.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["CABL"] = {
-    command = "CABL",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns relative position of left side of cabin.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "CABL",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns relative position of left side of cabin.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["CABN"] = {
-    command = "CABN",
-    rtype = "command",
-    params = {
-      { "left", "integer" },  { "top", "integer" },  { "right", "integer" },  { "bottom", "integer" } },
-    description = [[
-      Set a vehicles cabin rectangle.  The cabin is the area in which agents inside the vehicle are kept.  
-      The rectangle is relative to the position of the vehicle.  Default cabin is the bounding rectangle of part 
-      0.  You might want to use @ATTR@ to set attribute @Greedy Cabin@, on the vehicle.  This will make 
-      it automatically pick up items which are dropped in the cabin.
-    ]],
-    callback =
-      function(self, left, top, right, bottom )
-      end
+    ["command"] = {
+      command = "CABN",
+      rtype = "command",
+      params = {
+        { "left", "integer" },  { "top", "integer" },  { "right", "integer" },  { "bottom", "integer" } },
+      description = [[
+        Set a vehicles cabin rectangle.  The cabin is the area in which agents inside the vehicle are kept.  
+        The rectangle is relative to the position of the vehicle.  Default cabin is the bounding rectangle of part 
+        0.  You might want to use @ATTR@ to set attribute @Greedy Cabin@, on the vehicle.  This will make 
+        it automatically pick up items which are dropped in the cabin.
+      ]],
+      callback =
+        function(self, left, top, right, bottom )
+        end
+    }
   },
 
 
   ["CABP"] = {
-    lvalue = {
+    ["command"] = {
       command = "CABP",
       rtype = "command",
       params = {
@@ -10331,7 +11322,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "CABP",
       rtype = "integer",
       params = {},
@@ -10347,35 +11338,39 @@ CAOS.Machine.commands = {
 
 
   ["CABR"] = {
-    command = "CABR",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns relative position of right side of cabin.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "CABR",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns relative position of right side of cabin.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["CABT"] = {
-    command = "CABT",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns relative position of topside of cabin.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "CABT",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns relative position of topside of cabin.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["CABV"] = {
-    lvalue = {
+    ["command"] = {
       command = "CABV",
       rtype = "command",
       params = {
@@ -10391,7 +11386,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["integer"] = {
       command = "CABV",
       rtype = "integer",
       params = {},
@@ -10407,153 +11402,173 @@ CAOS.Machine.commands = {
 
 
   ["CABW"] = {
-    command = "CABW",
-    rtype = "command",
-    params = {
-      { "cabin_capacity", "integer" } },
-    description = [[
-      Set the capacity or width of the cabin.  This will determine how many passengers the cabin can hold, 
-      each passenger will be on a separate plane within the cabin.  Use @CABP@ to set the plane of 
-      the first agent relative to the cabin.  The default width is zero, this means that the cabin will 
-      accept any number of passengers and will place them all on the same plane. 
-    ]],
-    callback =
-      function(self, cabin_capacity )
-      end
+    ["command"] = {
+      command = "CABW",
+      rtype = "command",
+      params = {
+        { "cabin_capacity", "integer" } },
+      description = [[
+        Set the capacity or width of the cabin.  This will determine how many passengers the cabin can hold, 
+        each passenger will be on a separate plane within the cabin.  Use @CABP@ to set the plane of 
+        the first agent relative to the cabin.  The default width is zero, this means that the cabin will 
+        accept any number of passengers and will place them all on the same plane. 
+      ]],
+      callback =
+        function(self, cabin_capacity )
+        end
+    }
   },
 
 
   ["DPAS"] = {
-    command = "DPAS",
-    rtype = "command",
-    params = {
-      { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
-    description = [[
-      Drop all passengers matching classifier.
-    ]],
-    callback =
-      function(self, family, genus, species )
-      end
+    ["command"] = {
+      command = "DPAS",
+      rtype = "command",
+      params = {
+        { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
+      description = [[
+        Drop all passengers matching classifier.
+      ]],
+      callback =
+        function(self, family, genus, species )
+        end
+    }
   },
 
 
   ["EPAS"] = {
-    command = "EPAS",
-    rtype = "command",
-    params = {
-      { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
-    description = [[
-      Enumerate over owner vehicle's passengers which match the given classifier.  Similar to @ENUM@.
-    ]],
-    callback =
-      function(self, family, genus, species )
-      end
+    ["command"] = {
+      command = "EPAS",
+      rtype = "command",
+      params = {
+        { "family", "integer" },  { "genus", "integer" },  { "species", "integer" } },
+      description = [[
+        Enumerate over owner vehicle's passengers which match the given classifier.  Similar to @ENUM@.
+      ]],
+      callback =
+        function(self, family, genus, species )
+        end
+    }
   },
 
 
   ["GPAS"] = {
-    command = "GPAS",
-    rtype = "command",
-    params = {
-      { "family", "integer" },  { "genus", "integer" },  { "species", "integer" },  { "rect_to_use", "integer" } },
-    description = [[
-      Collect all nearby agents matching the classifier as passengers. 
-      rect_to_use 0 : Nearby means touching bounding rectangle of agent
-      rect_to_use 1 : Nearby means touching cabin rectangle
-    ]],
-    callback =
-      function(self, family, genus, species, rect_to_use )
-      end
+    ["command"] = {
+      command = "GPAS",
+      rtype = "command",
+      params = {
+        { "family", "integer" },  { "genus", "integer" },  { "species", "integer" },  { "rect_to_use", "integer" } },
+      description = [[
+        Collect all nearby agents matching the classifier as passengers. 
+        rect_to_use 0 : Nearby means touching bounding rectangle of agent
+        rect_to_use 1 : Nearby means touching cabin rectangle
+      ]],
+      callback =
+        function(self, family, genus, species, rect_to_use )
+        end
+    }
   },
 
 
   ["NEW: VHCL"] = {
-    command = "NEW: VHCL",
-    rtype = "command",
-    params = {
-      { "family", "integer" },  { "genus", "integer" },  { "species", "integer" },  { "sprite_file", "string" },  { "image_count", "integer" },  { "first_image", "integer" },  { "plane", "integer" } },
-    description = [[
-      Create a new vehicle.  Parameters are the same as @NEW: COMP@.
-    ]],
-    callback =
-      function(self, family, genus, species, sprite_file, image_count, first_image, plane )
-      end
+    ["command"] = {
+      command = "NEW: VHCL",
+      rtype = "command",
+      params = {
+        { "family", "integer" },  { "genus", "integer" },  { "species", "integer" },  { "sprite_file", "string" },  { "image_count", "integer" },  { "first_image", "integer" },  { "plane", "integer" } },
+      description = [[
+        Create a new vehicle.  Parameters are the same as @NEW: COMP@.
+      ]],
+      callback =
+        function(self, family, genus, species, sprite_file, image_count, first_image, plane )
+        end
+    }
   },
 
 
   ["RPAS"] = {
-    command = "RPAS",
-    rtype = "command",
-    params = {
-      { "vehicle", "agent" },  { "passenger", "agent" } },
-    description = [[
-      Specified vehicle drops the specified passenger.
-    ]],
-    callback =
-      function(self, vehicle, passenger )
-      end
+    ["command"] = {
+      command = "RPAS",
+      rtype = "command",
+      params = {
+        { "vehicle", "agent" },  { "passenger", "agent" } },
+      description = [[
+        Specified vehicle drops the specified passenger.
+      ]],
+      callback =
+        function(self, vehicle, passenger )
+        end
+    }
   },
 
 
   ["SPAS"] = {
-    command = "SPAS",
-    rtype = "command",
-    params = {
-      { "vehicle", "agent" },  { "new_passenger", "agent" } },
-    description = [[
-      Specified vehicle picks up the specified passenger.
-    ]],
-    callback =
-      function(self, vehicle, new_passenger )
-      end
+    ["command"] = {
+      command = "SPAS",
+      rtype = "command",
+      params = {
+        { "vehicle", "agent" },  { "new_passenger", "agent" } },
+      description = [[
+        Specified vehicle picks up the specified passenger.
+      ]],
+      callback =
+        function(self, vehicle, new_passenger )
+        end
+    }
   },
 
 
   ["DELW"] = {
-    command = "DELW",
-    rtype = "command",
-    params = {
-      { "world_name", "string" } },
-    description = [[
-      Deletes the specified world directory.
-    ]],
-    callback =
-      function(self, world_name )
-      end
+    ["command"] = {
+      command = "DELW",
+      rtype = "command",
+      params = {
+        { "world_name", "string" } },
+      description = [[
+        Deletes the specified world directory.
+      ]],
+      callback =
+        function(self, world_name )
+        end
+    }
   },
 
 
   ["LOAD"] = {
-    command = "LOAD",
-    rtype = "command",
-    params = {
-      { "world_name", "string" } },
-    description = [[
-      Loads the specified world at the start of the next tick.  See also @QUIT@ for important information about 
-      using @INST@.  See @BOOT@ and @engine_no_auxiliary_bootstrap_nnn@ for extra information about bootstrapping a world.
-    ]],
-    callback =
-      function(self, world_name )
-      end
+    ["command"] = {
+      command = "LOAD",
+      rtype = "command",
+      params = {
+        { "world_name", "string" } },
+      description = [[
+        Loads the specified world at the start of the next tick.  See also @QUIT@ for important information about 
+        using @INST@.  See @BOOT@ and @engine_no_auxiliary_bootstrap_nnn@ for extra information about bootstrapping a world.
+      ]],
+      callback =
+        function(self, world_name )
+        end
+    }
   },
 
 
   ["NWLD"] = {
-    command = "NWLD",
-    rtype = "integer",
-    params = {},
-    description = [[
-      Returns the number of world directories.
-    ]],
-    callback =
-      function(self)
-        return 0
-      end
+    ["integer"] = {
+      command = "NWLD",
+      rtype = "integer",
+      params = {},
+      description = [[
+        Returns the number of world directories.
+      ]],
+      callback =
+        function(self)
+          return 0
+        end
+    }
   },
 
 
   ["PSWD"] = {
-    lvalue = {
+    ["command"] = {
       command = "PSWD",
       rtype = "command",
       params = {
@@ -10567,7 +11582,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["string"] = {
       command = "PSWD",
       rtype = "string",
       params = {
@@ -10585,7 +11600,8 @@ CAOS.Machine.commands = {
 
 
   ["QUIT"] = {
-    command = "QUIT",
+    ["command"] = {
+      command = "QUIT",
     rtype = "command",
     params = {},
     description = [[
@@ -10597,11 +11613,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["RGAM"] = {
-    command = "RGAM",
+    ["command"] = {
+      command = "RGAM",
     rtype = "command",
     params = {},
     description = [[
@@ -10611,11 +11629,13 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["SAVE"] = {
-    command = "SAVE",
+    ["command"] = {
+      command = "SAVE",
     rtype = "command",
     params = {},
     description = [[
@@ -10625,26 +11645,30 @@ CAOS.Machine.commands = {
     callback =
       function(self)
       end
+    }
   },
 
 
   ["TNTW"] = {
-    command = "TNTW",
-    rtype = "command",
-    params = {
-      { "index", "integer" } },
-    description = [[
-      This tints the @TARG@ agent with the global tint manager at index.  Specify the @PART@ first for compound 
-      agents.  See also @TINT@.
-    ]],
-    callback =
-      function(self, index )
-      end
+    ["command"] = {
+      command = "TNTW",
+      rtype = "command",
+      params = {
+        { "index", "integer" } },
+      description = [[
+        This tints the @TARG@ agent with the global tint manager at index.  Specify the @PART@ first for compound 
+        agents.  See also @TINT@.
+      ]],
+      callback =
+        function(self, index )
+        end
+    }
   },
 
   -- full
   ["WNAM"] = {
-    command = "WNAM",
+    ["string"] = {
+      command = "WNAM",
     rtype = "string",
     params = {},
     description = [[
@@ -10655,27 +11679,30 @@ CAOS.Machine.commands = {
         local info = world.info()
         return info.name or "Ship"
       end
+    }
   },
 
   -- none/partial
   ["WNTI"] = {
-    command = "WNTI",
-    rtype = "integer",
-    params = {
-      { "world", "string" } },
-    description = [[
-      This returns the index of the <i>world</i>. If you pass in a world name which is 
-      not within the system, -1 is returned.
-    ]],
-    callback =
-      function(self, world )
-        return -1
-      end
+    ["integer"] = {
+      command = "WNTI",
+      rtype = "integer",
+      params = {
+        { "world", "string" } },
+      description = [[
+        This returns the index of the <i>world</i>. If you pass in a world name which is 
+        not within the system, -1 is returned.
+      ]],
+      callback =
+        function(self, world )
+          return -1
+        end
+    }
   },
 
 
   ["WRLD"] = {
-    lvalue = {
+    ["command"] = {
       command = "WRLD",
       rtype = "command",
       params = {
@@ -10688,7 +11715,7 @@ CAOS.Machine.commands = {
         end
     },
 
-    rvalue = {
+    ["string"] = {
       command = "WRLD",
       rtype = "string",
       params = {
@@ -10706,23 +11733,26 @@ CAOS.Machine.commands = {
 
 
   ["WTNT"] = {
-    command = "WTNT",
-    rtype = "command",
-    params = {
-      { "index", "integer" },  { "red_tint", "integer" },  { "green_tint", "integer" },  { "blue_tint", "integer" },  { "rotation", "integer" },  { "swap", "integer" } },
-    description = [[
-      This sets up the world (global) tint table. The index is the number associated with the tint table - (
-      keep it small please) and the r,g,b is the tint level. Rotation and Swap work as 
-      for pigment bleed genes.
-    ]],
-    callback =
-      function(self, index, red_tint, green_tint, blue_tint, rotation, swap )
-      end
+    ["command"] = {
+      command = "WTNT",
+      rtype = "command",
+      params = {
+        { "index", "integer" },  { "red_tint", "integer" },  { "green_tint", "integer" },  { "blue_tint", "integer" },  { "rotation", "integer" },  { "swap", "integer" } },
+      description = [[
+        This sets up the world (global) tint table. The index is the number associated with the tint table - (
+        keep it small please) and the r,g,b is the tint level. Rotation and Swap work as 
+        for pigment bleed genes.
+      ]],
+      callback =
+        function(self, index, red_tint, green_tint, blue_tint, rotation, swap )
+        end
+    }
   },
 
   -- full
   ["WUID"] = {
-    command = "WUID",
+    ["string"] = {
+      command = "WUID",
     rtype = "string",
     params = {},
     description = [[
@@ -10736,10 +11766,12 @@ CAOS.Machine.commands = {
         end
         return ""..(info.id or info.handle or info.name or "")
       end
+    }
   },
   
   ["ISCR"] = {
-    command = "ISCR",
+    ["command"] = {
+      command = "ISCR",
     rtype = "command",
     params = {},
     description = [[
@@ -10751,10 +11783,12 @@ CAOS.Machine.commands = {
       function(self)
         -- Install SCRipt
       end
+    }
   },
 
   ["RSCR"] = {
-    command = "RSCR",
+    ["command"] = {
+      command = "RSCR",
     rtype = "command",
     params = {},
     description = [[
@@ -10766,10 +11800,12 @@ CAOS.Machine.commands = {
       function(self)
       -- Remove SCRipt
       end
+    }
   },
 
   ["SCRP"] = {
-    command = "SCRP",
+    ["command"] = {
+      command = "SCRP",
     rtype = "command",
     params = {
       { "family", "integer" }, { "genus", "integer" }, { "species", "integer" }, { "event", "integer" }
@@ -10789,7 +11825,21 @@ CAOS.Machine.commands = {
       function(self, family, genus, species, event)
       -- SCRiPt (event callback)
       end
-  }
+    }
+  },
 
-  
+  ["ENDM"] = {
+    ["command"] = {
+      command = "ENDM",
+      rtype = "command",
+      params = {},
+      description = [[
+        Compulsory command at end of macro script.
+      ]],
+      callback =
+        function(self)
+        -- End script block
+        end
+    }
+  }  
 }
