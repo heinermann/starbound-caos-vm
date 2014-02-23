@@ -23,7 +23,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return 0
+          return CAOS.getVar(self.owner, "caos_first_image") or 0
         end
     }
   },
@@ -909,7 +909,10 @@ CAOS.commands = {
                                 caos_image_count = image_count,
                                 caos_first_image = first_image,
                                 caos_plane = plane,
-                                first_spawn = false }
+                                first_spawn = false,
+                                desired_script_line = (not (self.paused or self.stopped or self.invalid)) and self.line or 0,
+                                desired_script_column = self.column
+                             }
         
         
         world.spawnMonster(agent_name, self.vm.owner.position(), agent_params)
@@ -1124,9 +1127,12 @@ CAOS.commands = {
       callback =
         function(self, pose)
           local base = CAOS.getVar(self.vm.owner, "caos_image_base") or 0
+          local global_base = CAOS.getVar(self.owner, "caos_first_image") or 0
           pose = pose or 0
-          CAOS.setVar(self.vm.target, "caos_image_pose", pose + base)
-          self.vm.target.setGlobalTag("frameno", pose)
+          
+          local frameno = pose + base + global_base
+          CAOS.setVar(self.vm.target, "caos_image_pose", frameno)
+          self.vm.target.setGlobalTag("frameno", frameno)
         end
     },
 

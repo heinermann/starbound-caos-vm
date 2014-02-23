@@ -32,8 +32,13 @@
       "damageConfig" : "/damage/damageresponse/ignore.config"
     },
     
-    "persistent" : true,
-    // init() is called on every world load, we don't want that!
+    // We can't actually persist the lua data for the script, so this has to go for now
+    // Possible workaround is have a central "agent controller" which controls every agent:
+    // Advantages are that it works as an agent spawner and also allows script saving and inter-script communication
+    // Additionally, as an object can use the storage API to store data
+    //"persistent" : true,
+    
+    // install script is called on every world load, we don't want that!
     "first_spawn" : false,
     
     "agent" : {

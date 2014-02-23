@@ -265,6 +265,7 @@ end
 
 function CAOS.Parser.run_script(self, family, genus, species, event)
   if ( self.no_interrupt ) then
+    world.logInfo("WHOOPS NO INTERRUPT!")
     return
   end
   
@@ -280,6 +281,9 @@ function CAOS.Parser.run_script(self, family, genus, species, event)
   
   if ( src ~= nil ) then
     self:set_cursor(src.line, src.column)
+  else
+    world.logInfo("TIMER NOT FOUND IN SCRIPTORIUM " .. family .. " " .. genus .. " " .. species .. " " .. event)
+    --CAOS.debug_scriptorium()
   end
 end
 

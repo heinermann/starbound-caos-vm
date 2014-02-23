@@ -37,13 +37,14 @@ function CAOS.Machine.create(agent, run_install_script)
   o.update_interval = 50
   o.last_tick = os.clock()*1000
 
-  CAOS.setVar(agent, "caos_family", agent.configParameter("caos_family", 0))
-  CAOS.setVar(agent, "caos_genus", agent.configParameter("caos_genus", 0))
-  CAOS.setVar(agent, "caos_species", agent.configParameter("caos_species", 0))
+  world.logInfo(tostring(agent.configParameter("caos_family", 0)))
+  CAOS.setVar(agent, "caos_family", tonumber(agent.configParameter("caos_family", 0)))
+  CAOS.setVar(agent, "caos_genus", tonumber(agent.configParameter("caos_genus", 0)))
+  CAOS.setVar(agent, "caos_species", tonumber(agent.configParameter("caos_species", 0)))
   CAOS.setVar(agent, "caos_sprite_file", agent.configParameter("caos_sprite_file", ""))
-  CAOS.setVar(agent, "caos_image_count", agent.configParameter("caos_image_count", 1))
-  CAOS.setVar(agent, "caos_first_image", agent.configParameter("caos_first_image", 1))
-  CAOS.setVar(agent, "caos_plane", agent.configParameter("caos_plane", 500))
+  CAOS.setVar(agent, "caos_image_count", tonumber(agent.configParameter("caos_image_count", 1)))
+  CAOS.setVar(agent, "caos_first_image", tonumber(agent.configParameter("caos_first_image", 1)))
+  CAOS.setVar(agent, "caos_plane", tonumber(agent.configParameter("caos_plane", 500)))
   CAOS.setVar(agent, "caos_image_base", 0)
   CAOS.setVar(agent, "caos_image_pose", 0)
       
@@ -97,11 +98,49 @@ function CAOS.Machine.create(agent, run_install_script)
   
   if ( run_install_script == true ) then
     o.parser:run_install_script()
+    o.parser:update()
   else
-    o.parser:stop()
+    local desired_line = tonumber(agent.configParameter("desired_script_line", 0))
+    local desired_column = tonumber(agent.configParameter("desired_script_column", 0))
+    if ( desired_line == 0 ) then
+      o.parser:stop()
+    else
+      o.parser:set_cursor(desired_line, desired_column)
+    end
   end
   
   return o
+end
+
+
+
+function CAOS.Machine.update(self)
+
+  -- Prevents execution until the update interval has passed
+  -- The update interval is number of milliseconds per tick
+  if ( os.clock()*1000 < self.last_tick + self.update_interval ) then
+    return
+  end
+  self.last_tick = os.clock()*1000
+  
+  if ( self.timer_interval > 0 ) then
+    world.logInfo("Update tick")
+    if ( self.timer_step >= self.timer_interval ) then
+      world.logInfo("RAN TIMER SCRIPT")
+      self.timer_step = 0
+      self.parser:run_script( CAOS.getVar(self.owner, "caos_family"),
+                              CAOS.getVar(self.owner, "caos_genus"),
+                              CAOS.getVar(self.owner, "caos_species"),
+                              CAOS.EVENT.TIMER)
+    else
+      self.timer_step = self.timer_step + 1
+    end
+  end
+  
+  self.parser:update()
+end
+
+function CAOS.Machine.killed(self)
 end
 
 function CAOS.getVar(agent, name)
@@ -197,35 +236,8 @@ function CAOS.get_command(name, expected_type)
   return cmd_store[expected_type or "command"]
 end
 
-
-
--- Executes a piece of source code
-function CAOS.Machine.execute_source(self, source)
-end
-
-function CAOS.Machine.update(self)
-
-  -- Prevents execution until the update interval has passed
-  -- The update interval is number of milliseconds per tick
-  if ( os.clock()*1000 < self.last_tick + self.update_interval ) then
-    return
-  end
-  self.last_tick = os.clock()*1000
-  
-  if ( self.timer_interval > 0 ) then
-    if ( self.timer_step == self.timer_interval ) then
-      self.timer_step = 0
-      parser:run_script(  CAOS.getVar(self.owner, "caos_family"),
-                          CAOS.getVar(self.owner, "caos_genus"),
-                          CAOS.getVar(self.owner, "caos_species"),
-                          CAOS.EVENT.TIMER)
-    end
-  end
-  
-  self.parser:update()
-end
-
-function CAOS.Machine.killed(self)
+function CAOS.debug_scriptorium()
+  world.logInfo(table.tostring(CAOS.scriptorium))
 end
 
 -- VAxx

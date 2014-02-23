@@ -67,7 +67,11 @@ end
 --
 -- @treturn bool true if the monster can die, false to keep the monster alive
 function shouldDie()
-  return self.caos_killed == true
+  local dead = self.caos_killed == true
+  dead = dead or (self.caos_family == 0 and self.caos_genus == 0 and self.caos_species == 0)
+  
+  return dead
+  --return true
 end
 
 
