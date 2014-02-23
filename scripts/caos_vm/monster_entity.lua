@@ -74,11 +74,11 @@ end
 -- Get and set functions so that CAOS can interact with external entities' local variables
 function setVar(name, value)
   self[name] = value
-  world.logInfo("Setvar! " .. tostring(name) .. " " .. tostring(value))
+  --world.logInfo("Setvar! " .. tostring(name) .. " " .. tostring(value))
   return true
 end
 
 function getVar(name)
-world.logInfo("getvar! " .. tostring(name))
+  --world.logInfo("getvar! " .. tostring(name))
   return self[name]
 end

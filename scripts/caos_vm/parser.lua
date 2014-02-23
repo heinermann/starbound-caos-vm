@@ -133,6 +133,7 @@ end
 
 function CAOS.Parser.stop(self)
   self.stopped = true
+  self.invalid = true
   self.instant_execution = false
   self.no_interrupt = false
 end
@@ -146,7 +147,8 @@ function CAOS.Parser.continue_script(self)
   local expected_type = nil
   local throttle = os.time()*1000
   
-  while ( (os.time()*1000 < throttle + 500) or self.instant_execution ) do
+  --while ( (os.time()*1000 < throttle + 500) or self.instant_execution ) do
+  while ( self:valid() ) do
     local next_value = nil
     local condition_depth = 0
     
@@ -195,7 +197,12 @@ function CAOS.Parser.continue_script(self)
       local cmd_args = {}
       for i = #cmd.params, 1, -1 do
         param = cmd.params[i]
-        table.insert(cmd_args, self.var_stack[#self.var_stack])
+        local sval = self.var_stack[#self.var_stack]
+        if ( type(sval) == "table" and sval.type == "variable" and param[2] ~= "variable" ) then
+          --param[2] type checking TODO
+          sval = sval.variable
+        end
+        table.insert(cmd_args, sval)
         table.remove(self.var_stack)
       end
       table.insert(cmd_args, self)

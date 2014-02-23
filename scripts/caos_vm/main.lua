@@ -79,8 +79,8 @@ function CAOS.Machine.create(agent, run_install_script)
   o.caos_vars = {}
   local agent_vars = {}
   for i = 1, 100 do
-    o.caos_vars[i] = { value = 0 }
-    agent_vars[i] = { value = 0 }
+    o.caos_vars[i] = { value = 0, type = "variable" }
+    agent_vars[i] = { value = 0, type = "variable" }
   end
   CAOS.setVar(agent, "caos_vars", agent_vars)
 
@@ -105,11 +105,19 @@ function CAOS.Machine.create(agent, run_install_script)
 end
 
 function CAOS.getVar(agent, name)
-  return world.callScriptedEntity(agent.id(), name)
+  if ( agent == entity ) then
+    return getVar(name)
+  else
+    return world.callScriptedEntity(agent.id(), name)
+  end
 end
 
 function CAOS.setVar(agent, name, value)
-  return world.callScriptedEntity(agent.id(), name, value)
+  if ( agent == entity ) then
+    return setVar(name, value)
+  else
+    return world.callScriptedEntity(agent.id(), name, value)
+  end
 end
 
 function CAOS.add_to_scriptorium(family, genus, species, event, line, column)
@@ -212,11 +220,6 @@ function CAOS.Machine.update(self)
                           CAOS.getVar(self.owner, "caos_species"),
                           CAOS.EVENT.TIMER)
     end
-  end
-  
-  -- reset all script-local variables
-  for i = 1, 100 do
-    self.caos_vars[i] = { value = 0 }
   end
   
   self.parser:update()

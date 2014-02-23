@@ -897,7 +897,7 @@ CAOS.commands = {
     ]],
     callback =
       function(self, family, genus, species, sprite_file, image_count, first_image, plane)
-        world.logInfo("NEW: SIMP " .. tostring(self) .. " " .. tostring(family) .. " " .. tostring(genus) .. " " .. tostring(species) .. " " .. tostring(sprite_file))
+        world.logInfo("NEW: SIMP " .. " " .. tostring(family) .. " " .. tostring(genus) .. " " .. tostring(species) .. " " .. tostring(sprite_file) .. " " .. tostring(image_count) .. " " .. tostring(first_image) .. " " .. tostring(plane))
         --local agent_name = CAOS.get_cob_name(family,genus,species)
         
         local agent_name = "test_agent"
@@ -1124,6 +1124,7 @@ CAOS.commands = {
       callback =
         function(self, pose)
           local base = CAOS.getVar(self.vm.owner, "caos_image_base") or 0
+          pose = pose or 0
           CAOS.setVar(self.vm.target, "caos_image_pose", pose + base)
           self.vm.target.setGlobalTag("frameno", pose)
         end
@@ -8035,7 +8036,7 @@ CAOS.commands = {
       callback =
         function(self, x_velocity, y_velocity )
           if ( self.vm.owner.setVelocity ~= nil ) then
-            self.vm.owner.setVelocity(x_velocity, y_velocity)
+            self.vm.owner.setVelocity( {x_velocity, y_velocity} )
           end
         end
     }
