@@ -33,8 +33,8 @@
     },
     
     "persistent" : true,
-    
-
+    // init() is called on every world load, we don't want that!
+    "first_spawn" : false,
     
     "agent" : {
       "source" : [

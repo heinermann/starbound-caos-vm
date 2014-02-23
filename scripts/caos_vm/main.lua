@@ -78,7 +78,7 @@ function CAOS.Machine.create(agent, run_install_script)
   -- variables
   o.caos_vars = {}
   local agent_vars = {}
-  for i = 0, 99 do
+  for i = 1, 100 do
     o.caos_vars[i] = { value = 0 }
     agent_vars[i] = { value = 0 }
   end
@@ -95,8 +95,10 @@ function CAOS.Machine.create(agent, run_install_script)
   o.parser = CAOS.Parser.create(o)
   o.parser:init()
   
-  if ( run_install_script ) then
+  if ( run_install_script == true ) then
     o.parser:run_install_script()
+  else
+    o.parser:stop()
   end
   
   return o
@@ -213,9 +215,9 @@ function CAOS.Machine.update(self)
   end
   
   -- reset all script-local variables
-  --for i = 0, 99 do
-  --  self.caos_vars[string.format("VA%02d", i)] = { value = 0 }
-  --end
+  for i = 1, 100 do
+    self.caos_vars[i] = { value = 0 }
+  end
   
   self.parser:update()
 end

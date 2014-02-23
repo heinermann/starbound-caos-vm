@@ -207,7 +207,7 @@ function CAOS.Parser.continue_script(self)
       
       world.logInfo("Calling command... " .. cmd.command)
       
-      local call_result = cmd.callback(unpack(args_for_passing))
+      local call_result = cmd.callback(unpack(args_for_passing, 1))
       if ( cmd.rtype ~= "command" ) then
         table.insert(self.var_stack, call_result)
       end
@@ -230,6 +230,11 @@ function CAOS.Parser.set_cursor(self, line, column)
   self.column = column
   self.stopped = false
   self.invalid = false
+  
+  self.str = (#self.source > 0) and self.source[self.line] or ""
+  
+  self.var_stack = {}
+  self.call_stack = {}
 end
 
 function CAOS.Parser.run_install_script(self)

@@ -41,10 +41,10 @@ end
 function table.reverse ( tab )
     local size = #tab
     local newTable = {}
- 
-    for i,v in ipairs ( tab ) do
-        newTable[size-i] = v
+    
+    for i = #tab, 1, -1 do
+      table.insert(newTable, tab[i])
     end
- 
+
     return newTable
 end

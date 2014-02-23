@@ -21,8 +21,10 @@ function init()
   
   world.logInfo("Spawned an agent!")
   
+  local should_install = entity.configParameter("first_spawn") == "true"
+  
   if ( CAOS ~= nil and CAOS.Machine ~= nil ) then
-    self.caos_vm = CAOS.Machine.create(entity, entity.configParameter("first_spawn", false))
+    self.caos_vm = CAOS.Machine.create(entity, should_install)
   end
 end
 
@@ -72,8 +74,11 @@ end
 -- Get and set functions so that CAOS can interact with external entities' local variables
 function setVar(name, value)
   self[name] = value
+  world.logInfo("Setvar! " .. tostring(name) .. " " .. tostring(value))
   return true
 end
+
 function getVar(name)
+world.logInfo("getvar! " .. tostring(name))
   return self[name]
 end
