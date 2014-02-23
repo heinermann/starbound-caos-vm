@@ -8,6 +8,8 @@
 --  float
 --  variable (returned from command)
 --  decimal
+--  condition
+--  any (internal only)
 
 CAOS.commands = {
   ["ABBA"] = {
@@ -1735,20 +1737,20 @@ CAOS.commands = {
   ["WILD"] = {
     ["string"] = {
       command = "WILD",
-    rtype = "string",
-    params = {
-      { "family", "integer" },  { "genus", "integer" },  { "species", "integer" },  { "tag_stub", "string" },  { "offset", "integer" } },
-    description = [[
-      Searches for a catalogue tag based on the given classifier, and returns the string at the given offset.  
-      See also @READ@.  As an example, with a tag_stub of "Agent Help" and a classifier 3 7 11 
-      it would first look for the tag "Agent Help 3 7 11".  If that wasn't present, it 
-      would go through the wildcards, eventually trying "Agent Help 0 0 0", and throwing an error if even 
-      that isn't there.
-    ]],
-    callback =
-      function(self, family, genus, species, tag_stub, offset)
-        return ""
-      end
+      rtype = "string",
+      params = {
+        { "family", "integer" },  { "genus", "integer" },  { "species", "integer" },  { "tag_stub", "string" },  { "offset", "integer" } },
+      description = [[
+        Searches for a catalogue tag based on the given classifier, and returns the string at the given offset.  
+        See also @READ@.  As an example, with a tag_stub of "Agent Help" and a classifier 3 7 11 
+        it would first look for the tag "Agent Help 3 7 11".  If that wasn't present, it 
+        would go through the wildcards, eventually trying "Agent Help 0 0 0", and throwing an error if even 
+        that isn't there.
+      ]],
+      callback =
+        function(self, family, genus, species, tag_stub, offset)
+          return ""
+        end
     }
   },
 
@@ -5233,31 +5235,149 @@ CAOS.commands = {
   ["DOIF"] = {
     ["command"] = {
       command = "DOIF",
-    rtype = "command",
-    params = {
-      { "condition", "condition" } },
-    description = [[
-      Execute a block of code if the condition is true.  The code block ends at the next @ELSE@, @ELIF@ or @ENDI@.  A condition is composed of one or more comparisons joined by AND or OR.  A comparison compares two values with EQ, NE, GT, GE, LT, LE, or alternatively =, &lt;&gt;, &gt;, &gt;=, &lt;, &lt;=.
-      
-      DOIF ov00 GE 5 AND ov00 LT 10
-      --- code block 1 ---
-      ELIF ov00 GE 10 OR ov00 LT 100
-      --- code block 2 ---
-      ELSE
-      --- code block 3 ---
-      ENDI
-      
-      Conditions are evaluated simply from left to right, so "a AND b OR c" is the same as "(
-      a AND b) OR c", not "a AND ( b OR c )".
-      Conditional statements may not work correctly 
-      with commands overloaded by rvalue.
-    ]],
-    callback =
-      function(self, condition )
-      end
+      rtype = "command",
+      params = {
+        { "condition", "condition" } },
+      description = [[
+        Execute a block of code if the condition is true.  The code block ends at the next @ELSE@, @ELIF@ or @ENDI@. 
+        A condition is composed of one or more comparisons joined by AND or OR.  A comparison compares two values 
+        with EQ, NE, GT, GE, LT, LE, or alternatively =, <>, >, >=, <, <=.
+        
+        DOIF ov00 GE 5 AND ov00 LT 10
+        --- code block 1 ---
+        ELIF ov00 GE 10 OR ov00 LT 100
+        --- code block 2 ---
+        ELSE
+        --- code block 3 ---
+        ENDI
+        
+        Conditions are evaluated simply from left to right, so "a AND b OR c" is the same as "(
+        a AND b) OR c", not "a AND ( b OR c )".
+        Conditional statements may not work correctly 
+        with commands overloaded by rvalue.
+      ]],
+      callback =
+        function(self, condition )
+        end
     }
   },
 
+
+  ["____internal_and"] = {
+    ["condition"] = {
+      command = "____internal_and",
+      rtype = "condition",
+      params = {
+        { "lhs", "condition", "rhs", "condition" } },
+      description = [[
+      ]],
+      callback =
+        function(self, lhs, rhs)
+          return (lhs > 0 and rhs > 0) and 1 or 0
+        end
+    }
+  },
+  ["____internal_or"] = {
+    ["condition"] = {
+      command = "____internal_or",
+      rtype = "condition",
+      params = {
+        { "lhs", "condition", "rhs", "condition" } },
+      description = [[
+      ]],
+      callback =
+        function(self, lhs, rhs)
+          return (lhs > 0 or rhs > 0) and 1 or 0
+        end
+    }
+  },
+
+  ["____internal_eq"] = {
+    ["condition"] = {
+      command = "____internal_eq",
+      rtype = "condition",
+      params = {
+        { "lhs", "any", "rhs", "any" } },
+      description = [[
+      ]],
+      callback =
+        function(self, lhs, rhs)
+          return (lhs == rhs) and 1 or 0
+        end
+    }
+  },
+  ["____internal_ne"] = {
+    ["condition"] = {
+      command = "____internal_ne",
+      rtype = "condition",
+      params = {
+        { "lhs", "any", "rhs", "any" } },
+      description = [[
+      ]],
+      callback =
+        function(self, lhs, rhs)
+          return (lhs ~= rhs) and 1 or 0
+        end
+    }
+  },
+  ["____internal_gt"] = {
+    ["condition"] = {
+      command = "____internal_gt",
+      rtype = "condition",
+      params = {
+        { "lhs", "any", "rhs", "any" } },
+      description = [[
+      ]],
+      callback =
+        function(self, lhs, rhs)
+          return (lhs > rhs) and 1 or 0
+        end
+    }
+  },
+  ["____internal_lt"] = {
+    ["condition"] = {
+      command = "____internal_lt",
+      rtype = "condition",
+      params = {
+        { "lhs", "any", "rhs", "any" } },
+      description = [[
+      ]],
+      callback =
+        function(self, lhs, rhs)
+          return (lhs < rhs) and 1 or 0
+        end
+    }
+  },
+  ["____internal_ge"] = {
+    ["condition"] = {
+      command = "____internal_ge",
+      rtype = "condition",
+      params = {
+        { "lhs", "any", "rhs", "any" } },
+      description = [[
+      ]],
+      callback =
+        function(self, lhs, rhs)
+          return (lhs >= rhs) and 1 or 0
+        end
+    }
+  },
+  ["____internal_le"] = {
+    ["condition"] = {
+      command = "____internal_le",
+      rtype = "condition",
+      params = {
+        { "lhs", "any", "rhs", "any" } },
+      description = [[
+      ]],
+      callback =
+        function(self, lhs, rhs)
+          return (lhs <= rhs) and 1 or 0
+        end
+    }
+  },
+
+  
 
   ["ELIF"] = {
     ["command"] = {

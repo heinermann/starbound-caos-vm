@@ -6,6 +6,45 @@
 -- string annoyance
 getmetatable('').__index = function(str,i) return string.sub(str,i,i) end
 
+
+-- Thing for debugging
+function table.val_to_str ( v )
+  if "string" == type( v ) then
+    v = string.gsub( v, "\n", "\\n" )
+    if string.match( string.gsub(v,"[^'\"]",""), '^"+$' ) then
+      return "'" .. v .. "'"
+    end
+    return '"' .. string.gsub(v,'"', '\\"' ) .. '"'
+  else
+    return "table" == type( v ) and table.tostring( v ) or
+      tostring( v )
+  end
+end
+
+function table.key_to_str ( k )
+  if "string" == type( k ) and string.match( k, "^[_%a][_%a%d]*$" ) then
+    return k
+  else
+    return "[" .. table.val_to_str( k ) .. "]"
+  end
+end
+
+function table.tostring( tbl )
+  local result, done = {}, {}
+  for k, v in ipairs( tbl ) do
+    table.insert( result, table.val_to_str( v ) )
+    done[ k ] = true
+  end
+  for k, v in pairs( tbl ) do
+    if not done[ k ] then
+      table.insert( result,
+        table.key_to_str( k ) .. "=" .. table.val_to_str( v ) )
+    end
+  end
+  return "{" .. table.concat( result, "," ) .. "}"
+end
+---------------------------------------------- ^ utility functions: TODO separate
+
 -- Main file
 CAOS = {}
 CAOS.__index = CAOS
@@ -375,16 +414,6 @@ function CAOS.get_command(name, expected_type)
   return cmd_store[expected_type or "command"]
 end
 
--- NOTE: conditional relations:
---          eq - equal
---          ne - not equal
---          gt - greater than
---          lt - less than
---          ge - greater or equal
---          le - less or equal
---          bt - bit test (AND)
---          bf - bit fail (NAND)
-
 CAOS.Machine.Parser = {}
 CAOS.Machine.Parser.__index = CAOS.Machine.Parser
 
@@ -392,6 +421,7 @@ function CAOS.Machine.Parser.create(source_data)
   local o = {}
   setmetatable(o, CAOS.Machine.Parser)
   
+  o.invalid = false
   if ( source_data == nil or #source_data == 0 ) then
     o.invalid = true
   end
@@ -414,7 +444,7 @@ end
 
 -- checks if the stream is valid
 function CAOS.Machine.Parser.valid(self)
-  return self.invalid and false or true
+  return not self.invalid
 end
 
 -- Goes to the next line and returns false if it reached the end of the stream
@@ -428,7 +458,7 @@ function CAOS.Machine.Parser.next_line(self)
     else
       self.invalid = true
     end
-  until ( self.invalid or #self.str > 0 )
+  until ( self.invalid == true or #self.str > 0 )
 
   return self:valid()
 end
@@ -456,7 +486,11 @@ function CAOS.Machine.Parser.skip_whitespace(self)
 end
 
 -- Gets a string from the parser, assumes that it is currently pointing to the string's starting quotes
-function CAOS.Machine.Parser.get_string(self)
+function CAOS.Machine.Parser.get_string(self, expected_type)
+  if ( expected_type ~= nil and expected_type ~= "string" and expected_type ~= "conditional" and expected_type ~= "any" ) then
+    self:error("Type mismatch. Expected " .. expected_type .. "; Got string.")
+  end
+  
   local startpos = self.column + 1
   local endpos = string.find(self.str, "\"", startpos, true)
   if ( endpos == nil ) then
@@ -470,7 +504,11 @@ function CAOS.Machine.Parser.get_string(self)
 end
 
 -- Gets an array of values from the parser, assumes that it is currently pointing to an open bracket
-function CAOS.Machine.Parser.get_byte_string(self)
+function CAOS.Machine.Parser.get_byte_string(self, expected_type)
+  if ( expected_type ~= nil and expected_type ~= "byte-string" ) then
+    self:error("Type mismatch. Expected " .. expected_type .. "; Got byte-string.")
+  end
+  
   local startpos = self.column + 1
   local endpos = string.find(self.str, "]", startpos, true)
   if ( endpos == nil ) then
@@ -529,6 +567,15 @@ function CAOS.Machine.Parser.get_command(self, expected_type)
   if ( cmd == nil and expected_type ~= "command" ) then
     cmd = CAOS.get_command(cmdstr, "variable")
   end
+  
+  if ( cmd == nil and (expected_type == "condition" or expected_type == "any") ) then
+    cmd = cmd or CAOS.get_command(cmdstr, "integer")
+    cmd = cmd or CAOS.get_command(cmdstr, "float")
+    cmd = cmd or CAOS.get_command(cmdstr, "variable")
+    cmd = cmd or CAOS.get_command(cmdstr, "decimal")
+    cmd = cmd or CAOS.get_command(cmdstr, "agent")
+    cmd = cmd or CAOS.get_command(cmdstr, "string")
+  end
     
   if ( cmd == nil ) then
     self:error("The command \"" .. cmdstr .. "\" does not support the expected type \"" .. expected_type .. "\".")
@@ -538,6 +585,69 @@ function CAOS.Machine.Parser.get_command(self, expected_type)
   return cmd
 end
 
+-- NOTE: conditional relations:
+--          eq - equal
+--          ne - not equal
+--          gt - greater than
+--          lt - less than
+--          ge - greater or equal
+--          le - less or equal
+--          bt - bit test (AND)
+--          bf - bit fail (NAND)
+--          and - conjunction
+--          or - conjunction
+function CAOS.Machine.Parser.parse_conditional(self)
+  self:skip_whitespace()
+  if ( not self:valid() ) then
+    return false
+  end
+  
+  local stacktop = nil
+  local cmd = nil
+  
+  -- initialize some string positions to jump to
+  local start1 = self.column
+  
+  local end1 = string.find(self.str, " ", start1, true)
+  --end1 = end1 and end1[1] or #self.str
+  end1 = end1 or #self.str + 1
+  
+  -- get the next string
+  local str = string.lower( string.sub(self.str, start1, end1-1) )
+  if ( str == "eq" or str == "=" ) then
+    str = "eq"
+  elseif ( str == "ne" or str == "<>" ) then
+    str = "ne"
+  elseif ( str == "gt" or str == ">" ) then
+    str = "gt"
+  elseif ( str == "lt" or str == "<" ) then
+    str = "lt"
+  elseif ( str == "ge" or str == ">=" ) then
+    str = "ge"
+  elseif ( str == "le" or str == "<=" ) then
+    str = "le"
+
+  --elseif ( str == "bt" ) then
+  --elseif ( str == "bf" ) then
+  elseif ( str == "and" ) then
+  elseif ( str == "or" ) then
+  else
+    return false
+  end
+  -- This should not fail
+  cmd = CAOS.get_command("____internal_" .. str, "condition")
+  
+  -- re-order the table to make use of hacky functions
+  stacktop = self.var_stack[#self.var_stack]
+  table.remove(self.var_stack)
+  table.insert(self.var_stack, cmd)
+  table.insert(self.call_stack, { ["cmd"] = cmd, argno = 2 })
+  table.insert(self.var_stack, stacktop)
+  
+  self.column = end1
+  return true
+end
+
 function CAOS.Machine.Parser.next(self, expected_type)
   self:skip_whitespace()
   if ( not self:valid() ) then
@@ -545,15 +655,9 @@ function CAOS.Machine.Parser.next(self, expected_type)
   end
   
   if ( self.str[self.column] == "\"" ) then
-    if ( expected_type ~= nil and expected_type ~= "string" ) then
-      self:error("Type mismatch. Expected " .. expected_type .. "; Got string.")
-    end
-    return self:get_string()
+    return self:get_string(expected_type)
   elseif ( self.str[self.column] == "[" ) then
-    if ( expected_type ~= nil and expected_type ~= "byte-string" ) then
-      self:error("Type mismatch. Expected " .. expected_type .. "; Got byte-string.")
-    end
-    return self:get_byte_string()
+    return self:get_byte_string(expected_type)
   else
     -- check if there is a numeric value
     local endmatch = string.find(self.str, " ", self.column, true)
@@ -561,13 +665,19 @@ function CAOS.Machine.Parser.next(self, expected_type)
     endmatch = endmatch or #self.str + 1
     
     local snippet = string.sub(self.str, self.column, endmatch-1)
+    
+    -- numeric type testing
     local num = tonumber(snippet)
-    if ( num ~= nil ) then
-      if ( expected_type ~= nil and expected_type ~= "float" and expected_type ~= "integer" and expected_type ~= "decimal" ) then
-        self:error("Type mismatch. Expected " .. expected_type .. "; Got " .. (num == math.floor(num) and "integer" or "float") .. ".")
-      elseif ( expected_type == "integer" and num ~= math.floor(num) ) then
-        self:error("Type mismatch. Expected " .. expected_type .. "; Got float.")
+    if ( num ~= nil ) then      
+      -- Type checking
+      if ( expected_type ~= "any" ) then
+        if ( expected_type ~= nil and expected_type ~= "float" and expected_type ~= "integer" and expected_type ~= "decimal" ) then
+          self:error("Type mismatch. Expected " .. expected_type .. "; Got " .. (num == math.floor(num) and "integer" or "float") .. ".")
+        elseif ( expected_type == "integer" and num ~= math.floor(num) ) then
+          self:error("Type mismatch. Expected " .. expected_type .. "; Got float.")
+        end
       end
+      
       self.column = endmatch
       return num
     else -- assume that it must be a command
@@ -576,68 +686,59 @@ function CAOS.Machine.Parser.next(self, expected_type)
   end
 end
 
--- Thing for debugging
-function table.val_to_str ( v )
-  if "string" == type( v ) then
-    v = string.gsub( v, "\n", "\\n" )
-    if string.match( string.gsub(v,"[^'\"]",""), '^"+$' ) then
-      return "'" .. v .. "'"
-    end
-    return '"' .. string.gsub(v,'"', '\\"' ) .. '"'
-  else
-    return "table" == type( v ) and table.tostring( v ) or
-      tostring( v )
-  end
-end
-
-function table.key_to_str ( k )
-  if "string" == type( k ) and string.match( k, "^[_%a][_%a%d]*$" ) then
-    return k
-  else
-    return "[" .. table.val_to_str( k ) .. "]"
-  end
-end
-
-function table.tostring( tbl )
-  local result, done = {}, {}
-  for k, v in ipairs( tbl ) do
-    table.insert( result, table.val_to_str( v ) )
-    done[ k ] = true
-  end
-  for k, v in pairs( tbl ) do
-    if not done[ k ] then
-      table.insert( result,
-        table.key_to_str( k ) .. "=" .. table.val_to_str( v ) )
-    end
-  end
-  return "{" .. table.concat( result, "," ) .. "}"
-end
-
 -- Parses a full source and adds it to the scriptorium
 function CAOS.Machine.parse_full_source(self, raw_source)
   local parser = CAOS.Machine.Parser.create(raw_source)
   local current_cmd = nil
+  local expected_type = nil
   
   while ( parser:valid() ) do
     local next_value = nil
+    local condition_depth = 0
+    
+    -- treat the next identifier as a command if the call stack is not expecting any values
     if ( #parser.call_stack == 0 ) then
       next_value = parser:next("command")
-      print(tostring(next_value))
     else
+      -- Obtain the next expected argument
       current_cmd = parser.call_stack[#parser.call_stack]
-      next_value = parser:next( current_cmd.cmd.params[current_cmd.argno][2] )
-      print(tostring(next_value))
+      if ( #current_cmd.cmd.params >= current_cmd.argno ) then
+        expected_type = current_cmd.cmd.params[current_cmd.argno][2]
+      else
+        expected_type = current_cmd.cmd.params[#current_cmd.cmd.params][2]
+      end
+      next_value = parser:next( expected_type )
+
       current_cmd.argno = current_cmd.argno + 1
     end
+    
+    world.logInfo(tostring(parser.invalid))
+    
+    -- Add our values/commands to the stack
     table.insert(parser.var_stack, next_value)
     if ( type(next_value) == "table" and next_value.params ) then
       table.insert(parser.call_stack, { cmd = next_value, argno = 1 })
     end
     
+    
     -- Retrieve the most recent command from the call stack and check if all of its arguments have been provided
     while ( #parser.call_stack > 0 and parser.call_stack[#parser.call_stack].argno > #parser.call_stack[#parser.call_stack].cmd.params ) do
+
       current_cmd = parser.call_stack[#parser.call_stack]
       local cmd = current_cmd.cmd
+      
+
+      -- Parse conditionals
+      if ( #parser.call_stack == 1 ) then
+        current_cmd = parser.call_stack[1]
+        local params = current_cmd.cmd.params
+        if ( #params > 0 and params[#params][2] == "condition" ) then
+          if ( parser:parse_conditional() ) then
+            break
+          end
+        end
+      end
+      
       
       -- Retrieve the arguments from the stack
       local cmd_args = {}
@@ -665,7 +766,7 @@ function CAOS.Machine.parse_full_source(self, raw_source)
       -- table.insert(parser.var_stack, make the call )
       --world.logInfo("[CAOS] made virtual call: " .. cmd.command .. " " .. table.tostring(cmd_args))
       
-      table.remove(parser.call_stack)    -- remove the command from the call stack as we do not require the call
+      table.remove(parser.call_stack)    -- remove the command from the call stack since it has been processed
       
     end
   end
