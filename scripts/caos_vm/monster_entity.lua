@@ -22,7 +22,7 @@ function init()
   world.logInfo("Spawned an agent!")
   
   if ( CAOS ~= nil and CAOS.Machine ~= nil ) then
-    self.caos_vm = CAOS.Machine.create(entity)
+    self.caos_vm = CAOS.Machine.create(entity, entity.configParameter("first_spawn", false))
   end
 end
 

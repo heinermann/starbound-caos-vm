@@ -16,7 +16,8 @@
     "level" : 7,
     "actionOnReap" : [{
       "action" : "spawnmonster",
-      "type" : "test_agent"
+      "type" : "test_agent",
+      "arguments" : { "first_spawn" : "true" }
     }]
   }
 }

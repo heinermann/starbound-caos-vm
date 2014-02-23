@@ -9,8 +9,14 @@
   
   "baseParameters" : {
     "scripts" : [
+      "/scripts/caos_vm/utility.lua",
+      
       "/scripts/caos_vm/main.lua",
+      "/scripts/caos_vm/constants.lua",
+      "/scripts/caos_vm/variables.lua",
       "/scripts/caos_vm/commands.lua",
+      "/scripts/caos_vm/parser.lua",
+      
       "/scripts/caos_vm/monster_entity.lua"
     ],
     "scriptDelta" : 1,
@@ -29,12 +35,6 @@
     "persistent" : true,
     
 
-    
-    
-    
-    
-    
-    
     
     "agent" : {
       "source" : [
