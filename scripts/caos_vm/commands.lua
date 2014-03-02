@@ -879,8 +879,8 @@ CAOS.commands = {
                                 caos_first_image = first_image,
                                 caos_plane = plane,
                                 first_spawn = false,
-                                desired_script_line = (not (self.paused or self.stopped or self.invalid)) and self.line or 0,
-                                desired_script_column = self.column
+                                desired_script_line = 0,
+                                desired_script_column = 0
                              }
         
         self.vm.target = EntityWrap.create(world.spawnMonster(agent_name, self.vm.owner:position(), agent_params))
@@ -1101,6 +1101,8 @@ CAOS.commands = {
           local frameno = pose + base + global_base
           self.vm.target:setVar("caos_image_pose", frameno)
           self.vm.target:setTag("frameno", frameno)
+          
+          world.logInfo("Posed: " .. tostring(pose) )
         end
     },
 
@@ -1447,11 +1449,13 @@ CAOS.commands = {
       params = {
         { "tick_rate", "integer" } },
       description = [[
-        Start agent timer, calling @Timer@ script every tick_rate ticks.  Set to 0 to turn off the timer.
+        Start agent timer, calling @Timer@ script every tick_rate ticks.  Set to 0 to turn off the timer. (assuming target)
       ]],
       callback =
         function(self, tick_rate)
-          self.vm.timer_interval = tick_rate
+          self.vm.target:setVar("caos_timer_interval", tick_rate)
+          --self.vm.target:setTick(tick_rate)
+          --self.vm.timer_interval = tick_rate
         end
     },
 
@@ -1464,7 +1468,9 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return self.vm.timer_interval or 0
+          --return self.vm.timer_interval or 0
+          --return self.vm.target:getTick()
+          return self.vm.target:getVar("caos_timer_interval")
         end
     }
   },

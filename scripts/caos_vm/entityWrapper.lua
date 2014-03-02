@@ -34,7 +34,7 @@ function EntityWrap.getVar(self, name)
 end
 
 function EntityWrap.setVar(self, name, value)
-  return world.callScriptedEntity(self.id, "CAOS_set_var", name, value)
+  world.callScriptedEntity(self.id, "CAOS_set_var", name, value)
 end
 
 function EntityWrap.setFlipped(self, flip)
@@ -92,4 +92,8 @@ end
 
 function EntityWrap.kill(self)
   world.callScriptedEntity(self.id, "CAOS_kill")
+end
+
+function EntityWrap.setPosition(self, position)
+  world.callScriptedEntity(self.id, "entity.setPosition", position)
 end

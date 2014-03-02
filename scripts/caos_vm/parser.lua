@@ -199,7 +199,7 @@ function CAOS.Parser.continue_script(self)
         local sval = self.var_stack[#self.var_stack]
         if ( type(sval) == "table" and sval.type == "variable" and param[2] ~= "variable" ) then
           --param[2] type checking TODO
-          sval = sval.variable
+          sval = sval:get()
         end
         table.insert(cmd_args, sval)
         table.remove(self.var_stack)
@@ -216,7 +216,7 @@ function CAOS.Parser.continue_script(self)
       for i = 2, #args_for_passing do
         dbg_args = dbg_args .. " " .. tostring(args_for_passing[i])
       end
-      world.logInfo("[CAOS " .. self.vm.owner.id .. " " .. self.vm.target.id .. "] " .. cmd.command .. dbg_args )
+      world.logInfo("[CAOS " .. self.vm.owner.id .. " " .. self.vm.target.id .. "] " .. cmd.command .. "(" .. cmd.rtype .. ")" .. dbg_args )
       
       -- Call the function
       local call_result = cmd.callback(unpack(args_for_passing, 1))

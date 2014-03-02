@@ -32,7 +32,10 @@ function CAOS.Machine.create(agent, run_install_script)
   o.message_param_1 = nil
   o.message_param_2 = nil
   
-  o.timer_interval = 0
+  o.timer_interval = o.owner:getVarDynamic("caos_timer_interval")
+  if ( o.timer_interval:get() == nil ) then
+    o.timer_interval:set(0)
+  end
   o.timer_step = 0
   o.update_interval = 50
   o.last_tick = os.clock()*1000
@@ -122,8 +125,10 @@ function CAOS.Machine.update(self)
   end
   self.last_tick = os.clock()*1000
   
-  if ( self.timer_interval > 0 ) then
-    if ( self.timer_step >= self.timer_interval ) then
+  
+  local interval = self.timer_interval:get()
+  if ( interval > 0 ) then
+    if ( self.timer_step >= interval ) then
       if ( self.parser.wait_time == 0 ) then
         world.logInfo("RAN TIMER SCRIPT")
         self.timer_step = 0
