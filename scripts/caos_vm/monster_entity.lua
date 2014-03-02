@@ -1,5 +1,6 @@
 --- Stubs for global functions monster scripts can define, which will be called by C++
 
+
 --- Called (once) when the monster is added to the world.
 --
 -- Note that the monster's position may not yet be valid.
@@ -19,28 +20,29 @@ function init()
   
   entity.setGlobalTag("frameno", 0)
   
-  world.logInfo("Spawned an agent!")
   
-  local should_install = entity.configParameter("first_spawn") == "true"
-  
-  if ( CAOS ~= nil and CAOS.Machine ~= nil ) then
-    self.caos_vm = CAOS.Machine.create(entity, should_install)
+  if ( storage.caos_vars == nil ) then
+    storage.caos_vars = {}
   end
+  
+  local first_spawn = entity.configParameter("first_spawn")
+  storage.should_install = first_spawn == "true" or first_spawn == true
+  
+  world.logInfo("Entity created")
 end
 
 --- Update loop handler, called once every scriptDelta (defined in *.monstertype) ticks
-function main() 
-  if ( self.caos_vm ~= nil ) then
-    self.caos_vm:update()
+function main()
+  if ( vm ~= nil ) then
+    vm:update()
+  else
+    vm = CAOS.Machine.create(entity.id(), storage.should_install)
+    world.logInfo("VM Created")
   end
-
 end
 
 --- Called when shouldDie has returned true and the monster and is about to be removed from the world
-function die() 
-  if ( self.caos_vm ~= nil ) then
-    self.caos_vm:killed()
-  end
+function die()
 end
 
 --- Called after the NPC has taken damage
@@ -67,22 +69,41 @@ end
 --
 -- @treturn bool true if the monster can die, false to keep the monster alive
 function shouldDie()
-  local dead = self.caos_killed == true
-  dead = dead or (self.caos_family == 0 and self.caos_genus == 0 and self.caos_species == 0)
-  
-  return dead
+  return storage.CAOS_killed == true
   --return true
 end
 
-
--- Get and set functions so that CAOS can interact with external entities' local variables
-function setVar(name, value)
-  self[name] = value
-  --world.logInfo("Setvar! " .. tostring(name) .. " " .. tostring(value))
-  return true
+-- Tells the VM controller if this agent was just initialized. If it was already initialized then it will return false,
+-- allowing the controller to exclude it from initializing it as an agent.
+function CAOS_init()
+  if ( storage.CAOS_controlled ~= true ) then
+    storage.CAOS_controlled = true
+    return true
+  end
+  return false
 end
 
-function getVar(name)
-  --world.logInfo("getvar! " .. tostring(name))
-  return self[name]
+-- Resets control, this is for when the entity is no longer being controlled by the VM controller (exited the space, controller was destroyed, etc.)
+function CAOS_reset()
+  storage.CAOS_controlled = false
 end
+
+-- Tells the agent to kill itself
+function CAOS_kill()
+  storage.CAOS_killed = true
+end
+
+function CAOS_get_var(name)
+  if ( storage.caos_vars == nil ) then
+    storage.caos_vars = {}
+  end
+  return storage.caos_vars[name]
+end
+
+function CAOS_set_var(name, value)
+  if ( storage.caos_vars == nil ) then
+    storage.caos_vars = {}
+  end
+  storage.caos_vars[name] = value
+end
+

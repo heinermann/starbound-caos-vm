@@ -23,7 +23,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return CAOS.getVar(self.owner, "caos_first_image") or 0
+          return self.vm.owner:getVar("caos_first_image") or 0
         end
     }
   },
@@ -96,37 +96,24 @@ CAOS.commands = {
       description = "Set attributes of target.  Sum the values in the @Attribute Flags@ table to get the attribute value to pass into this command.",
       callback =
         function(self, attributes)
-          CAOS.setVar(self.vm.target, "caos_attributes", attributes)
+          self.vm.target:setVar("caos_attributes", attributes)
           
           if ( bit32.band(attributes, CAOS.ATTRIBUTES.CARRYABLE) ~= 0 ) then
           end
           if ( bit32.band(attributes, CAOS.ATTRIBUTES.MOUSEABLE) ~= 0 ) then
           end
-          
-          -- ACTIVATEABLE
-          if ( self.vm.target.setInteractive ~= nil ) then
-            self.vm.target.setInteractive( bit32.band(attributes, CAOS.ATTRIBUTES.ACTIVATEABLE) ~= 0 )
+          if ( bit32.band(attributes, CAOS.ATTRIBUTES.ACTIVATEABLE) ~= 0 ) then
           end
-          
-          
           if ( bit32.band(attributes, CAOS.ATTRIBUTES.GREEDY_CABIN) ~= 0 ) then
           end
-          
-          -- INVISIBLE
-          if ( self.vm.target.setVisible ~= nil ) then
-            self.vm.target.setVisible( bit32.band(attributes, CAOS.ATTRIBUTES.INVISIBLE) ~= 0 )
+          if ( bit32.band(attributes, CAOS.ATTRIBUTES.INVISIBLE) ~= 0 ) then
           end
-          
           if ( bit32.band(attributes, CAOS.ATTRIBUTES.FLOATABLE) ~= 0 ) then
           end
           if ( bit32.band(attributes, CAOS.ATTRIBUTES.SUFFER_COLLISIONS) ~= 0 ) then
           end
-          
-          -- SUFFER_PHYSICS
-          if ( self.vm.target.setGravityEnabled ~= nil ) then
-            self.vm.target.setGravityEnabled( bit32.band(attributes, CAOS.ATTRIBUTES.SUFFER_PHYSICS) ~= 0 )
+          if ( bit32.band(attributes, CAOS.ATTRIBUTES.SUFFER_PHYSICS) ~= 0 ) then
           end
-      
           if ( bit32.band(attributes, CAOS.ATTRIBUTES.CAMERA_SHY) ~= 0 ) then
           end
           if ( bit32.band(attributes, CAOS.ATTRIBUTES.OPEN_AIR_CABIN) ~= 0 ) then
@@ -146,7 +133,7 @@ CAOS.commands = {
       description = "Return attributes of target.",
       callback =
         function(self)
-          return CAOS.getVar(self.vm.target, "caos_attributes") or 0
+          return self.vm.target:getVar("caos_attributes") or 0
         end
     }
   },
@@ -164,7 +151,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, index)
-          CAOS.setVar(self.vm.owner, "caos_image_base", index)
+          self.vm.owner:setVar("caos_image_base", index)
         end
     },
 
@@ -177,7 +164,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return CAOS.getVar(self.vm.owner, "caos_image_base") or 0
+          return self.vm.owner:getVar("caos_image_base") or 0
         end
     }
   },
@@ -195,7 +182,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, permissions)
-          CAOS.setVar(self.vm.target, "caos_permissions", permissions)
+          self.vm.target:setVar("caos_permissions", permissions)
         end
     },
 
@@ -208,7 +195,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return CAOS.getVar(self.vm.target, "caos_permissions") or 0
+          return self.vm.target:getVar("caos_permissions") or 0
         end
     }
   },
@@ -248,7 +235,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return CAOS.getVar(self.vm.target, "caos_carried_by")
+          return self.vm.target:getVar("caos_carried_by")
         end
     }
   },
@@ -337,7 +324,7 @@ CAOS.commands = {
     ]],
     callback =
       function(self, topY, bottomY, leftX, rightX)
-        CAOS.setVar(self.vm.target, "caos_bounds", { left = leftx,
+        self.vm.target:setVar("caos_bounds", { left = leftx,
                                                   top = topy,
                                                   right = rightx,
                                                   bottom = bottomy
@@ -358,7 +345,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, core_on)
-          CAOS.setVar(self.vm.target, "caos_debug_core", core_on)
+          self.vm.target:setVar("caos_debug_core", core_on)
         end
     }
   },
@@ -377,7 +364,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, other)
-          local dist = world.distance(self.vm.target.position(), other.position())
+          local dist = world.distance(self.vm.target:position(), other:position())
           return dist * dist
         end
     }
@@ -513,7 +500,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return CAOS.getVar(self.vm.target, "caos_family") or 0
+          return self.vm.target:getVar("caos_family") or 0
         end
     }
   },
@@ -613,7 +600,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return CAOS.getVar(self.vm.target, "caos_genus") or 0
+          return self.vm.target:getVar("caos_genus") or 0
         end
     }
   },
@@ -660,7 +647,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return CAOS.getVar(self.vm.target, "caos_carrying")
+          return self.vm.target:getVar("caos_carrying")
         end
     }
   },
@@ -676,7 +663,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          local bounds = CAOS.getVar(self.vm.target, bounds)
+          local bounds = self.vm.target:getVar(bounds)
           return bounds and math.abs(bounds.bottom - bounds.top) or 0
         end
     }
@@ -726,12 +713,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, agent)
-          CAOS.setVar(agent, "caos_killed", true)
-          if ( agent.smash ~= nil ) then
-            agent.smash()
-          elseif ( agent.heal ~= nil ) then
-            agent.heal(-1000000000)
-          end
+          agent:kill()
         end
     }
   },
@@ -786,14 +768,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, on_off)
-          CAOS.setVar(self.vm.owner, "caos_flipped", on_off)
-          
-          if ( self.vm.owner.setFlipped ~= nil ) then
-            self.vm.owner.setFlipped(on_off == 1)
-          elseif ( self.vm.owner.setFacingDirection ~= nil ) then
-            local direction = (on_off == 0) and 1 or -1
-            self.vm.owner.setFacingDirection(direction)
-          end
+          self.vm.owner:setFlipped(on_off)
         end
     },
 
@@ -806,12 +781,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          local result = CAOS.getVar(self.vm.owner, "caos_flipped", on_off)
-          
-          if ( result == nil and self.vm.owner.facingDirection ~= nil ) then
-            result = (self.vm.owner.facingDirection() < 0 ) and 1 or 0
-          end
-          return result or 0
+          return self.vm.owner:isFlipped() and 1 or 0
         end
     }
   },
@@ -897,7 +867,6 @@ CAOS.commands = {
     ]],
     callback =
       function(self, family, genus, species, sprite_file, image_count, first_image, plane)
-        world.logInfo("NEW: SIMP " .. " " .. tostring(family) .. " " .. tostring(genus) .. " " .. tostring(species) .. " " .. tostring(sprite_file) .. " " .. tostring(image_count) .. " " .. tostring(first_image) .. " " .. tostring(plane))
         --local agent_name = CAOS.get_cob_name(family,genus,species)
         
         local agent_name = "test_agent"
@@ -914,8 +883,7 @@ CAOS.commands = {
                                 desired_script_column = self.column
                              }
         
-        
-        world.spawnMonster(agent_name, self.vm.owner.position(), agent_params)
+        self.vm.target = EntityWrap.create(world.spawnMonster(agent_name, self.vm.owner:position(), agent_params))
       end
     }
   },
@@ -1013,7 +981,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, paused)
-          CAOS.setVar(self.vm.target, "caos_paused", paused)
+          self.vm.target:setVar("caos_paused", paused)
         end
     },
 
@@ -1026,7 +994,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return CAOS.getVar(self.vm.target, "caos_paused") or 0
+          return self.vm.target:getVar("caos_paused") or 0
         end
     }
   },
@@ -1062,7 +1030,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, plane)
-          CAOS.setVar(self.vm.target, "caos_plane", plane)
+          self.vm.target:setVar("caos_plane", plane)
         end
     },
 
@@ -1075,7 +1043,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return CAOS.getVar(self.vm.target, "caos_plane") or 0
+          return self.vm.target:getVar("caos_plane") or 0
         end
     }
   },
@@ -1107,8 +1075,8 @@ CAOS.commands = {
     ]],
     callback =
       function(self)
-        local bounds = CAOS.getVar(self.vm.target, "caos_bounds")
-        return bounds.bottom or (self.vm.target.position()[2] + 1.0) or 0.0
+        local bounds = self.vm.target:getVar("caos_bounds")
+        return bounds.bottom or (self.vm.target:position()[2] + 1.0) or 0.0
       end
     }
   },
@@ -1126,13 +1094,13 @@ CAOS.commands = {
       ]],
       callback =
         function(self, pose)
-          local base = CAOS.getVar(self.vm.owner, "caos_image_base") or 0
-          local global_base = CAOS.getVar(self.owner, "caos_first_image") or 0
+          local base = self.vm.target:getVar("caos_image_base") or 0
+          local global_base = self.vm.target:getVar("caos_first_image") or 0
           pose = pose or 0
           
           local frameno = pose + base + global_base
-          CAOS.setVar(self.vm.target, "caos_image_pose", frameno)
-          self.vm.target.setGlobalTag("frameno", frameno)
+          self.vm.target:setVar("caos_image_pose", frameno)
+          self.vm.target:setTag("frameno", frameno)
         end
     },
 
@@ -1145,7 +1113,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return CAOS.getVar(self.vm.target, "caos_image_pose") or 0
+          return self.vm.target:getVar("caos_image_pose") or 0
         end
     }
   },
@@ -1161,8 +1129,8 @@ CAOS.commands = {
     ]],
     callback =
       function(self)
-        local bounds = CAOS.getVar(self.vm.target, "caos_bounds")
-        return bounds.left or (self.vm.target.position()[1] - 1.0) or 0.0
+        local bounds = self.vm.target:getVar("caos_bounds")
+        return bounds.left or (self.vm.target:position()[1] - 1.0) or 0.0
       end
     }
   },
@@ -1178,8 +1146,8 @@ CAOS.commands = {
     ]],
     callback =
       function(self)
-        local bounds = CAOS.getVar(self.vm.target, "caos_bounds")
-        return bounds.right or (self.vm.target.position()[1] + 1.0) or 0.0
+        local bounds = self.vm.target:getVar("caos_bounds")
+        return bounds.right or (self.vm.target:position()[1] + 1.0) or 0.0
       end
     }
   },
@@ -1195,8 +1163,8 @@ CAOS.commands = {
     ]],
     callback =
       function(self)
-        local bounds = CAOS.getVar(self.vm.target, "caos_bounds")
-        return bounds.top or (self.vm.target.position()[2] - 1.0) or 0.0
+        local bounds = self.vm.target:getVar("caos_bounds")
+        return bounds.top or (self.vm.target:position()[2] - 1.0) or 0.0
       end
     }
   },
@@ -1212,7 +1180,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return self.vm.target.position()[1] or 0.0
+          return self.vm.target:position()[1] or 0.0
         end
     }
   },
@@ -1228,7 +1196,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return self.vm.target.position()[2] or 0.0
+          return self.vm.target:position()[2] or 0.0
         end
     }
   },
@@ -1315,7 +1283,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, distance)
-          CAOS.setVar(self.vm.target, "caos_distance_check", distance)
+          self.vm.target:setVar("caos_distance_check", distance)
         end
     },
 
@@ -1328,7 +1296,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return CAOS.getVar(self.vm.target, "caos_distance_check") or 100.0
+          return self.vm.target:getVar("caos_distance_check") or 100.0
         end
     }
   },
@@ -1400,7 +1368,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return CAOS.getVar(self.vm.target, "caos_species") or 0
+          return self.vm.target:getVar("caos_species") or 0
         end
     }
   },
@@ -1713,7 +1681,7 @@ CAOS.commands = {
     ]],
     callback =
       function(self, checkAllCameras)
-        local bounds = CAOS.getVar(self.vm.owner, "caos_bounds")
+        local bounds = self.vm.owner:getVar("caos_bounds")
         return world.isVisibleToPlayer({
                 minX = bounds.left,
                 minY = bounds.top,
@@ -1735,7 +1703,7 @@ CAOS.commands = {
     ]],
     callback =
       function(self)
-        local bounds = CAOS.getVar(self.vm.target, bounds)
+        local bounds = self.vm.target:getVar(bounds)
         return bounds and math.abs(bounds.right - bounds.left) or 0
       end
     }
@@ -4824,7 +4792,7 @@ CAOS.commands = {
           local result = ""
           if ( variable == -1 ) then
           elseif ( variable >= 0 and variable <= 99 ) then
-            result = tostring(CAOS.getVar(self.vm.target, "caos_vars")[variable+1])
+            result = tostring(self.vm.target:getVar("caos_vars_" .. variable+1))
           end
           return result
         end
@@ -4948,7 +4916,7 @@ CAOS.commands = {
     ]],
     callback =
       function(self)
-        return self.vm.target.id()
+        return self.vm.target.id
       end
     }
   },
@@ -5580,6 +5548,7 @@ CAOS.commands = {
     ]],
     callback =
       function(self, label)
+        self:stop()
       end
     }
   },
@@ -6320,10 +6289,10 @@ CAOS.commands = {
       ]],
       callback =
         function(self, message )
-          CAOS.setVar(self.vm.target, "caos_clack_msg", CAOS.message_to_script(message))
-          CAOS.setVar(self.vm.target, "caos_click_msg_1", -2)
-          CAOS.setVar(self.vm.target, "caos_click_msg_2", -2)
-          CAOS.setVar(self.vm.target, "caos_click_msg_3", -2)
+          self.vm.target:setVar("caos_clack_msg", CAOS.message_to_script(message))
+          self.vm.target:setVar("caos_click_msg_1", -2)
+          self.vm.target:setVar("caos_click_msg_2", -2)
+          self.vm.target:setVar("caos_click_msg_3", -2)
         end
     },
 
@@ -6337,7 +6306,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return CAOS.script_to_message( CAOS.getVar(self.vm.target, "caos_clack_msg") ) or -1
+          return CAOS.script_to_message( self.vm.target:getVar("caos_clack_msg") ) or -1
         end
     }
   },
@@ -6355,10 +6324,10 @@ CAOS.commands = {
       ]],
       callback =
         function(self, message_1, message_2, message_3 )
-          CAOS.setVar(self.vm.target, "caos_clack_msg", -2)
-          CAOS.setVar(self.vm.target, "caos_click_msg_1", CAOS.message_to_script(which_value_or_msg1))
-          CAOS.setVar(self.vm.target, "caos_click_msg_2", CAOS.message_to_script(message_2))
-          CAOS.setVar(self.vm.target, "caos_click_msg_3", CAOS.message_to_script(message_3))
+          self.vm.target:setVar("caos_clack_msg", -2)
+          self.vm.target:setVar("caos_click_msg_1", CAOS.message_to_script(which_value_or_msg1))
+          self.vm.target:setVar("caos_click_msg_2", CAOS.message_to_script(message_2))
+          self.vm.target:setVar("caos_click_msg_3", CAOS.message_to_script(message_3))
         end
     },
 
@@ -6379,11 +6348,11 @@ CAOS.commands = {
           if ( which_value == 0 ) then
             return 1  -- TODO
           elseif ( which_value == 1 ) then
-            return CAOS.getVar(self.vm.target, "caos_click_msg_1") or -1
+            return self.vm.target:getVar("caos_click_msg_1") or -1
           elseif ( which_value == 2 ) then
-            return CAOS.getVar(self.vm.target, "caos_click_msg_2") or -1
+            return self.vm.target:getVar("caos_click_msg_2") or -1
           elseif ( which_value == 3 ) then
-            return CAOS.getVar(self.vm.target, "caos_click_msg_3") or -1
+            return self.vm.target:getVar("caos_click_msg_3") or -1
           end
           return 0
         end
@@ -7092,11 +7061,11 @@ CAOS.commands = {
       description = [[
         Value from 1 to 100. Sets which room boundaries the agent can pass through.  The smaller the @PERM@ 
         the more it can go through.  @DOOR@ sets the corresponding room boundary permiability.  Also used for @ESEE@, to 
-        decide what it can see through.
+        decide what it can see through. (assumed target)
       ]],
       callback =
         function(self, permiability )
-          CAOS.setVar(self.vm.target, "caos_permiability", permiability)
+          self.vm.target:setVar("caos_permiability", permiability)
         end
     },
 
@@ -7109,7 +7078,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return CAOS.getVar(self.vm.target, "caos_permiability") or 50
+          return self.vm.target:getVar("caos_permiability") or 50
         end
     }
   },
@@ -7142,11 +7111,11 @@ CAOS.commands = {
         function(self, room_id, ca_index )
           -- TODO: map room_id to position from previous call
           if ( ca_index == CAOS.CA_INDEX.SOUND ) then
-            return world.windLevel(self.vm.owner.position())
+            return world.windLevel(self.vm.owner:position())
           elseif ( ca_index == CAOS.CA_INDEX.LIGHT ) then
-            return world.lightLevel(self.vm.owner.position())
+            return world.lightLevel(self.vm.owner:position())
           elseif ( ca_index == CAOS.CA_INDEX.HEAT ) then
-            return world.temperature(self.vm.owner.position())
+            return world.temperature(self.vm.owner:position())
           elseif ( ca_index == CAOS.CA_INDEX.PRECIPITATION ) then
           elseif ( ca_index == CAOS.CA_INDEX.NUTRIENT ) then
           elseif ( ca_index == CAOS.CA_INDEX.WATER ) then
@@ -7356,7 +7325,7 @@ CAOS.commands = {
       params = {
         { "acceleration", "float" } },
       description = [[
-        Set acceleration due to gravity in pixels per tick squared.
+        Set acceleration due to gravity in pixels per tick squared. (assumed target)
       ]],
       callback =
         function(self, acceleration )
@@ -7449,7 +7418,7 @@ CAOS.commands = {
     ]],
     callback =
       function(self, x, y )
-        local pos = self.vm.target.position()
+        local pos = self.vm.target:position()
         return math.atan2(pos[2] - y, pos[1] - x) / (2*math.pi)
       end
     }
@@ -7493,10 +7462,10 @@ CAOS.commands = {
         { "elasticity", "integer" } },
       description = [[
         Set the elasticity percentage.  An agent with elasticity 100 will bounce perfectly, one with elasticity 0 won't 
-        bounce at all.
+        bounce at all. (Assumed to be target)
       ]],
       callback =
-        function(self, elasticity )
+        function(self, elasticity)
         end
     },
 
@@ -7526,18 +7495,13 @@ CAOS.commands = {
     callback =
       function(self)
         -- check for world gravity or the physics flag
-        if ( math.abs(world.gravity(self.vm.target.position())) < 1 
-            or bit32.band( CAOS.getVar(self.vm.target, "caos_attributes"), CAOS.ATTRIBUTES.SUFFER_PHYSICS) == 0 ) then
+        if ( math.abs(world.gravity(self.vm.target:position())) < 1 
+            or bit32.band( self.vm.target:getVar("caos_attributes"), CAOS.ATTRIBUTES.SUFFER_PHYSICS) == 0 ) then
           return 0
         end
         
         -- if there is world gravity and agent suffers from physics
-        if ( self.vm.target.falling ~= nil ) then
-          return self.vm.target.falling() and 1 or 0
-        elseif ( self.vm.target.velocity ~= nil ) then
-          return (self.vm.target.velocity()[2] == 0) and 0 or 1
-        end
-        return 0
+        return (self.vm.target:velocity()[2] == 0) and 0 or 1
       end
     }
   },
@@ -7588,7 +7552,7 @@ CAOS.commands = {
       function(self, screen_x, screen_y )
         -- float to
         local pos = { screen_x, screen_y }
-        local rel = CAOS.getVar(self.vm.target, "caos_float_relative")
+        local rel = self.vm.target:getVar("caos_float_relative")
         if ( rel ~= nil ) then
           local targp = rel.position()
           pos[1] = pos[1] + targp[1]
@@ -7615,7 +7579,7 @@ CAOS.commands = {
     ]],
     callback =
       function(self, relative )
-        CAOS.setVar(self.vm.target, "caos_float_relative")
+        self.vm.target:setVar("caos_float_relative")
       end
     }
   },
@@ -7629,7 +7593,7 @@ CAOS.commands = {
         { "friction", "integer" } },
       description = [[
         Set physics friction percentage, normally from 0 to 100.  Speed is lost by this amount when an agent 
-        slides along the floor.
+        slides along the floor. (assumed target)
       ]],
       callback =
         function(self, friction )
@@ -7865,9 +7829,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, amount_in_fraction_of_whole_circle )
-          if ( self.vm.owner.rotateGroup ~= nil ) then
-            self.vm.owner.rotateGroup("all", amount_in_fraction_of_whole_circle*2*math.pi)
-          end
+          self.vm.owner:rotate(amount_in_fraction_of_whole_circle*2*math.pi)
         end
     },
 
@@ -7880,7 +7842,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return self.vm.owner.currentRotationAngle("all") or 0
+          return self.vm.owner:currentRotation() or 0
         end
     }
   },
@@ -8041,9 +8003,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, x_velocity, y_velocity )
-          if ( self.vm.owner.setVelocity ~= nil ) then
-            self.vm.owner.setVelocity( {x_velocity, y_velocity} )
-          end
+          self.vm.owner:setVelocity( {x_velocity, y_velocity} )
         end
     }
   },
@@ -8059,7 +8019,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return self.vm.owner.velocity()[1] or 0
+          return self.vm.owner:velocity()[1] or 0
         end
     }
   },
@@ -8075,7 +8035,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return self.vm.owner.velocity()[2] or 0
+          return self.vm.owner:velocity()[2] or 0
         end
     }
   },
@@ -8596,9 +8556,6 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          if ( self.vm.owner.inboundNodeCount ~= nil ) then
-            return self.vm.owner.inboundNodeCount()
-          end
           return 0
         end
     }
@@ -8700,9 +8657,6 @@ CAOS.commands = {
     ]],
     callback =
       function(self)
-        if ( self.vm.owner.outboundNodeCount ~= nil ) then
-          return self.vm.owner.outboundNodeCount()
-        end
         return 0
       end
     }
@@ -8736,9 +8690,6 @@ CAOS.commands = {
       ]],
       callback =
         function(self, id, data )
-          if ( self.vm.owner.setOutboundNodeLevel ~= nil ) then
-            self.vm.owner.setOutboundNodeLevel(id, (data > 0))
-          end
         end
     }
   },
@@ -9279,7 +9230,6 @@ CAOS.commands = {
       callback =
         function(self)
           self.instant_execution = true
-          world.logInfo("SUCCESS")
         end
     }
   },
@@ -9428,7 +9378,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          local vm = CAOS.getVar(self.vm.target, "caos_vm")
+          local vm = self.vm.target:getVar("caos_vm")
           vm.parser:stop()
         end
     }
@@ -9628,17 +9578,11 @@ CAOS.commands = {
     ]],
     callback =
       function(self, text )
-        local voice = CAOS.getVar(self.vm.target, "caos_voice")
-        if ( voice ~= nil and self.vm.target.playSound ~= nil ) then
-          self.vm.target.playSound( self.vm.target.randomizeParameter(voice) )
-        end
+        self.vm.target:playVoice( self.vm.target:getVar("caos_voice") )
+        self.vm.target:say(text)
         
-        if ( self.vm.target.say ~= nil ) then
-          self.vm.target.say(text)
-        else
           -- TODO: use debug text??
-          world.logInfo("%s says \"%s\"", world.entityName(self.vm.target.id()), text)
-        end
+        world.logInfo("%s says \"%s\"", self.vm.target:name(), text)
       end
     }
   },
@@ -9656,9 +9600,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, sound_file )
-          if ( self.vm.target.playSound ~= nil ) then
-            self.vm.target.playSound(sound_file)
-          end
+          self.vm.target:playSound(sound_file)
         end
     }
   },
@@ -9675,9 +9617,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, sound_file )
-          if ( self.vm.target.playSound ~= nil ) then
-            self.vm.target.playSound(sound_file)
-          end
+          self.vm.target:playSound(sound_file)
         end
     }
   },
@@ -9710,9 +9650,8 @@ CAOS.commands = {
       ]],
       callback =
         function(self, sound_file, delay )
-          if ( self.vm.target.playSound ~= nil ) then
-            self.vm.target.playSound(sound_file)
-          end
+          -- TODO
+          self.vm.target:playSound(sound_file)
         end
     }
   },
@@ -9779,7 +9718,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, voice_name )
-          CAOS.setVar(self.vm.target, "caos_voice", voice_name)
+          self.vm.target:setVar("caos_voice", voice_name)
         end
     },
 
@@ -9794,7 +9733,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return CAOS.getVar(self.vm.target, "caos_voice") or ""
+          return self.vm.target:getVar("caos_voice") or ""
         end
     }
   },
@@ -9875,7 +9814,7 @@ CAOS.commands = {
     ]],
     callback =
       function(self)
-        local days_in_season = self.vm:get_game_var("engine_LengthOfSeasonInDays")
+        local days_in_season = self.vm:get_game_var("engine_LengthOfSeasonInDays").get()
         if ( days_in_season <= 0 ) then
           days_in_season = 4
         end
@@ -10064,7 +10003,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return self.vm.owner.dt()
+          return self.vm.owner:dt()
         end
     }
   },
@@ -10171,12 +10110,12 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          local days_in_season = self.vm:get_game_var("engine_LengthOfSeasonInDays")
+          local days_in_season = self.vm:get_game_var("engine_LengthOfSeasonInDays").get()
           if ( days_in_season <= 0 ) then
             days_in_season = 4
           end
           
-          local seasons_in_year = self.vm:get_game_var("engine_NumberOfSeasons")
+          local seasons_in_year = self.vm:get_game_var("engine_NumberOfSeasons").get()
           if ( seasons_in_year <= 0 ) then
             seasons_in_year = 4
           end
@@ -10301,12 +10240,12 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          local days_in_season = self.vm:get_game_var("engine_LengthOfSeasonInDays")
+          local days_in_season = self.vm:get_game_var("engine_LengthOfSeasonInDays").get()
           if ( days_in_season <= 0 ) then
             days_in_season = 4
           end
           
-          local seasons_in_year = self.vm:get_game_var("engine_NumberOfSeasons")
+          local seasons_in_year = self.vm:get_game_var("engine_NumberOfSeasons").get()
           if ( seasons_in_year <= 0 ) then
             seasons_in_year = 4
           end
@@ -10329,7 +10268,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, var )
-          var.value = math.abs(var.value)
+          var:set( math.abs(var:get()) )
         end
     }
   },
@@ -10363,7 +10302,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, var, append )
-          var.value = var.value .. append
+          var:set( var:get() .. append)
         end
     }
   },
@@ -10380,7 +10319,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, var, sum )
-          var.value = var.value + sum
+          var:set( var:get() + sum )
         end
     }
   },
@@ -10397,7 +10336,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, var, value )
-          var.value = bit32.band(var.value, value)
+          var:set( bit32.band(var:get(), value) )
         end
     }
   },
@@ -10467,7 +10406,9 @@ CAOS.commands = {
       ]],
       callback =
         function(self, string_, index, character )
-          string_.value[index] = character
+          loc_str = string_:get()
+          loc_str[index] = character
+          string_:set(loc_str)
         end
     },
 
@@ -10481,7 +10422,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, string_, index )
-          return string_.value[index]
+          return string_:get()[index]
         end
     }
   },
@@ -10515,7 +10456,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, variable_name )
-          self.vm:get_engine_var(variable_name).value = nil
+          self.vm:get_engine_var(variable_name).set(nil)
         end
     }
   },
@@ -10532,7 +10473,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, variable_name )
-          self.vm:get_game_var(variable_name).value = nil
+          self.vm:get_game_var(variable_name).set(nil)
         end
     }
   },
@@ -10549,7 +10490,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, variable_name )
-          self.vm:get_target_var(variable_name).value = nil
+          self.vm:get_target_var(variable_name).set(nil)
         end
     }
   },
@@ -10567,7 +10508,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, var, div )
-          var.value = var.value / div
+          var:set(var:get() / div)
         end
     }
   },
@@ -10768,7 +10709,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, var, mod_ )
-          var.value = var.value % mod_
+          var:set(var:get() % mod_)
         end
     }
   },
@@ -10785,111 +10726,111 @@ CAOS.commands = {
       ]],
       callback =
         function(self, var, mul )
-          var.value = var.value * mul
+          var:set(var:get() * mul)
         end
     }
   },
 
-  ["MV00"] = { ["variable"] = { command = "MV00", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[1] end } },
-  ["MV01"] = { ["variable"] = { command = "MV01", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[2] end } },
-  ["MV02"] = { ["variable"] = { command = "MV02", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[3] end } },
-  ["MV03"] = { ["variable"] = { command = "MV03", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[4] end } },
-  ["MV04"] = { ["variable"] = { command = "MV04", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[5] end } },
-  ["MV05"] = { ["variable"] = { command = "MV05", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[6] end } },
-  ["MV06"] = { ["variable"] = { command = "MV06", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[7] end } },
-  ["MV07"] = { ["variable"] = { command = "MV07", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[8] end } },
-  ["MV08"] = { ["variable"] = { command = "MV08", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[9] end } },
-  ["MV09"] = { ["variable"] = { command = "MV09", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[10] end } },
-  ["MV10"] = { ["variable"] = { command = "MV10", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[11] end } },
-  ["MV11"] = { ["variable"] = { command = "MV11", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[12] end } },
-  ["MV12"] = { ["variable"] = { command = "MV12", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[13] end } },
-  ["MV13"] = { ["variable"] = { command = "MV13", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[14] end } },
-  ["MV14"] = { ["variable"] = { command = "MV14", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[15] end } },
-  ["MV15"] = { ["variable"] = { command = "MV15", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[16] end } },
-  ["MV16"] = { ["variable"] = { command = "MV16", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[17] end } },
-  ["MV17"] = { ["variable"] = { command = "MV17", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[18] end } },
-  ["MV18"] = { ["variable"] = { command = "MV18", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[19] end } },
-  ["MV19"] = { ["variable"] = { command = "MV19", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[20] end } },
-  ["MV20"] = { ["variable"] = { command = "MV20", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[21] end } },
-  ["MV21"] = { ["variable"] = { command = "MV21", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[22] end } },
-  ["MV22"] = { ["variable"] = { command = "MV22", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[23] end } },
-  ["MV23"] = { ["variable"] = { command = "MV23", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[24] end } },
-  ["MV24"] = { ["variable"] = { command = "MV24", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[25] end } },
-  ["MV25"] = { ["variable"] = { command = "MV25", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[26] end } },
-  ["MV26"] = { ["variable"] = { command = "MV26", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[27] end } },
-  ["MV27"] = { ["variable"] = { command = "MV27", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[28] end } },
-  ["MV28"] = { ["variable"] = { command = "MV28", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[29] end } },
-  ["MV29"] = { ["variable"] = { command = "MV29", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[30] end } },
-  ["MV30"] = { ["variable"] = { command = "MV30", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[31] end } },
-  ["MV31"] = { ["variable"] = { command = "MV31", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[32] end } },
-  ["MV32"] = { ["variable"] = { command = "MV32", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[33] end } },
-  ["MV33"] = { ["variable"] = { command = "MV33", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[34] end } },
-  ["MV34"] = { ["variable"] = { command = "MV34", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[35] end } },
-  ["MV35"] = { ["variable"] = { command = "MV35", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[36] end } },
-  ["MV36"] = { ["variable"] = { command = "MV36", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[37] end } },
-  ["MV37"] = { ["variable"] = { command = "MV37", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[38] end } },
-  ["MV38"] = { ["variable"] = { command = "MV38", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[39] end } },
-  ["MV39"] = { ["variable"] = { command = "MV39", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[40] end } },
-  ["MV40"] = { ["variable"] = { command = "MV40", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[41] end } },
-  ["MV41"] = { ["variable"] = { command = "MV41", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[42] end } },
-  ["MV42"] = { ["variable"] = { command = "MV42", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[43] end } },
-  ["MV43"] = { ["variable"] = { command = "MV43", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[44] end } },
-  ["MV44"] = { ["variable"] = { command = "MV44", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[45] end } },
-  ["MV45"] = { ["variable"] = { command = "MV45", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[46] end } },
-  ["MV46"] = { ["variable"] = { command = "MV46", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[47] end } },
-  ["MV47"] = { ["variable"] = { command = "MV47", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[48] end } },
-  ["MV48"] = { ["variable"] = { command = "MV48", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[49] end } },
-  ["MV49"] = { ["variable"] = { command = "MV49", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[50] end } },
-  ["MV50"] = { ["variable"] = { command = "MV50", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[51] end } },
-  ["MV51"] = { ["variable"] = { command = "MV51", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[52] end } },
-  ["MV52"] = { ["variable"] = { command = "MV52", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[53] end } },
-  ["MV53"] = { ["variable"] = { command = "MV53", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[54] end } },
-  ["MV54"] = { ["variable"] = { command = "MV54", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[55] end } },
-  ["MV55"] = { ["variable"] = { command = "MV55", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[56] end } },
-  ["MV56"] = { ["variable"] = { command = "MV56", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[57] end } },
-  ["MV57"] = { ["variable"] = { command = "MV57", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[58] end } },
-  ["MV58"] = { ["variable"] = { command = "MV58", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[59] end } },
-  ["MV59"] = { ["variable"] = { command = "MV59", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[60] end } },
-  ["MV60"] = { ["variable"] = { command = "MV60", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[61] end } },
-  ["MV61"] = { ["variable"] = { command = "MV61", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[62] end } },
-  ["MV62"] = { ["variable"] = { command = "MV62", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[63] end } },
-  ["MV63"] = { ["variable"] = { command = "MV63", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[64] end } },
-  ["MV64"] = { ["variable"] = { command = "MV64", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[65] end } },
-  ["MV65"] = { ["variable"] = { command = "MV65", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[66] end } },
-  ["MV66"] = { ["variable"] = { command = "MV66", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[67] end } },
-  ["MV67"] = { ["variable"] = { command = "MV67", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[68] end } },
-  ["MV68"] = { ["variable"] = { command = "MV68", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[69] end } },
-  ["MV69"] = { ["variable"] = { command = "MV69", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[70] end } },
-  ["MV70"] = { ["variable"] = { command = "MV70", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[71] end } },
-  ["MV71"] = { ["variable"] = { command = "MV71", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[72] end } },
-  ["MV72"] = { ["variable"] = { command = "MV72", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[73] end } },
-  ["MV73"] = { ["variable"] = { command = "MV73", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[74] end } },
-  ["MV74"] = { ["variable"] = { command = "MV74", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[75] end } },
-  ["MV75"] = { ["variable"] = { command = "MV75", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[76] end } },
-  ["MV76"] = { ["variable"] = { command = "MV76", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[77] end } },
-  ["MV77"] = { ["variable"] = { command = "MV77", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[78] end } },
-  ["MV78"] = { ["variable"] = { command = "MV78", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[79] end } },
-  ["MV79"] = { ["variable"] = { command = "MV79", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[80] end } },
-  ["MV80"] = { ["variable"] = { command = "MV80", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[81] end } },
-  ["MV81"] = { ["variable"] = { command = "MV81", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[82] end } },
-  ["MV82"] = { ["variable"] = { command = "MV82", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[83] end } },
-  ["MV83"] = { ["variable"] = { command = "MV83", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[84] end } },
-  ["MV84"] = { ["variable"] = { command = "MV84", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[85] end } },
-  ["MV85"] = { ["variable"] = { command = "MV85", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[86] end } },
-  ["MV86"] = { ["variable"] = { command = "MV86", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[87] end } },
-  ["MV87"] = { ["variable"] = { command = "MV87", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[88] end } },
-  ["MV88"] = { ["variable"] = { command = "MV88", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[89] end } },
-  ["MV89"] = { ["variable"] = { command = "MV89", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[90] end } },
-  ["MV90"] = { ["variable"] = { command = "MV90", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[91] end } },
-  ["MV91"] = { ["variable"] = { command = "MV91", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[92] end } },
-  ["MV92"] = { ["variable"] = { command = "MV92", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[93] end } },
-  ["MV93"] = { ["variable"] = { command = "MV93", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[94] end } },
-  ["MV94"] = { ["variable"] = { command = "MV94", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[95] end } },
-  ["MV95"] = { ["variable"] = { command = "MV95", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[96] end } },
-  ["MV96"] = { ["variable"] = { command = "MV96", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[97] end } },
-  ["MV97"] = { ["variable"] = { command = "MV97", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[98] end } },
-  ["MV98"] = { ["variable"] = { command = "MV98", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[99] end } },
-  ["MV99"] = { ["variable"] = { command = "MV99", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return CAOS.getVar(self.vm.owner, "caos_vars")[100] end } },
+  ["MV00"] = { ["variable"] = { command = "MV00", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[1] end } },
+  ["MV01"] = { ["variable"] = { command = "MV01", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[2] end } },
+  ["MV02"] = { ["variable"] = { command = "MV02", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[3] end } },
+  ["MV03"] = { ["variable"] = { command = "MV03", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[4] end } },
+  ["MV04"] = { ["variable"] = { command = "MV04", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[5] end } },
+  ["MV05"] = { ["variable"] = { command = "MV05", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[6] end } },
+  ["MV06"] = { ["variable"] = { command = "MV06", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[7] end } },
+  ["MV07"] = { ["variable"] = { command = "MV07", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[8] end } },
+  ["MV08"] = { ["variable"] = { command = "MV08", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[9] end } },
+  ["MV09"] = { ["variable"] = { command = "MV09", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[10] end } },
+  ["MV10"] = { ["variable"] = { command = "MV10", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[11] end } },
+  ["MV11"] = { ["variable"] = { command = "MV11", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[12] end } },
+  ["MV12"] = { ["variable"] = { command = "MV12", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[13] end } },
+  ["MV13"] = { ["variable"] = { command = "MV13", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[14] end } },
+  ["MV14"] = { ["variable"] = { command = "MV14", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[15] end } },
+  ["MV15"] = { ["variable"] = { command = "MV15", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[16] end } },
+  ["MV16"] = { ["variable"] = { command = "MV16", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[17] end } },
+  ["MV17"] = { ["variable"] = { command = "MV17", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[18] end } },
+  ["MV18"] = { ["variable"] = { command = "MV18", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[19] end } },
+  ["MV19"] = { ["variable"] = { command = "MV19", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[20] end } },
+  ["MV20"] = { ["variable"] = { command = "MV20", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[21] end } },
+  ["MV21"] = { ["variable"] = { command = "MV21", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[22] end } },
+  ["MV22"] = { ["variable"] = { command = "MV22", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[23] end } },
+  ["MV23"] = { ["variable"] = { command = "MV23", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[24] end } },
+  ["MV24"] = { ["variable"] = { command = "MV24", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[25] end } },
+  ["MV25"] = { ["variable"] = { command = "MV25", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[26] end } },
+  ["MV26"] = { ["variable"] = { command = "MV26", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[27] end } },
+  ["MV27"] = { ["variable"] = { command = "MV27", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[28] end } },
+  ["MV28"] = { ["variable"] = { command = "MV28", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[29] end } },
+  ["MV29"] = { ["variable"] = { command = "MV29", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[30] end } },
+  ["MV30"] = { ["variable"] = { command = "MV30", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[31] end } },
+  ["MV31"] = { ["variable"] = { command = "MV31", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[32] end } },
+  ["MV32"] = { ["variable"] = { command = "MV32", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[33] end } },
+  ["MV33"] = { ["variable"] = { command = "MV33", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[34] end } },
+  ["MV34"] = { ["variable"] = { command = "MV34", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[35] end } },
+  ["MV35"] = { ["variable"] = { command = "MV35", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[36] end } },
+  ["MV36"] = { ["variable"] = { command = "MV36", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[37] end } },
+  ["MV37"] = { ["variable"] = { command = "MV37", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[38] end } },
+  ["MV38"] = { ["variable"] = { command = "MV38", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[39] end } },
+  ["MV39"] = { ["variable"] = { command = "MV39", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[40] end } },
+  ["MV40"] = { ["variable"] = { command = "MV40", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[41] end } },
+  ["MV41"] = { ["variable"] = { command = "MV41", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[42] end } },
+  ["MV42"] = { ["variable"] = { command = "MV42", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[43] end } },
+  ["MV43"] = { ["variable"] = { command = "MV43", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[44] end } },
+  ["MV44"] = { ["variable"] = { command = "MV44", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[45] end } },
+  ["MV45"] = { ["variable"] = { command = "MV45", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[46] end } },
+  ["MV46"] = { ["variable"] = { command = "MV46", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[47] end } },
+  ["MV47"] = { ["variable"] = { command = "MV47", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[48] end } },
+  ["MV48"] = { ["variable"] = { command = "MV48", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[49] end } },
+  ["MV49"] = { ["variable"] = { command = "MV49", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[50] end } },
+  ["MV50"] = { ["variable"] = { command = "MV50", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[51] end } },
+  ["MV51"] = { ["variable"] = { command = "MV51", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[52] end } },
+  ["MV52"] = { ["variable"] = { command = "MV52", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[53] end } },
+  ["MV53"] = { ["variable"] = { command = "MV53", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[54] end } },
+  ["MV54"] = { ["variable"] = { command = "MV54", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[55] end } },
+  ["MV55"] = { ["variable"] = { command = "MV55", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[56] end } },
+  ["MV56"] = { ["variable"] = { command = "MV56", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[57] end } },
+  ["MV57"] = { ["variable"] = { command = "MV57", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[58] end } },
+  ["MV58"] = { ["variable"] = { command = "MV58", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[59] end } },
+  ["MV59"] = { ["variable"] = { command = "MV59", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[60] end } },
+  ["MV60"] = { ["variable"] = { command = "MV60", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[61] end } },
+  ["MV61"] = { ["variable"] = { command = "MV61", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[62] end } },
+  ["MV62"] = { ["variable"] = { command = "MV62", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[63] end } },
+  ["MV63"] = { ["variable"] = { command = "MV63", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[64] end } },
+  ["MV64"] = { ["variable"] = { command = "MV64", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[65] end } },
+  ["MV65"] = { ["variable"] = { command = "MV65", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[66] end } },
+  ["MV66"] = { ["variable"] = { command = "MV66", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[67] end } },
+  ["MV67"] = { ["variable"] = { command = "MV67", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[68] end } },
+  ["MV68"] = { ["variable"] = { command = "MV68", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[69] end } },
+  ["MV69"] = { ["variable"] = { command = "MV69", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[70] end } },
+  ["MV70"] = { ["variable"] = { command = "MV70", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[71] end } },
+  ["MV71"] = { ["variable"] = { command = "MV71", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[72] end } },
+  ["MV72"] = { ["variable"] = { command = "MV72", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[73] end } },
+  ["MV73"] = { ["variable"] = { command = "MV73", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[74] end } },
+  ["MV74"] = { ["variable"] = { command = "MV74", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[75] end } },
+  ["MV75"] = { ["variable"] = { command = "MV75", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[76] end } },
+  ["MV76"] = { ["variable"] = { command = "MV76", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[77] end } },
+  ["MV77"] = { ["variable"] = { command = "MV77", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[78] end } },
+  ["MV78"] = { ["variable"] = { command = "MV78", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[79] end } },
+  ["MV79"] = { ["variable"] = { command = "MV79", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[80] end } },
+  ["MV80"] = { ["variable"] = { command = "MV80", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[81] end } },
+  ["MV81"] = { ["variable"] = { command = "MV81", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[82] end } },
+  ["MV82"] = { ["variable"] = { command = "MV82", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[83] end } },
+  ["MV83"] = { ["variable"] = { command = "MV83", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[84] end } },
+  ["MV84"] = { ["variable"] = { command = "MV84", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[85] end } },
+  ["MV85"] = { ["variable"] = { command = "MV85", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[86] end } },
+  ["MV86"] = { ["variable"] = { command = "MV86", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[87] end } },
+  ["MV87"] = { ["variable"] = { command = "MV87", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[88] end } },
+  ["MV88"] = { ["variable"] = { command = "MV88", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[89] end } },
+  ["MV89"] = { ["variable"] = { command = "MV89", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[90] end } },
+  ["MV90"] = { ["variable"] = { command = "MV90", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[91] end } },
+  ["MV91"] = { ["variable"] = { command = "MV91", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[92] end } },
+  ["MV92"] = { ["variable"] = { command = "MV92", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[93] end } },
+  ["MV93"] = { ["variable"] = { command = "MV93", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[94] end } },
+  ["MV94"] = { ["variable"] = { command = "MV94", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[95] end } },
+  ["MV95"] = { ["variable"] = { command = "MV95", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[96] end } },
+  ["MV96"] = { ["variable"] = { command = "MV96", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[97] end } },
+  ["MV97"] = { ["variable"] = { command = "MV97", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[98] end } },
+  ["MV98"] = { ["variable"] = { command = "MV98", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[99] end } },
+  ["MV99"] = { ["variable"] = { command = "MV99", rtype = "variable", params = {}, description = [[MV00 to MV99 are variables specific to an agent. They are read from @OWNR@, the owner agent of the current script.  These are the exact same variables as @OVxx@, except read from owner not targ.  If owner and targ are the same, then OV23 is MV23, for example.]], callback = function(self) return self.vm.owner:getVar("caos_vars")[100] end } },
 
   -- full
   ["NAME"] = {
@@ -10939,7 +10880,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, var )
-          var.value = 0 - var.value
+          var:set(0 - var:get())
         end
     }
   },
@@ -10956,7 +10897,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, var )
-          var.value = bit32.bnot(var.value)
+          var:set(bit32.bnot(var:get()))
         end
     }
   },
@@ -10973,112 +10914,112 @@ CAOS.commands = {
       ]],
       callback =
         function(self, var, value )
-          var.value = bit32.bor(var.value, value)
+          var:set( bit32.bor(var:get(), value) )
         end
     }
   },
 
 
-  ["OV00"] = { ["variable"] = { command = "OV00", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[1] end } },
-  ["OV01"] = { ["variable"] = { command = "OV01", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[2] end } },
-  ["OV02"] = { ["variable"] = { command = "OV02", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[3] end } },
-  ["OV03"] = { ["variable"] = { command = "OV03", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[4] end } },
-  ["OV04"] = { ["variable"] = { command = "OV04", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[5] end } },
-  ["OV05"] = { ["variable"] = { command = "OV05", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[6] end } },
-  ["OV06"] = { ["variable"] = { command = "OV06", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[7] end } },
-  ["OV07"] = { ["variable"] = { command = "OV07", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[8] end } },
-  ["OV08"] = { ["variable"] = { command = "OV08", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[9] end } },
-  ["OV09"] = { ["variable"] = { command = "OV09", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[10] end } },
-  ["OV10"] = { ["variable"] = { command = "OV10", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[11] end } },
-  ["OV11"] = { ["variable"] = { command = "OV11", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[12] end } },
-  ["OV12"] = { ["variable"] = { command = "OV12", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[13] end } },
-  ["OV13"] = { ["variable"] = { command = "OV13", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[14] end } },
-  ["OV14"] = { ["variable"] = { command = "OV14", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[15] end } },
-  ["OV15"] = { ["variable"] = { command = "OV15", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[16] end } },
-  ["OV16"] = { ["variable"] = { command = "OV16", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[17] end } },
-  ["OV17"] = { ["variable"] = { command = "OV17", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[18] end } },
-  ["OV18"] = { ["variable"] = { command = "OV18", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[19] end } },
-  ["OV19"] = { ["variable"] = { command = "OV19", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[20] end } },
-  ["OV20"] = { ["variable"] = { command = "OV20", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[21] end } },
-  ["OV21"] = { ["variable"] = { command = "OV21", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[22] end } },
-  ["OV22"] = { ["variable"] = { command = "OV22", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[23] end } },
-  ["OV23"] = { ["variable"] = { command = "OV23", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[24] end } },
-  ["OV24"] = { ["variable"] = { command = "OV24", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[25] end } },
-  ["OV25"] = { ["variable"] = { command = "OV25", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[26] end } },
-  ["OV26"] = { ["variable"] = { command = "OV26", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[27] end } },
-  ["OV27"] = { ["variable"] = { command = "OV27", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[28] end } },
-  ["OV28"] = { ["variable"] = { command = "OV28", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[29] end } },
-  ["OV29"] = { ["variable"] = { command = "OV29", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[30] end } },
-  ["OV30"] = { ["variable"] = { command = "OV30", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[31] end } },
-  ["OV31"] = { ["variable"] = { command = "OV31", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[32] end } },
-  ["OV32"] = { ["variable"] = { command = "OV32", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[33] end } },
-  ["OV33"] = { ["variable"] = { command = "OV33", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[34] end } },
-  ["OV34"] = { ["variable"] = { command = "OV34", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[35] end } },
-  ["OV35"] = { ["variable"] = { command = "OV35", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[36] end } },
-  ["OV36"] = { ["variable"] = { command = "OV36", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[37] end } },
-  ["OV37"] = { ["variable"] = { command = "OV37", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[38] end } },
-  ["OV38"] = { ["variable"] = { command = "OV38", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[39] end } },
-  ["OV39"] = { ["variable"] = { command = "OV39", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[40] end } },
-  ["OV40"] = { ["variable"] = { command = "OV40", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[41] end } },
-  ["OV41"] = { ["variable"] = { command = "OV41", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[42] end } },
-  ["OV42"] = { ["variable"] = { command = "OV42", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[43] end } },
-  ["OV43"] = { ["variable"] = { command = "OV43", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[44] end } },
-  ["OV44"] = { ["variable"] = { command = "OV44", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[45] end } },
-  ["OV45"] = { ["variable"] = { command = "OV45", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[46] end } },
-  ["OV46"] = { ["variable"] = { command = "OV46", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[47] end } },
-  ["OV47"] = { ["variable"] = { command = "OV47", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[48] end } },
-  ["OV48"] = { ["variable"] = { command = "OV48", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[49] end } },
-  ["OV49"] = { ["variable"] = { command = "OV49", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[50] end } },
-  ["OV50"] = { ["variable"] = { command = "OV50", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[51] end } },
-  ["OV51"] = { ["variable"] = { command = "OV51", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[52] end } },
-  ["OV52"] = { ["variable"] = { command = "OV52", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[53] end } },
-  ["OV53"] = { ["variable"] = { command = "OV53", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[54] end } },
-  ["OV54"] = { ["variable"] = { command = "OV54", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[55] end } },
-  ["OV55"] = { ["variable"] = { command = "OV55", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[56] end } },
-  ["OV56"] = { ["variable"] = { command = "OV56", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[57] end } },
-  ["OV57"] = { ["variable"] = { command = "OV57", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[58] end } },
-  ["OV58"] = { ["variable"] = { command = "OV58", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[59] end } },
-  ["OV59"] = { ["variable"] = { command = "OV59", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[60] end } },
-  ["OV60"] = { ["variable"] = { command = "OV60", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[61] end } },
-  ["OV61"] = { ["variable"] = { command = "OV61", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[62] end } },
-  ["OV62"] = { ["variable"] = { command = "OV62", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[63] end } },
-  ["OV63"] = { ["variable"] = { command = "OV63", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[64] end } },
-  ["OV64"] = { ["variable"] = { command = "OV64", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[65] end } },
-  ["OV65"] = { ["variable"] = { command = "OV65", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[66] end } },
-  ["OV66"] = { ["variable"] = { command = "OV66", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[67] end } },
-  ["OV67"] = { ["variable"] = { command = "OV67", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[68] end } },
-  ["OV68"] = { ["variable"] = { command = "OV68", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[69] end } },
-  ["OV69"] = { ["variable"] = { command = "OV69", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[70] end } },
-  ["OV70"] = { ["variable"] = { command = "OV70", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[71] end } },
-  ["OV71"] = { ["variable"] = { command = "OV71", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[72] end } },
-  ["OV72"] = { ["variable"] = { command = "OV72", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[73] end } },
-  ["OV73"] = { ["variable"] = { command = "OV73", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[74] end } },
-  ["OV74"] = { ["variable"] = { command = "OV74", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[75] end } },
-  ["OV75"] = { ["variable"] = { command = "OV75", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[76] end } },
-  ["OV76"] = { ["variable"] = { command = "OV76", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[77] end } },
-  ["OV77"] = { ["variable"] = { command = "OV77", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[78] end } },
-  ["OV78"] = { ["variable"] = { command = "OV78", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[79] end } },
-  ["OV79"] = { ["variable"] = { command = "OV79", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[80] end } },
-  ["OV80"] = { ["variable"] = { command = "OV80", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[81] end } },
-  ["OV81"] = { ["variable"] = { command = "OV81", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[82] end } },
-  ["OV82"] = { ["variable"] = { command = "OV82", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[83] end } },
-  ["OV83"] = { ["variable"] = { command = "OV83", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[84] end } },
-  ["OV84"] = { ["variable"] = { command = "OV84", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[85] end } },
-  ["OV85"] = { ["variable"] = { command = "OV85", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[86] end } },
-  ["OV86"] = { ["variable"] = { command = "OV86", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[87] end } },
-  ["OV87"] = { ["variable"] = { command = "OV87", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[88] end } },
-  ["OV88"] = { ["variable"] = { command = "OV88", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[89] end } },
-  ["OV89"] = { ["variable"] = { command = "OV89", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[90] end } },
-  ["OV90"] = { ["variable"] = { command = "OV90", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[91] end } },
-  ["OV91"] = { ["variable"] = { command = "OV91", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[92] end } },
-  ["OV92"] = { ["variable"] = { command = "OV92", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[93] end } },
-  ["OV93"] = { ["variable"] = { command = "OV93", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[94] end } },
-  ["OV94"] = { ["variable"] = { command = "OV94", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[95] end } },
-  ["OV95"] = { ["variable"] = { command = "OV95", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[96] end } },
-  ["OV96"] = { ["variable"] = { command = "OV96", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[97] end } },
-  ["OV97"] = { ["variable"] = { command = "OV97", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[98] end } },
-  ["OV98"] = { ["variable"] = { command = "OV98", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[99] end } },
-  ["OV99"] = { ["variable"] = { command = "OV99", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return CAOS.getVar(self.vm.target, "caos_vars")[100] end } },
+  ["OV00"] = { ["variable"] = { command = "OV00", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 1) end } },
+  ["OV01"] = { ["variable"] = { command = "OV01", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 2) end } },
+  ["OV02"] = { ["variable"] = { command = "OV02", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 3) end } },
+  ["OV03"] = { ["variable"] = { command = "OV03", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 4) end } },
+  ["OV04"] = { ["variable"] = { command = "OV04", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 5) end } },
+  ["OV05"] = { ["variable"] = { command = "OV05", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 6) end } },
+  ["OV06"] = { ["variable"] = { command = "OV06", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 7) end } },
+  ["OV07"] = { ["variable"] = { command = "OV07", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 8) end } },
+  ["OV08"] = { ["variable"] = { command = "OV08", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 9) end } },
+  ["OV09"] = { ["variable"] = { command = "OV09", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 10) end } },
+  ["OV10"] = { ["variable"] = { command = "OV10", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 11) end } },
+  ["OV11"] = { ["variable"] = { command = "OV11", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 12) end } },
+  ["OV12"] = { ["variable"] = { command = "OV12", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 13) end } },
+  ["OV13"] = { ["variable"] = { command = "OV13", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 14) end } },
+  ["OV14"] = { ["variable"] = { command = "OV14", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 15) end } },
+  ["OV15"] = { ["variable"] = { command = "OV15", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 16) end } },
+  ["OV16"] = { ["variable"] = { command = "OV16", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 17) end } },
+  ["OV17"] = { ["variable"] = { command = "OV17", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 18) end } },
+  ["OV18"] = { ["variable"] = { command = "OV18", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 19) end } },
+  ["OV19"] = { ["variable"] = { command = "OV19", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 20) end } },
+  ["OV20"] = { ["variable"] = { command = "OV20", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 21) end } },
+  ["OV21"] = { ["variable"] = { command = "OV21", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 22) end } },
+  ["OV22"] = { ["variable"] = { command = "OV22", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 23) end } },
+  ["OV23"] = { ["variable"] = { command = "OV23", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 24) end } },
+  ["OV24"] = { ["variable"] = { command = "OV24", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 25) end } },
+  ["OV25"] = { ["variable"] = { command = "OV25", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 26) end } },
+  ["OV26"] = { ["variable"] = { command = "OV26", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 27) end } },
+  ["OV27"] = { ["variable"] = { command = "OV27", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 28) end } },
+  ["OV28"] = { ["variable"] = { command = "OV28", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 29) end } },
+  ["OV29"] = { ["variable"] = { command = "OV29", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 30) end } },
+  ["OV30"] = { ["variable"] = { command = "OV30", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 31) end } },
+  ["OV31"] = { ["variable"] = { command = "OV31", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 32) end } },
+  ["OV32"] = { ["variable"] = { command = "OV32", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 33) end } },
+  ["OV33"] = { ["variable"] = { command = "OV33", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 34) end } },
+  ["OV34"] = { ["variable"] = { command = "OV34", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 35) end } },
+  ["OV35"] = { ["variable"] = { command = "OV35", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 36) end } },
+  ["OV36"] = { ["variable"] = { command = "OV36", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 37) end } },
+  ["OV37"] = { ["variable"] = { command = "OV37", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 38) end } },
+  ["OV38"] = { ["variable"] = { command = "OV38", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 39) end } },
+  ["OV39"] = { ["variable"] = { command = "OV39", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 40) end } },
+  ["OV40"] = { ["variable"] = { command = "OV40", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 41) end } },
+  ["OV41"] = { ["variable"] = { command = "OV41", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 42) end } },
+  ["OV42"] = { ["variable"] = { command = "OV42", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 43) end } },
+  ["OV43"] = { ["variable"] = { command = "OV43", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 44) end } },
+  ["OV44"] = { ["variable"] = { command = "OV44", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 45) end } },
+  ["OV45"] = { ["variable"] = { command = "OV45", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 46) end } },
+  ["OV46"] = { ["variable"] = { command = "OV46", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 47) end } },
+  ["OV47"] = { ["variable"] = { command = "OV47", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 48) end } },
+  ["OV48"] = { ["variable"] = { command = "OV48", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 49) end } },
+  ["OV49"] = { ["variable"] = { command = "OV49", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 50) end } },
+  ["OV50"] = { ["variable"] = { command = "OV50", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 51) end } },
+  ["OV51"] = { ["variable"] = { command = "OV51", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 52) end } },
+  ["OV52"] = { ["variable"] = { command = "OV52", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 53) end } },
+  ["OV53"] = { ["variable"] = { command = "OV53", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 54) end } },
+  ["OV54"] = { ["variable"] = { command = "OV54", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 55) end } },
+  ["OV55"] = { ["variable"] = { command = "OV55", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 56) end } },
+  ["OV56"] = { ["variable"] = { command = "OV56", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 57) end } },
+  ["OV57"] = { ["variable"] = { command = "OV57", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 58) end } },
+  ["OV58"] = { ["variable"] = { command = "OV58", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 59) end } },
+  ["OV59"] = { ["variable"] = { command = "OV59", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 60) end } },
+  ["OV60"] = { ["variable"] = { command = "OV60", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 61) end } },
+  ["OV61"] = { ["variable"] = { command = "OV61", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 62) end } },
+  ["OV62"] = { ["variable"] = { command = "OV62", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 63) end } },
+  ["OV63"] = { ["variable"] = { command = "OV63", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 64) end } },
+  ["OV64"] = { ["variable"] = { command = "OV64", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 65) end } },
+  ["OV65"] = { ["variable"] = { command = "OV65", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 66) end } },
+  ["OV66"] = { ["variable"] = { command = "OV66", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 67) end } },
+  ["OV67"] = { ["variable"] = { command = "OV67", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 68) end } },
+  ["OV68"] = { ["variable"] = { command = "OV68", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 69) end } },
+  ["OV69"] = { ["variable"] = { command = "OV69", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 70) end } },
+  ["OV70"] = { ["variable"] = { command = "OV70", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 71) end } },
+  ["OV71"] = { ["variable"] = { command = "OV71", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 72) end } },
+  ["OV72"] = { ["variable"] = { command = "OV72", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 73) end } },
+  ["OV73"] = { ["variable"] = { command = "OV73", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 74) end } },
+  ["OV74"] = { ["variable"] = { command = "OV74", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 75) end } },
+  ["OV75"] = { ["variable"] = { command = "OV75", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 76) end } },
+  ["OV76"] = { ["variable"] = { command = "OV76", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 77) end } },
+  ["OV77"] = { ["variable"] = { command = "OV77", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 78) end } },
+  ["OV78"] = { ["variable"] = { command = "OV78", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 79) end } },
+  ["OV79"] = { ["variable"] = { command = "OV79", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 80) end } },
+  ["OV80"] = { ["variable"] = { command = "OV80", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 81) end } },
+  ["OV81"] = { ["variable"] = { command = "OV81", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 82) end } },
+  ["OV82"] = { ["variable"] = { command = "OV82", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 83) end } },
+  ["OV83"] = { ["variable"] = { command = "OV83", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 84) end } },
+  ["OV84"] = { ["variable"] = { command = "OV84", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 85) end } },
+  ["OV85"] = { ["variable"] = { command = "OV85", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 86) end } },
+  ["OV86"] = { ["variable"] = { command = "OV86", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 87) end } },
+  ["OV87"] = { ["variable"] = { command = "OV87", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 88) end } },
+  ["OV88"] = { ["variable"] = { command = "OV88", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 89) end } },
+  ["OV89"] = { ["variable"] = { command = "OV89", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 90) end } },
+  ["OV90"] = { ["variable"] = { command = "OV90", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 91) end } },
+  ["OV91"] = { ["variable"] = { command = "OV91", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 92) end } },
+  ["OV92"] = { ["variable"] = { command = "OV92", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 93) end } },
+  ["OV93"] = { ["variable"] = { command = "OV93", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 94) end } },
+  ["OV94"] = { ["variable"] = { command = "OV94", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 95) end } },
+  ["OV95"] = { ["variable"] = { command = "OV95", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 96) end } },
+  ["OV96"] = { ["variable"] = { command = "OV96", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 97) end } },
+  ["OV97"] = { ["variable"] = { command = "OV97", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 98) end } },
+  ["OV98"] = { ["variable"] = { command = "OV98", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 99) end } },
+  ["OV99"] = { ["variable"] = { command = "OV99", rtype = "variable", params = {}, description = [[OV00 to OV99 are variables specific to an agent.  They are read from @TARG@, the target agent.  You can also access these same variables via owner using @MVxx@.]], callback = function(self) return self.vm.target:getVarDynamic("caos_vars_" .. 100) end } },
 
 
   -- full
@@ -11112,7 +11053,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, variable, min_, max_ )
-          variable.value = math.random(math.min(min_,max_), math.max(min_,max_))
+          variable:set( math.random(math.min(min_,max_), math.max(min_,max_)) )
         end
     }
   },
@@ -11200,7 +11141,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, var, value )
-          var.value = value
+          var:set(value)
         end
     }
   },
@@ -11217,7 +11158,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, var, value )
-          var.value = value
+          var:set(value)
         end
     }
   },
@@ -11234,7 +11175,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, var, value )
-          var.value = value
+          var:set(value)
         end
     }
   },
@@ -11378,7 +11319,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, var, sub )
-          var.value = var.value - sub
+          var:set( var:get() - sub )
         end
     }
   },

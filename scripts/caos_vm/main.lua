@@ -25,8 +25,8 @@ function CAOS.Machine.create(agent, run_install_script)
   local o = {}
   setmetatable(o, CAOS.Machine)
   
-  o.owner       = agent
-  o.target      = agent
+  o.owner   = EntityWrap.create(agent)
+  o.target  = EntityWrap.create(agent)
   
   o.message_from = nil
   o.message_param_1 = nil
@@ -36,59 +36,57 @@ function CAOS.Machine.create(agent, run_install_script)
   o.timer_step = 0
   o.update_interval = 50
   o.last_tick = os.clock()*1000
-
-  world.logInfo(tostring(agent.configParameter("caos_family", 0)))
-  CAOS.setVar(agent, "caos_family", tonumber(agent.configParameter("caos_family", 0)))
-  CAOS.setVar(agent, "caos_genus", tonumber(agent.configParameter("caos_genus", 0)))
-  CAOS.setVar(agent, "caos_species", tonumber(agent.configParameter("caos_species", 0)))
-  CAOS.setVar(agent, "caos_sprite_file", agent.configParameter("caos_sprite_file", ""))
-  CAOS.setVar(agent, "caos_image_count", tonumber(agent.configParameter("caos_image_count", 1)))
-  CAOS.setVar(agent, "caos_first_image", tonumber(agent.configParameter("caos_first_image", 1)))
-  CAOS.setVar(agent, "caos_plane", tonumber(agent.configParameter("caos_plane", 500)))
-  CAOS.setVar(agent, "caos_image_base", 0)
-  CAOS.setVar(agent, "caos_image_pose", 0)
-      
-  CAOS.setVar(agent, "caos_attributes", 0)
-  CAOS.setVar(agent, "caos_permissions", 0)
-  CAOS.setVar(agent, "caos_permiability", 50)
-  CAOS.setVar(agent, "caos_carried_by", nil)
-  CAOS.setVar(agent, "caos_carrying", nil)
-  CAOS.setVar(agent, "caos_flipped", 0 )
-    
-  CAOS.setVar(agent, "caos_clack_msg", 1)
-  CAOS.setVar(agent, "caos_click_msg_1", -2)
-  CAOS.setVar(agent, "caos_click_msg_2", -2)
-  CAOS.setVar(agent, "caos_click_msg_3", -2)
-  CAOS.setVar(agent, "caos_current_click", 0)
-    
-  CAOS.setVar(agent, "caos_paused", false)
-  CAOS.setVar(agent, "caos_debug_core", false)
-  CAOS.setVar(agent, "caos_killed", false)
-  CAOS.setVar(agent, "caos_distance_check", 100)
-  CAOS.setVar(agent, "caos_float_relative", nil)
-  CAOS.setVar(agent, "caos_voice", nil)
   
-  CAOS.setVar(agent, "caos_vars", {})
+  o.owner:setVar("caos_family", tonumber(o.owner:configParameter("caos_family", 0)))
+  o.owner:setVar("caos_genus", tonumber(o.owner:configParameter("caos_genus", 0)))
+  o.owner:setVar("caos_species", tonumber(o.owner:configParameter("caos_species", 0)))
+  o.owner:setVar("caos_sprite_file", o.owner:configParameter("caos_sprite_file", ""))
+  o.owner:setVar("caos_image_count", tonumber(o.owner:configParameter("caos_image_count", 1)))
+  o.owner:setVar("caos_first_image", tonumber(o.owner:configParameter("caos_first_image", 1)))
+  o.owner:setVar("caos_plane", tonumber(o.owner:configParameter("caos_plane", 500)))
+  o.owner:setVar("caos_image_base", 0)
+  o.owner:setVar("caos_image_pose", 0)
+      
+  o.owner:setVar("caos_attributes", 0)
+  o.owner:setVar("caos_permissions", 0)
+  o.owner:setVar("caos_permiability", 50)
+  o.owner:setVar("caos_carried_by", nil)
+  o.owner:setVar("caos_carrying", nil)
+  o.owner:setVar("caos_flipped", 0 )
     
-  CAOS.setVar(agent, "caos_bounds", { left = agent.position()[1] - 4,
-                                      top = agent.position()[2] - 4,
-                                      right = agent.position()[1] + 4,
-                                      bottom = agent.position()[2] + 4
+  o.owner:setVar("caos_clack_msg", 1)
+  o.owner:setVar("caos_click_msg_1", -2)
+  o.owner:setVar("caos_click_msg_2", -2)
+  o.owner:setVar("caos_click_msg_3", -2)
+  o.owner:setVar("caos_current_click", 0)
+    
+  o.owner:setVar("caos_paused", false)
+  o.owner:setVar("caos_debug_core", false)
+  o.owner:setVar("caos_killed", false)
+  o.owner:setVar("caos_distance_check", 100)
+  o.owner:setVar("caos_float_relative", nil)
+  o.owner:setVar("caos_voice", nil)
+  
+  o.owner:setVar("caos_vars", {})
+    
+  o.owner:setVar("caos_bounds", {     left    = o.owner:position()[1] - 4,
+                                      top     = o.owner:position()[2] - 4,
+                                      right   = o.owner:position()[1] + 4,
+                                      bottom  = o.owner:position()[2] + 4
                                     })
     
   -- variables
   o.caos_vars = {}
   local agent_vars = {}
   for i = 1, 100 do
-    o.caos_vars[i] = { value = 0, type = "variable" }
-    agent_vars[i] = { value = 0, type = "variable" }
+    o.caos_vars[i] = Variable.createValue(0)
+    o.owner:getVarDynamic("caos_vars_" .. i):set(0)
   end
-  CAOS.setVar(agent, "caos_vars", agent_vars)
 
   -- script file
-  o.script_file = agent.configParameter("agent.source", nil)
+  o.script_file = o.owner:configParameter("agent.source", nil)
   if ( o.script_file == nil ) then
-    error("Expected an agent.ource configuration, became nil!")
+    error("Expected an agent.source configuration, became nil!")
   end
   table.insert(o.script_file, "ENDM")    -- hacky ENDM since scripts don't originally require it
   
@@ -99,9 +97,10 @@ function CAOS.Machine.create(agent, run_install_script)
   if ( run_install_script == true ) then
     o.parser:run_install_script()
     o.parser:update()
+    o.owner:kill()  -- Kill the agent that ran the install script; The installer/injector is actually not supposed to appear
   else
-    local desired_line = tonumber(agent.configParameter("desired_script_line", 0))
-    local desired_column = tonumber(agent.configParameter("desired_script_column", 0))
+    local desired_line = tonumber(o.owner:configParameter("desired_script_line", 0))
+    local desired_column = tonumber(o.owner:configParameter("desired_script_column", 0))
     if ( desired_line == 0 ) then
       o.parser:stop()
     else
@@ -124,14 +123,15 @@ function CAOS.Machine.update(self)
   self.last_tick = os.clock()*1000
   
   if ( self.timer_interval > 0 ) then
-    world.logInfo("Update tick")
     if ( self.timer_step >= self.timer_interval ) then
-      world.logInfo("RAN TIMER SCRIPT")
-      self.timer_step = 0
-      self.parser:run_script( CAOS.getVar(self.owner, "caos_family"),
-                              CAOS.getVar(self.owner, "caos_genus"),
-                              CAOS.getVar(self.owner, "caos_species"),
-                              CAOS.EVENT.TIMER)
+      if ( self.parser.wait_time == 0 ) then
+        world.logInfo("RAN TIMER SCRIPT")
+        self.timer_step = 0
+        self.parser:run_script( self.owner:getVar("caos_family"),
+                                self.owner:getVar("caos_genus"),
+                                self.owner:getVar("caos_species"),
+                                CAOS.EVENT.TIMER)
+      end
     else
       self.timer_step = self.timer_step + 1
     end
@@ -141,22 +141,6 @@ function CAOS.Machine.update(self)
 end
 
 function CAOS.Machine.killed(self)
-end
-
-function CAOS.getVar(agent, name)
-  if ( agent == entity ) then
-    return getVar(name)
-  else
-    return world.callScriptedEntity(agent.id(), name)
-  end
-end
-
-function CAOS.setVar(agent, name, value)
-  if ( agent == entity ) then
-    return setVar(name, value)
-  else
-    return world.callScriptedEntity(agent.id(), name, value)
-  end
 end
 
 function CAOS.add_to_scriptorium(family, genus, species, event, line, column)
@@ -251,46 +235,18 @@ end
 
 -- MAME, MVxx
 function CAOS.Machine.get_owner_var(self, var_name)
-  local pool = CAOS.getVar(self.owner, "caos_vars")
-  
-  -- Create a CAOS variable pool if one is not found.
-  if ( pool == nil ) then
-    if ( CAOS.setVar(self.owner, "caos_vars", {}) == nil ) then
-      return { value = nil }
-    end
-  end
-  
-  -- Create a variable for the value if it doesn't exist
-  if ( pool[var_name] == nil ) then
-    pool[var_name] = { value = nil }
-  end
-
-  return pool[var_name]
+  return Variable.create(self.owner.id, var_name)
 end
 
 -- DELN, NAME, OVxx, NAMN
 function CAOS.Machine.get_target_var(self, var_name)
-  local pool = CAOS.getVar(self.target, "caos_vars")
-  
-  -- Create a CAOS variable pool if one is not found.
-  if ( pool == nil ) then
-    if ( CAOS.setVar(self.target, "caos_vars", {}) == nil ) then
-      return { value = nil }
-    end
-  end
-  
-  -- Create a variable for the value if it doesn't exist
-  if ( pool[var_name] == nil ) then
-    pool[var_name] = { value = nil }
-  end
-
-  return pool[var_name]
+  return Variable.create(self.target.id, var_name)
 end
 
 -- DELG, GAME, GAMN
 function CAOS.Machine.get_game_var(self, var_name)
   if ( CAOS.game.caos_vars[var_name] == nil ) then
-    CAOS.game.caos_vars[var_name] = { value = nil }
+    CAOS.game.caos_vars[var_name] = Variable.createValue(0)
   end
   
   return CAOS.game.caos_vars[var_name]
@@ -299,7 +255,7 @@ end
 -- DELE, EAME, EAMN
 function CAOS.Machine.get_engine_var(self, var_name)
   if ( CAOS.engine.caos_vars[var_name] == nil ) then
-    CAOS.engine.caos_vars[var_name] = { value = nil }
+    CAOS.engine.caos_vars[var_name] = Variable.createValue(0)
   end
   
   return CAOS.engine.caos_vars[var_name]

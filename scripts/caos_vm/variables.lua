@@ -2,7 +2,6 @@
 CAOS.engine = { caos_vars = {} }
 CAOS.game = { caos_vars = {} }
 
-CAOS.name_of_hand = "hand"
 CAOS.world_search_size = 100000
 CAOS.name_of_game = "Starbound"
 

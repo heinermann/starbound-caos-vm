@@ -1,0 +1,13 @@
+{
+  "input" : [
+    { 
+      "item" : "money", 
+      "count" : 1 
+    }
+  ],
+  "output" : {
+    "item" : "caosdimensionalcrack",
+    "count" : 1
+  },
+  "groups" : [ "mod", "caos_vm", "all" ]
+}

@@ -120,7 +120,6 @@ function CAOS.Parser.update(self)
     return
   end
   
-
   -- WAIT command, waits for number of ticks
   if ( self.wait_time > 0 ) then
     self.wait_time = self.wait_time - 1
@@ -212,8 +211,14 @@ function CAOS.Parser.continue_script(self)
       local args_for_passing = table.reverse(cmd_args)
       table.remove(self.var_stack)
       
-      world.logInfo("Calling command... " .. cmd.command)
+      -- Debug
+      dbg_args = ""
+      for i = 2, #args_for_passing do
+        dbg_args = dbg_args .. " " .. tostring(args_for_passing[i])
+      end
+      world.logInfo("[CAOS " .. self.vm.owner.id .. " " .. self.vm.target.id .. "] " .. cmd.command .. dbg_args )
       
+      -- Call the function
       local call_result = cmd.callback(unpack(args_for_passing, 1))
       if ( cmd.rtype ~= "command" ) then
         table.insert(self.var_stack, call_result)
@@ -233,6 +238,8 @@ function CAOS.Parser.continue_script(self)
 end
 
 function CAOS.Parser.set_cursor(self, line, column)
+  world.logInfo("Set the cursor: " .. line .. ":" .. column)
+  
   self.line = line
   self.column = column
   self.stopped = false
