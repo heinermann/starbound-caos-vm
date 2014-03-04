@@ -888,6 +888,7 @@ CAOS.commands = {
                              }
         
         self.vm.target = EntityWrap.create(world.spawnMonster(agent_name, self.vm.owner:position(), agent_params))
+        self.leave = true -- so that entity can actually spawn and initialize its VM (CRUCIAL)
       end
     }
   },
@@ -5554,7 +5555,7 @@ CAOS.commands = {
       callback =
         function(self, count)
           self.loop_max = count
-          self.loop_count = 0
+          self.loop_count = 1
           self.loop_line = self.line
           self.loop_column = self.column
         end
@@ -7739,7 +7740,7 @@ CAOS.commands = {
       callback =
         function(self, x, y )
           -- TODO: determine safe location
-          self.vm.target:setPosition({x/8,y/8})
+          --self.vm.target:setPosition({x,y})
         end
     }
   },
@@ -8052,7 +8053,7 @@ CAOS.commands = {
         function(self, x_velocity, y_velocity )
           local ms_per_tick = self.vm.update_interval or 50
           
-          self.vm.target:setVelocity( {x_velocity * ms_per_tick, -y_velocity * ms_per_tick} )
+          self.vm.target:setVelocity( {x_velocity*8, y_velocity*8} )
         end
     }
   },

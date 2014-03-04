@@ -103,7 +103,7 @@ function CAOS.Machine.create(agent, run_install_script)
   if ( run_install_script == true ) then
     o.parser:run_install_script()
     o.parser:update()
-    o.owner:kill()  -- Kill the agent that ran the install script; The installer/injector is actually not supposed to appear
+    --o.owner:kill()  -- Kill the agent that ran the install script; The installer/injector is actually not supposed to appear
   else
     local desired_line = tonumber(o.owner:configParameter("desired_script_line", 0))
     local desired_column = tonumber(o.owner:configParameter("desired_script_column", 0))

@@ -35,6 +35,8 @@ function CAOS.Parser.create(parent_vm)
   o.loop_line = 0
   o.loop_column = 0
   
+  o.is_install = false
+  
   return o
 end
 
@@ -145,6 +147,10 @@ function CAOS.Parser.stop(self)
   self.no_interrupt = false
   self.ignore_exec = false
   self.executed_if_chain = false
+  
+  if ( self.is_install ) then
+    self.vm.owner:kill() -- TODO: separate install script
+  end
 end
 
 function CAOS.Parser.continue_script(self)
@@ -275,6 +281,7 @@ function CAOS.Parser.set_cursor(self, line, column)
   
   self.var_stack = {}
   self.call_stack = {}
+  self.is_install = false
 end
 
 function CAOS.Parser.run_install_script(self)
@@ -284,6 +291,7 @@ function CAOS.Parser.run_install_script(self)
 
   self:log("RUNNING INSTALL SCRIPT")
   self:set_cursor(CAOS.script_install.line, CAOS.script_install.column)
+  self.is_install = true
 end
 
 function CAOS.Parser.run_remove_script(self)
