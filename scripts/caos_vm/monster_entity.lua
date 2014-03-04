@@ -20,13 +20,25 @@ function init()
   
   entity.setGlobalTag("frameno", 0)
   
-  
+  -- Initialize the CAOS variable storage
   if ( storage.caos_vars == nil ) then
     storage.caos_vars = {}
   end
   
+  -- Check if this is the entity's first time spawning, in which case it should immediately despawn
   local first_spawn = entity.configParameter("first_spawn")
   storage.should_install = first_spawn == "true" or first_spawn == true
+  if ( storage.should_install == true ) then
+    entity.setAnimationState("portrait", "invisible")
+  end
+  
+  -- Assign inherited variables
+  local inherited_vars = entity.configParameter("inherited_vars")
+  if ( type(inherited_vars) == "table" ) then
+    for k,v in pairs(inherited_vars) do
+      CAOS_set_var(k, v)
+    end
+  end
   
   world.logInfo("Entity created")
 end

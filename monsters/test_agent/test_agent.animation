@@ -8,6 +8,9 @@
         "states" : {
           "portrait" : {
             "frames" : 1
+          },
+          "invisible" : {
+            "frames" : 1
           }
         }
       }
@@ -26,6 +29,11 @@
             "portrait" : {
               "properties" : {
                 "image" : "<partImage>:<frameno>"
+              }
+            },
+            "invisible" : {
+              "properties" : {
+                "image" : ""
               }
             }
           }

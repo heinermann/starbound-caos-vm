@@ -216,7 +216,7 @@ function CAOS.Parser.continue_script(self)
       for i = 2, #args_for_passing do
         dbg_args = dbg_args .. " " .. tostring(args_for_passing[i])
       end
-      world.logInfo("[CAOS " .. self.vm.owner.id .. " " .. self.vm.target.id .. "] " .. cmd.command .. "(" .. cmd.rtype .. ")" .. dbg_args )
+      self:log(cmd.command .. "(" .. cmd.rtype .. ")" .. dbg_args)
       
       -- Call the function
       local call_result = cmd.callback(unpack(args_for_passing, 1))
@@ -256,6 +256,7 @@ function CAOS.Parser.run_install_script(self)
     return
   end
 
+  self:log("RUNNING INSTALL SCRIPT")
   self:set_cursor(CAOS.script_install.line, CAOS.script_install.column)
 end
 
@@ -264,10 +265,12 @@ function CAOS.Parser.run_remove_script(self)
     return
   end
   
+  self:log("RUNNING REMOVE SCRIPT")
   self:set_cursor(CAOS.script_remove.line, CAOS.script_remove.column)
 end
 
 function CAOS.Parser.call_subroutine(self)
+  self:log("call sub not implemented")
 end
 
 function CAOS.Parser.run_script(self, family, genus, species, event)
@@ -288,8 +291,9 @@ function CAOS.Parser.run_script(self, family, genus, species, event)
   
   if ( src ~= nil ) then
     self:set_cursor(src.line, src.column)
+    self:log("RUNNING SCRIPT: " .. family .. " " .. genus .. " " .. species .. " " .. event)
   else
-    world.logInfo("TIMER NOT FOUND IN SCRIPTORIUM " .. family .. " " .. genus .. " " .. species .. " " .. event)
+    self:log("EVENT NOT FOUND IN SCRIPTORIUM " .. family .. " " .. genus .. " " .. species .. " " .. event)
     --CAOS.debug_scriptorium()
   end
 end
@@ -299,6 +303,10 @@ end
 -- Raises an error indicating the line it occurred on
 function CAOS.Parser.error(self, text)
   error("[CAOS:" .. self.line .. ":" .. self.column .. "] " .. text)
+end
+
+function CAOS.Parser.log(self, text)
+  world.logInfo("[CAOS " .. self.vm.owner.id .. " " .. self.vm.target.id .. "] " .. text )
 end
 
 -- checks if the stream is valid

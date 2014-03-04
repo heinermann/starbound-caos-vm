@@ -880,7 +880,11 @@ CAOS.commands = {
                                 caos_plane = plane,
                                 first_spawn = false,
                                 desired_script_line = 0,
-                                desired_script_column = 0
+                                desired_script_column = 0,
+                                inherited_vars = {
+                                  --caos_timer_interval = self.vm.timer_interval:get()    -- nope
+                                  
+                                }
                              }
         
         self.vm.target = EntityWrap.create(world.spawnMonster(agent_name, self.vm.owner:position(), agent_params))
@@ -1442,6 +1446,7 @@ CAOS.commands = {
   },
 
   -- full/partial
+  -- TODO: NOTE: May possibly be a global tick for this particular agent??
   ["TICK"] = {
     ["command"] = {
       command = "TICK",
@@ -7268,7 +7273,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, room_id )
-          return 0
+          return 6
         end
     }
   },
