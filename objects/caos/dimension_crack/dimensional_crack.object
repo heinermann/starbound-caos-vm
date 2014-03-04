@@ -1,0 +1,42 @@
+{
+  "objectName" : "caosdimensionalcrack",
+  "rarity" : "Legendary",
+  "objectType" : "container",
+
+  "category" : "generic",
+  "description" : "A crack in dimensions. Who knows where it leads?",
+  "shortdescription" : "Dimensional Crack",
+  "race" : "generic",
+
+  "inventoryIcon" : "crackicon.png",
+  "orientations" : [
+    {
+      "dualImage" : "crack.png:<frame>",
+      "imagePosition" : [-16, -8],
+      "frames" : 1,
+      "animationCycle" : 0.5,
+      
+      "spaceScan" : 0.1,
+      "anchors" : [ "background" ]
+    }
+  ],
+
+  "openSounds" : [ "/sfx/objects/chest_small_open.wav" ],
+  "closeSounds" : [ "/sfx/objects/chest_small_close.wav" ],
+  "slotCount" : 64,
+  "uiConfig" : "/interface/chests/chest%slots%.config",
+  "frameCooldown" : 67,
+  "autoCloseCooldown" : 3600,
+  
+  "scripts" : [ "/scripts/caos_vm/utility.lua",
+                
+                "/scripts/caos_vm/entityWrapper.lua",
+                "/scripts/caos_vm/main.lua",
+                "/scripts/caos_vm/constants.lua",
+                "/scripts/caos_vm/variables.lua",
+                "/scripts/caos_vm/commands.lua",
+                "/scripts/caos_vm/parser.lua",
+                "/scripts/caos_vm/script_manager.lua",
+                "/scripts/caos_vm/main_controller.lua" ],
+  "scriptDelta" : 1
+}

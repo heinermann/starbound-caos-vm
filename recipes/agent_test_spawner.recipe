@@ -1,0 +1,8 @@
+{
+  "input" : [],
+  "output" : {
+    "item" : "agent_bottle",
+    "count" : 1
+  },
+  "groups" : [ "mod", "caos_vm", "all" ]
+}

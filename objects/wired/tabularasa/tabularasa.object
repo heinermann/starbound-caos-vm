@@ -1,0 +1,12 @@
+{
+  "__merge" : [], 
+  // This file (which should be at /objects/wired/tabularasa/tabularasa.object) 
+  // demonstrates how to add a mod filter button to the Tabula Rasa
+  "filterButtons" : [
+    {
+      "baseImage" : "/caos_vm_graphics/button_off.png",
+      "baseImageChecked" : "/caos_vm_graphics/button_on.png",
+      "filter" : "caos_vm"
+    }
+  ]
+}

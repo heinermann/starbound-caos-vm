@@ -1,5 +1,5 @@
 ## What is the Creatures VM Starbound mod?
-The Creatures VM mod is a Creatures Agent Object Script (CAOS) virtual machine is an attempt to migrate
+The Starbound Creatures VM mod is a CAOS virtual machine that attempts to migrate
 Creatures Objects (COBs) and agents from an old game series to Starbound.
 
 ## What is Creatures?
@@ -20,42 +20,92 @@ Some examples:
  - A piece of equipment that can be wired to other pieces of equipment
  - A new meta-room (w/ background) for agents to live in
 
-## What is a CAOS script?
-A Creatures Agent Object Script (CAOS) script is a proprietary scripting
+## What is CAOS?
+A Creatures Agent Object Script (CAOS) is a proprietary scripting
 language for the Creatures engine. All agents contain a script.
 
- 
+## How to convert a Creatures Docking Station agent to Starbound
+NOTE: A program to automate this process will eventually be released. In its current stage, nothing is final.
+
+1. Extract the creatures `.agent` or `.agents` file with `bin/revelation.exe`
+2. Extract the the image data from the `.c16` or `.s16` file with `bin/c16topng.exe`
+3. Batch resize all image canvases to the largest size, centering those that are too small (Can be done with Irfanview)
+4. Stitch images together horizontally (GIMP)
+5. TODO
+
 ## What are the challenges?
 The Starbound scripting API is extremely limited compared to CAOS script.
 This means serious compromises and workarounds must be made in order to
 accomplish what seems like trivial tasks for the CAOS scripting engine.
 
-Some major issues to consider:
-* General limitations (in order for some agents to have more capabilities than others, we must determine if they will be made into a Starbound object, monster, or ship)
-* Movement (teleporting to different locations generally not possible, and the physics engine is different)
-* No global/engine/world environment for variables (cellular automata, scriptorium)
-* Agents containing multiple objects must be split into multiple files, making it difficult to share resources
+### Issues and solutions
+
+#### Using monster entities as objects
+Deciding which entity type to use was a problem because I wanted to also include wiring, however there were 
+far more important matters to consider. Using monster entities as objects have the following capabilities:
+
+ * Invincibility, explicit removal
+ * Movable only with script
+ * Can control graphic and frames
+ * Passive
+ * Persistent
+ * position, velocity, gravity API (Creatures physics engine fighting with the Starbound physics engine)
+ * playSound API
+ * config API
+ * rotation API
+ * tag API (image and frame control)
+
+#### Using 'central hub' objects as world and script controllers
+There were a few major problems encountered, one is that scripts aren't global and the scriptorium
+can't be shared between monster entities. Another was that persistent monster entities can't save their script data for reload.
+Yet another problem, is the way entities were created/controlled. A removal script was unable to run without additional issues.
+Global engine variables were not sharable between objects. And several others. The solution to all of this is using a central
+hub object that acts as a core for all scripts, and controlling the objects instead of the scripts running on the objects themselves.
+This has the following advantages:
+ * Shared global/engine variables
+ * Global scriptorium (script sharing)
+ * Allows install/remove script with storage API (agents are items that can be placed in the storage)
+ * Allows persistent data saving with storage API and config
+ * Since every object isn't creating a full-blown virtual machine, it saves on memory
+ * Allows the global debug commands such as PAWS to work easily
+ 
+#### Using a wire converter object
+I wanted to include the Creatures wiring system, but that would be impossible for several reasons:
+ * Nodes need to be dynamically modifiable (add/remove nodes anywhere on the agent)
+ * Nodes need to be on objects that can move
+ 
+To solve this, a separate, dynamic wiring system for agent entities will be included. To bridge the gap,
+an object must be made to convert to/from the two different wiring systems.
+
+#### Having a configurable meta-room
+Meta-rooms in Starbound need to be a bit different. In order to have the cellular automata and other room-based
+options that agents may depend on, meta-rooms need to exist. There can be two solutions
+
+1. Meta-room boundaries will be set up and connected with wire.
+2. Meta-room icon is placed in a room and the room is automatically considered a meta-room.
+
+The second being more favourable than the first, however this is not entirely decided at this time.
+
+#### Tech for object interaction
+Some agents react to certain actions such as "activate 1", "activate 2", "hit", etc. In addition, CAOS has an input API.
+Tech is the only thing that currently has an input API. This will allow the following:
+* CAOS input API
+* Picking up agents
+* Agent help popup
+* Wiring agents together
+* Query the "hand" object
+
+
+
+### Unsolved issues:
 * No file API
 * No network API
 * No music/cd/volume API
 * No non-debug text/drawing api
-* No plane support (z-index)
-* Lack of image control (tinting, alpha, change base image, set image frames) without workarounds
-* Interaction difficulties (can't "interact" with monster)
-* Wiring API difficulties: set/attach/detach wiring ports/nodes, sending integral signals through them, wire moving agents(monsters)
-* No parts API (difficulty with connecting agents together, ie leaves and stems)
-* No camera API (view, zoom, snapshot)
+* No plane support (z-index) (?)
+* Lack of some image control (tinting, alpha)
+* No camera API (view, zoom, snapshot, capture, portals showing the other side)
 * No engine API (window size, fullscreen, save, load, world creation, etc.)
-* No ability to create/remove/alter meta-rooms
-* Unable to carry objects while still being functional
-* No input API (keyboard, mouse)
-* No player entity API (player-stored variables)
-* No permiability controls (collide with certain objects only)
-* Lack of cellular automata (precipitation, nutrients, etc)
-* Lack of entity collision API
-* No vehicle/moving objects API
-
-... among others.
 
 
 ## What is the type relationship?
