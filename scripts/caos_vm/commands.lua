@@ -1106,7 +1106,7 @@ CAOS.commands = {
           self.vm.target:setVar("caos_image_pose", frameno)
           self.vm.target:setTag("frameno", frameno)
           
-          world.logInfo("Posed: " .. tostring(pose) )
+          world.logInfo("Set frame: " .. tostring(frameno) )
         end
     },
 
@@ -5111,7 +5111,6 @@ CAOS.commands = {
     params = {},
     description = [[
       Retrieves an integer from the input stream, delimited by white space.  Defaults to 0 if no valid data.
-      
     ]],
     callback =
       function(self)
@@ -5236,8 +5235,11 @@ CAOS.commands = {
     }
   },
 
-
+  -- full
   ["DOIF"] = {
+    -- IMPORTANT: 
+    --    "Conditions are evaluated simply from left to right" (check)
+    --    "Conditional statements may not work correctly with commands overloaded by rvalue." (check)
     ["command"] = {
       command = "DOIF",
       rtype = "command",
@@ -5258,11 +5260,17 @@ CAOS.commands = {
         
         Conditions are evaluated simply from left to right, so "a AND b OR c" is the same as "(
         a AND b) OR c", not "a AND ( b OR c )".
-        Conditional statements may not work correctly 
-        with commands overloaded by rvalue.
+        Conditional statements may not work correctly with commands overloaded by rvalue.
       ]],
       callback =
-        function(self, condition )
+        function(self, condition)
+          if ( condition == 1 or condition == true ) then
+            self.executed_if_chain = true
+            self.ignore_exec = false
+          else
+            self.executed_if_chain = false
+            self.ignore_exec = true
+          end
         end
     }
   },
@@ -5383,7 +5391,7 @@ CAOS.commands = {
   },
 
   
-
+  -- full
   ["ELIF"] = {
     ["command"] = {
       command = "ELIF",
@@ -5395,75 +5403,88 @@ CAOS.commands = {
         will be evaluated in turn.  Only the first true condition will have its code block executed.
       ]],
       callback =
-        function(self, condition )
+        function(self, condition)
+          if ( (condition == 1 or condition == true) ) then
+            self.executed_if_chain = true
+            self.ignore_exec = false
+          else
+            self.executed_if_chain = false
+            self.ignore_exec = true
+          end
+        end
+    }
+  },
+
+  -- full
+  ["ELSE"] = {
+    ["command"] = {
+      command = "ELSE",
+      rtype = "command",
+      params = {},
+      description = [[
+        ELSE clause to follow @DOIF@ and @ELIF@(s). If nothing else matches, the ELSE block will be executed.
+      ]],
+      callback =
+        function(self)
+          self.executed_if_chain = true
+          self.ignore_exec = false
+        end
+    }
+  },
+
+  -- full
+  ["ENDI"] = {
+    ["command"] = {
+      command = "ENDI",
+      rtype = "command",
+      params = {},
+      description = [[
+        Closes a @DOIF@...@ELIF@...@ELSE@... set.
+      ]],
+      callback =
+        function(self)
+          self.executed_if_chain = false
+          self.ignore_exec = false
+        end
+    }
+  },
+
+  -- full
+  ["EVER"] = {
+    ["command"] = {
+      command = "EVER",
+      rtype = "command",
+      params = {},
+      description = [[
+        Forms the end of a @LOOP@..EVER loop, which just loops forever.
+      ]],
+      callback =
+        function(self)
+          self:move_cursor(self.loop_line, self.loop_column)
         end
     }
   },
 
 
-  ["ELSE"] = {
-    ["command"] = {
-      command = "ELSE",
-    rtype = "command",
-    params = {},
-    description = [[
-      ELSE clause to follow @DOIF@ and @ELIF@(s). If nothing else matches, the ELSE block will be executed.
-      
-    ]],
-    callback =
-      function(self)
-      end
-    }
-  },
-
-
-  ["ENDI"] = {
-    ["command"] = {
-      command = "ENDI",
-    rtype = "command",
-    params = {},
-    description = [[
-      Closes a @DOIF@...@ELIF@...@ELSE@... set.
-    ]],
-    callback =
-      function(self)
-      end
-    }
-  },
-
-
-  ["EVER"] = {
-    ["command"] = {
-      command = "EVER",
-    rtype = "command",
-    params = {},
-    description = [[
-      Forms the end of a @LOOP@..EVER loop, which just loops forever.
-    ]],
-    callback =
-      function(self)
-      end
-    }
-  },
-
-
   ["GOTO"] = {
+    -- IMPORTANT:
+    --    "Don't use this command."
     ["command"] = {
       command = "GOTO",
-    rtype = "command",
-    params = {
-      { "destination", "label" } },
-    description = [[
-      Don't use this command.  It jumps directly to a label defined by @SUBR@. This command is only 
-      here because it is used implicitly by @DOIF@ blocks. This is a really dangerous command to use manually, 
-      because if you jump out of a block of code (eg a @LOOP@...@EVER@ block), the stack frame 
-      will no longer be correct, and the script will most likely crash. Don't use it!  See @SUBR@.
-      
-    ]],
-    callback =
-      function(self, destination )
-      end
-    }
+      rtype = "command",
+      params = {
+        { "destination", "label" } },
+      description = [[
+        Don't use this command.  It jumps directly to a label defined by @SUBR@. This command is only 
+        here because it is used implicitly by @DOIF@ blocks. This is a really dangerous command to use manually, 
+        because if you jump out of a block of code (eg a @LOOP@...@EVER@ block), the stack frame 
+        will no longer be correct, and the script will most likely crash. Don't use it!  See @SUBR@.
+        
+      ]],
+      callback =
+        function(self, destination )
+        end
+      }
   },
 
 
@@ -5483,37 +5504,43 @@ CAOS.commands = {
     }
   },
 
-
+  -- full
   ["LOOP"] = {
     ["command"] = {
       command = "LOOP",
-    rtype = "command",
-    params = {},
-    description = [[
-      Begin a LOOP..@UNTL@ or LOOP..@EVER@ loop.
-    ]],
-    callback =
-      function(self)
-      end
+      rtype = "command",
+      params = {},
+      description = [[
+        Begin a LOOP..@UNTL@ or LOOP..@EVER@ loop.
+      ]],
+      callback =
+        function(self)
+          self.loop_line = self.line
+          self.loop_column = self.column
+        end
     }
   },
 
-
+  -- full
   ["REPE"] = {
     ["command"] = {
       command = "REPE",
-    rtype = "command",
-    params = {},
-    description = [[
-      Closes a @REPS@ loop.
-    ]],
-    callback =
-      function(self)
-      end
+      rtype = "command",
+      params = {},
+      description = [[
+        Closes a @REPS@ loop.
+      ]],
+      callback =
+        function(self)
+          if ( self.loop_count < self.loop_max ) then
+            self.loop_count = self.loop_count + 1
+            self:move_cursor(self.loop_line, self.loop_column)
+          end
+        end
     }
   },
 
-
+  -- full
   ["REPS"] = {
     ["command"] = {
       command = "REPS",
@@ -5525,7 +5552,11 @@ CAOS.commands = {
         the block.
       ]],
       callback =
-        function(self, count )
+        function(self, count)
+          self.loop_max = count
+          self.loop_count = 0
+          self.loop_line = self.line
+          self.loop_column = self.column
         end
     }
   },
@@ -5534,15 +5565,15 @@ CAOS.commands = {
   ["RETN"] = {
     ["command"] = {
       command = "RETN",
-    rtype = "command",
-    params = {},
-    description = [[
-      Return from subroutine. Do not use this instruction from inside a block of code (eg a @LOOP@#..@EVER@ 
-      or @ENUM@...@NEXT@ etc...)!  See @SUBR@ and @GSUB@.
-    ]],
-    callback =
-      function(self)
-      end
+      rtype = "command",
+      params = {},
+      description = [[
+        Return from subroutine. Do not use this instruction from inside a block of code (eg a @LOOP@#..@EVER@ 
+        or @ENUM@...@NEXT@ etc...)!  See @SUBR@ and @GSUB@.
+      ]],
+      callback =
+        function(self)
+        end
     }
   },
 
@@ -5550,21 +5581,21 @@ CAOS.commands = {
   ["SUBR"] = {
     ["command"] = {
       command = "SUBR",
-    rtype = "command",
-    params = { "label", "string" },
-    description = [[
-      Defines the start of a subroutine. Specify a label after the @SUBR@ command - the label is case sensitive, 
-      and should start with a letter. If this instruction is hit during normal program flow, it works as 
-      a @STOP@ instruction. See @GSUB@ and @RETN@.
-    ]],
-    callback =
-      function(self, label)
-        self:stop()
-      end
+      rtype = "command",
+      params = { "label", "string" },
+      description = [[
+        Defines the start of a subroutine. Specify a label after the @SUBR@ command - the label is case sensitive, 
+        and should start with a letter. If this instruction is hit during normal program flow, it works as 
+        a @STOP@ instruction. See @GSUB@ and @RETN@.
+      ]],
+      callback =
+        function(self, label)
+          self:stop()
+        end
     }
   },
 
-
+  -- full
   ["UNTL"] = {
     ["command"] = {
       command = "UNTL",
@@ -5576,7 +5607,10 @@ CAOS.commands = {
         DOIF@ for information on the form of the condition.
       ]],
       callback =
-        function(self, condition )
+        function(self, condition)
+          if ( condition ~= 1 and condition ~= true ) then
+            self:move_cursor(self.loop_line, self.loop_column)
+          end
         end
     }
   },
@@ -7704,6 +7738,8 @@ CAOS.commands = {
       ]],
       callback =
         function(self, x, y )
+          -- TODO: determine safe location
+          self.vm.target:setPosition({x/8,y/8})
         end
     }
   },
@@ -8010,11 +8046,13 @@ CAOS.commands = {
       params = {
         { "x_velocity", "float" },  { "y_velocity", "float" } },
       description = [[
-        Set velocity, measured in pixels per tick.
+        Set velocity, measured in pixels per tick. (assuming target)
       ]],
       callback =
         function(self, x_velocity, y_velocity )
-          self.vm.owner:setVelocity( {x_velocity, y_velocity} )
+          local ms_per_tick = self.vm.update_interval or 50
+          
+          self.vm.target:setVelocity( {x_velocity * ms_per_tick, -y_velocity * ms_per_tick} )
         end
     }
   },
@@ -9425,6 +9463,7 @@ CAOS.commands = {
         function(self, ticks )
           self.instant_execution = false
           self.wait_time = ticks
+          self.leave = true
         end
     }
   },

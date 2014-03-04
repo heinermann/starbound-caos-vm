@@ -45,7 +45,10 @@ function CAOS.Machine.create(agent, run_install_script)
   o.owner:setVar("caos_species", tonumber(o.owner:configParameter("caos_species", 0)))
   o.owner:setVar("caos_sprite_file", o.owner:configParameter("caos_sprite_file", ""))
   o.owner:setVar("caos_image_count", tonumber(o.owner:configParameter("caos_image_count", 1)))
-  o.owner:setVar("caos_first_image", tonumber(o.owner:configParameter("caos_first_image", 1)))
+  o.owner:setVar("caos_first_image", tonumber(o.owner:configParameter("caos_first_image", 0)))
+  --world.logInfo("caos_first_image = " .. tostring(o.owner:getVar("caos_first_image")) .. " vs " .. tostring(o.owner:configParameter("caos_first_image", 0)) )
+  
+  
   o.owner:setVar("caos_plane", tonumber(o.owner:configParameter("caos_plane", 500)))
   o.owner:setVar("caos_image_base", 0)
   o.owner:setVar("caos_image_pose", 0)

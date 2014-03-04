@@ -48,6 +48,7 @@ end
 
 function EntityWrap.setTag(self, name, value)
   world.callScriptedEntity(self.id, "entity.setGlobalTag", name, value)
+  --world.callScriptedEntity(self.id, "entity.setPartTag", body, name, value)
 end
 
 function EntityWrap.rotate(self, value)

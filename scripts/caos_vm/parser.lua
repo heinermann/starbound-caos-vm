@@ -27,6 +27,14 @@ function CAOS.Parser.create(parent_vm)
   o.paused = false
   o.leave = false
   
+  o.ignore_exec = false
+  o.executed_if_chain = false
+  
+  o.loop_max = 0
+  o.loop_count = 0
+  o.loop_line = 0
+  o.loop_column = 0
+  
   return o
 end
 
@@ -135,6 +143,8 @@ function CAOS.Parser.stop(self)
   self.invalid = true
   self.instant_execution = false
   self.no_interrupt = false
+  self.ignore_exec = false
+  self.executed_if_chain = false
 end
 
 function CAOS.Parser.continue_script(self)
@@ -184,6 +194,15 @@ function CAOS.Parser.continue_script(self)
       -- Parse conditionals
       if ( #self.call_stack == 1 ) then
         current_cmd = self.call_stack[1]
+        
+        -- special case: conditionals' behaviour
+        if ( (current_cmd.cmd.command == "ELIF" or current_cmd.cmd.command == "ELSE") and self.ignore_exec == true and self.executed_if_chain == false ) then
+          self.ignore_exec = false
+        elseif ( current_cmd.cmd.command == "ENDI" ) then
+          self.ignore_exec = false
+        end
+        
+        -- Parse conditional operator
         local params = current_cmd.cmd.params
         if ( #params > 0 and params[#params][2] == "condition" ) then
           if ( self:parse_conditional() ) then
@@ -206,24 +225,27 @@ function CAOS.Parser.continue_script(self)
       end
       table.insert(cmd_args, self)
       
-      -- command call (if not just parsing)
-      -- At this point, the command is executed and replaced with the result on the var_stack
-      local args_for_passing = table.reverse(cmd_args)
-      table.remove(self.var_stack)
       
-      -- Debug
-      dbg_args = ""
-      for i = 2, #args_for_passing do
-        dbg_args = dbg_args .. " " .. tostring(args_for_passing[i])
+      if ( self.ignore_exec ~= true ) then
+        
+        -- Change argument stack to correct format
+        local args_for_passing = table.reverse(cmd_args)
+        table.remove(self.var_stack)
+        
+        -- Debug
+        dbg_args = ""
+        for i = 2, #args_for_passing do
+          dbg_args = dbg_args .. " " .. tostring(args_for_passing[i])
+        end
+        self:log(cmd.command .. "(" .. cmd.rtype .. ")" .. dbg_args)
+        
+        -- Call the function
+        local call_result = cmd.callback(unpack(args_for_passing, 1))
+        if ( cmd.rtype ~= "command" ) then
+          table.insert(self.var_stack, call_result)
+        end
+        
       end
-      self:log(cmd.command .. "(" .. cmd.rtype .. ")" .. dbg_args)
-      
-      -- Call the function
-      local call_result = cmd.callback(unpack(args_for_passing, 1))
-      if ( cmd.rtype ~= "command" ) then
-        table.insert(self.var_stack, call_result)
-      end
-      --world.logInfo("[CAOS] made virtual call: " .. cmd.command .. " " .. table.tostring(cmd_args))
       
       table.remove(self.call_stack)    -- remove the command from the call stack since it has been processed
       
@@ -237,11 +259,15 @@ function CAOS.Parser.continue_script(self)
   
 end
 
+function CAOS.Parser.move_cursor(self, line, column)
+  self.line = line
+  self.column = column
+end
+
 function CAOS.Parser.set_cursor(self, line, column)
   world.logInfo("Set the cursor: " .. line .. ":" .. column)
   
-  self.line = line
-  self.column = column
+  self:move_cursor(line, column)
   self.stopped = false
   self.invalid = false
   
@@ -274,8 +300,13 @@ function CAOS.Parser.call_subroutine(self)
 end
 
 function CAOS.Parser.run_script(self, family, genus, species, event)
-  if ( self.no_interrupt ) then
+  if ( self.no_interrupt and not self.stopped and not self.invalid ) then
     world.logInfo("WHOOPS NO INTERRUPT!")
+    return
+  end
+  
+  if ( not self.stopped and not self.invalid ) then
+    world.logInfo("denied")
     return
   end
   
