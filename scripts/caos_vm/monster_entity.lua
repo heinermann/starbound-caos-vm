@@ -12,7 +12,7 @@ function init()
   entity.setDropPool(nil)
   
   -- temporary unless I decide not to write its own internal gravity engine
-  entity.setGravityEnabled(true)
+  entity.setGravityEnabled(false)
   
   entity.setVelocity({0,0})
   entity.setRunning(false)

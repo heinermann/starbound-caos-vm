@@ -18,12 +18,13 @@
       "/scripts/caos_vm/variables.lua",
       "/scripts/caos_vm/commands.lua",
       "/scripts/caos_vm/parser.lua",
+      "/scripts/caos_vm/physics.lua",
       
       "/scripts/caos_vm/monster_entity.lua"
     ],
     "scriptDelta" : 1,
     
-    "metaBoundBox" : [-2.5, -2.5, 2.5, 2.5],
+    "metaBoundBox" : [-4.125, -3.125, 4.125, 3.125],
     "scale" : 0.5,
     
     //"movementSettings" : {

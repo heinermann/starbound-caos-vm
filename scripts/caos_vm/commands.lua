@@ -1081,7 +1081,7 @@ CAOS.commands = {
     callback =
       function(self)
         local bounds = self.vm.target:getVar("caos_bounds")
-        return bounds.bottom or (self.vm.target:position()[2] + 1.0) or 0.0
+        return (self.vm.target:position()[2] - (bounds.bottom or 1)) or 0.0
       end
     }
   },
@@ -1137,7 +1137,7 @@ CAOS.commands = {
     callback =
       function(self)
         local bounds = self.vm.target:getVar("caos_bounds")
-        return bounds.left or (self.vm.target:position()[1] - 1.0) or 0.0
+        return (self.vm.target:position()[1] - (bounds.left or 1)) or 0.0
       end
     }
   },
@@ -1154,7 +1154,7 @@ CAOS.commands = {
     callback =
       function(self)
         local bounds = self.vm.target:getVar("caos_bounds")
-        return bounds.right or (self.vm.target:position()[1] + 1.0) or 0.0
+        return (self.vm.target:position()[1] + (bounds.right or 1)) or 0.0
       end
     }
   },
@@ -1171,7 +1171,7 @@ CAOS.commands = {
     callback =
       function(self)
         local bounds = self.vm.target:getVar("caos_bounds")
-        return bounds.top or (self.vm.target:position()[2] - 1.0) or 0.0
+        return (self.vm.target:position()[2] + (bounds.top or 1)) or 0.0
       end
     }
   },
@@ -1693,12 +1693,15 @@ CAOS.commands = {
     ]],
     callback =
       function(self, checkAllCameras)
-        local bounds = self.vm.owner:getVar("caos_bounds")
+        local agent   = self.vm.owner
+        local bounds  = agent:getVar("caos_bounds")
+        local pos     = agent:position()
+        
         return world.isVisibleToPlayer({
-                minX = bounds.left,
-                minY = bounds.top,
-                maxX = bounds.right,
-                maxY = bounds.bottom
+                minX = pos[1] - bounds.left,
+                minY = pos[2] - bounds.bottom,
+                maxX = pos[1] + bounds.right,
+                maxY = pos[2] + bounds.top
               }) and 1 or 0
       end
     }
@@ -7375,6 +7378,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, acceleration )
+          self.vm.target:setVar("caos_gravity_accel", acceleration)
         end
     },
 
@@ -7387,7 +7391,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return 0.0
+          return self.vm.target:getVar("caos_gravity_accel") or 0
         end
     }
   },
@@ -7405,6 +7409,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, damping_factor )
+          self.vm.target:setVar("caos_angular_damping", damping_factor)
         end
     },
 
@@ -7418,7 +7423,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return 0.0
+          return self.vm.target:getVar("caos_angular_damping") or 0
         end
     }
   },
@@ -7435,6 +7440,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, aerodynamics )
+          self.vm.target:setVar("caos_aerodynamics", aerodynamics)
         end
     },
 
@@ -7447,7 +7453,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return 0
+          return self.vm.target:getVar("caos_aerodynamics") or 0
         end
     }
   },
@@ -7482,6 +7488,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, amount_in_fraction_of_whole_circle )
+          self.vm.target:setVar("caos_angular_velocity", amount_in_fraction_of_whole_circle)
         end
     },
 
@@ -7494,7 +7501,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return 0.0
+          return self.vm.target:getVar("caos_angular_velocity") or 0
         end
     }
   },
@@ -7512,6 +7519,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, elasticity)
+          self.vm.target:setVar("caos_elasticity", elasticity)
         end
     },
 
@@ -7524,7 +7532,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return 0
+          return self.vm.target:getVar("caos_elasticity") or 0
         end
     }
   },
@@ -7565,6 +7573,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, damping_factor )
+          self.vm.target:setVar("caos_damping_forward", damping_factor)
         end
     },
 
@@ -7578,7 +7587,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return 0.0
+          return self.vm.target:getVar("caos_damping_forward") or 0
         end
     }
   },
@@ -7643,6 +7652,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, friction )
+          self.vm.target:setVar("caos_friction", friction)
         end
     },
 
@@ -7655,7 +7665,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return 0
+          return self.vm.target:getVar("caos_friction") or 0
         end
     }
   },
@@ -7847,6 +7857,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self, damping_factor )
+          self.vm.target:setVar("caos_damping_sideways", damping_factor)
         end
     },
 
@@ -7860,7 +7871,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return 0.0
+          return self.vm.target:getVar("caos_damping_sideways") or 0
         end
     }
   },

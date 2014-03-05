@@ -74,12 +74,15 @@ function CAOS.Machine.create(agent, run_install_script)
   o.owner:setVar("caos_voice", nil)
   
   o.owner:setVar("caos_vars", {})
-    
-  o.owner:setVar("caos_bounds", {     left    = o.owner:position()[1] - 4,
-                                      top     = o.owner:position()[2] - 4,
-                                      right   = o.owner:position()[1] + 4,
-                                      bottom  = o.owner:position()[2] + 4
+  
+  local vbounds = 
+  o.owner:setVar("caos_bounds", {     left    = 3.5,
+                                      top     = 2.5,
+                                      right   = 3.5,
+                                      bottom  = 2.5
                                     })
+    
+  o.physics = Physics.create(o.owner)
     
   -- variables
   o.caos_vars = {}
@@ -120,6 +123,8 @@ end
 
 
 function CAOS.Machine.update(self)
+
+  self.physics:update()
 
   -- Prevents execution until the update interval has passed
   -- The update interval is number of milliseconds per tick
