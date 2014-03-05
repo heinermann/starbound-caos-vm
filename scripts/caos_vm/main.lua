@@ -51,7 +51,7 @@ function CAOS.Machine.create(agent, run_install_script)
   
   o.owner:setVar("caos_plane", tonumber(o.owner:configParameter("caos_plane", 500)))
   o.owner:setVar("caos_image_base", 0)
-  o.owner:setVar("caos_image_pose", 0)
+  o.owner:setVar("caos_frameno", 0)
       
   o.owner:setVar("caos_attributes", 0)
   o.owner:setVar("caos_permissions", 0)
@@ -75,12 +75,7 @@ function CAOS.Machine.create(agent, run_install_script)
   
   o.owner:setVar("caos_vars", {})
   
-  local vbounds = 
-  o.owner:setVar("caos_bounds", {     left    = 3.5,
-                                      top     = 2.5,
-                                      right   = 3.5,
-                                      bottom  = 2.5
-                                    })
+  o.owner:setVar("caos_bounds", nil)
     
   o.physics = Physics.create(o.owner)
     

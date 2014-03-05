@@ -1,7 +1,7 @@
 {
   "input" : [],
   "output" : {
-    "item" : "agent_bottle",
+    "item" : "agent_balloonplant",
     "count" : 1
   },
   "groups" : [ "mod", "caos_vm", "all" ]

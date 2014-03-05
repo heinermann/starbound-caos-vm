@@ -21,7 +21,7 @@ function Physics.create(agent)
 end
 
 function Physics.update(self)
-  local bounds = self.agent:getVar("caos_bounds")
+  local bounds = self.agent:getBounds()
   local pos = self.agent:position()
   local permiability = self.agent:getVar("caos_permiability") or 100
   local gravity = -(self.agent:getVar("caos_gravity_accel") or -10)
@@ -33,8 +33,8 @@ function Physics.update(self)
   -- If the agent can collide with things
   if ( self.agent:caos_suffer_collisions() ) then
     -- left
-    if ( world.rectCollision({  pos[1] - bounds.left - 0.5,   pos[2] - bounds.bottom + 0.5,
-                                pos[1],  pos[2] + bounds.top - 0.5 }, permiability < 50) ) then
+    if ( world.rectCollision({  pos[1] - bounds.left - 0.1,   pos[2] - bounds.bottom + 0.1,
+                                pos[1],  pos[2] + bounds.top - 0.1 }, permiability < 50) ) then
       self.collide_left = true
       self.last_collision = CAOS.DIRECTIONS.LEFT
     else
@@ -117,15 +117,19 @@ function Physics.update(self)
     end
     if ( velocity[2] > 0 and self.collide_up ) then   -- don't fly through ceiling
       velocity[2] = 0
-      world.logInfo("Attached to ceiling " .. tostring(self.collide_left) .. " " .. tostring(self.collide_up) .. " " .. tostring(self.collide_right) .. " " .. tostring(self.collide_down))
+      local colPos = world.collisionBlocksAlongLine(pos, {pos[1], pos[2] + bounds.top + 0.1}, permiability < 50, 1)
+      if ( colPos ~= nil and #colPos > 0 ) then
+        self.agent:setPosition({pos[1], colPos[1][2] - bounds.top})
+      end
+      --world.logInfo("Attached to ceiling " .. tostring(self.collide_left) .. " " .. tostring(self.collide_up) .. " " .. tostring(self.collide_right) .. " " .. tostring(self.collide_down))
     end
     if ( velocity[1] < 0 and self.collide_left ) then   -- don't go through left wall
       velocity[1] = 0
-      world.logInfo("Attached to left " .. tostring(self.collide_left) .. " " .. tostring(self.collide_up) .. " " .. tostring(self.collide_right) .. " " .. tostring(self.collide_down))
+      --world.logInfo("Attached to left " .. tostring(self.collide_left) .. " " .. tostring(self.collide_up) .. " " .. tostring(self.collide_right) .. " " .. tostring(self.collide_down))
     end
     if ( velocity[1] > 0 and self.collide_right ) then   -- don't go through right wall
       velocity[1] = 0
-      world.logInfo("Attached to right " .. tostring(self.collide_left) .. " " .. tostring(self.collide_up) .. " " .. tostring(self.collide_right) .. " " .. tostring(self.collide_down))
+      --world.logInfo("Attached to right " .. tostring(self.collide_left) .. " " .. tostring(self.collide_up) .. " " .. tostring(self.collide_right) .. " " .. tostring(self.collide_down))
     end
 
     -- Finally set the new velocity

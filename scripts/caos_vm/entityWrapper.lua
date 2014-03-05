@@ -15,9 +15,6 @@ function EntityWrap.create(agentId)
     o.id = agentId
   end
   
-  -- misc. variables
-  o.is_flipped = false
-  
   return o
 end
 
@@ -43,16 +40,24 @@ end
 
 function EntityWrap.setFlipped(self, flip)
   world.callScriptedEntity(self.id, "entity.setFlipped", flip)
-  self.is_flipped = flip
+  self:setVar("caos_flipped", flip)
 end
 
 function EntityWrap.isFlipped(self)
-  return self.is_flipped
+  return self:getVar("caos_flipped") or false
 end
 
 function EntityWrap.setTag(self, name, value)
   world.callScriptedEntity(self.id, "entity.setGlobalTag", name, value)
-  --world.callScriptedEntity(self.id, "entity.setPartTag", body, name, value)
+end
+
+function EntityWrap.setFrame(self, frameNo)
+  self:setTag("frameno", frameNo)
+  self:setVar("frameno", frameNo)
+end
+
+function EntityWrap.getFrame(self)
+  return self:getVar("frameno") or 0
 end
 
 function EntityWrap.rotate(self, value)
@@ -147,3 +152,21 @@ end
           --if ( bit32.band(attributes, CAOS.ATTRIBUTES.GREEDY_CABIN) ~= 0 ) then
           --if ( bit32.band(attributes, CAOS.ATTRIBUTES.CAMERA_SHY) ~= 0 ) then
           --if ( bit32.band(attributes, CAOS.ATTRIBUTES.OPEN_AIR_CABIN) ~= 0 ) then
+
+function EntityWrap.getBounds(self)
+  local bounds = self:getVar("caos_bounds")
+  if ( bounds == nil ) then
+    local desired_frames = self:configParameter("agent.frameSize", nil)
+    if ( desired_frames ~= nil ) then
+      local frame_size = desired_frames[self:getFrame() + 1]
+      local wid = (frame_size[1]/10)
+      local hgt = (frame_size[2]/10)
+      return { left = wid/2, bottom = hgt/2, right = wid/2, top = hgt/2 }
+    else
+      world.logInfo("Missing desired frame size.")
+    end
+  else
+    return bounds
+  end
+  return nil
+end

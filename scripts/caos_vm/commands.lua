@@ -884,6 +884,10 @@ CAOS.commands = {
                                 inherited_vars = {
                                   --caos_timer_interval = self.vm.timer_interval:get()    -- nope
                                   
+                                },
+                                agent = {
+                                  frameSize = self.vm.owner:configParameter("agent.frameSize", nil),
+                                  source = self.vm.owner:configParameter("agent.source", nil)
                                 }
                              }
         
@@ -1080,7 +1084,7 @@ CAOS.commands = {
     ]],
     callback =
       function(self)
-        local bounds = self.vm.target:getVar("caos_bounds")
+        local bounds = self.vm.target:getBounds()
         return (self.vm.target:position()[2] - (bounds.bottom or 1)) or 0.0
       end
     }
@@ -1104,10 +1108,7 @@ CAOS.commands = {
           pose = pose or 0
           
           local frameno = pose + base + global_base
-          self.vm.target:setVar("caos_image_pose", frameno)
-          self.vm.target:setTag("frameno", frameno)
-          
-          world.logInfo("Set frame: " .. tostring(frameno) )
+          self.vm.target:setFrame(frameno)
         end
     },
 
@@ -1120,7 +1121,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return self.vm.target:getVar("caos_image_pose") or 0
+          return self.vm.target:getFrame() or 0
         end
     }
   },
@@ -1136,7 +1137,7 @@ CAOS.commands = {
     ]],
     callback =
       function(self)
-        local bounds = self.vm.target:getVar("caos_bounds")
+        local bounds = self.vm.target:getBounds()
         return (self.vm.target:position()[1] - (bounds.left or 1)) or 0.0
       end
     }
@@ -1153,7 +1154,7 @@ CAOS.commands = {
     ]],
     callback =
       function(self)
-        local bounds = self.vm.target:getVar("caos_bounds")
+        local bounds = self.vm.target:getBounds()
         return (self.vm.target:position()[1] + (bounds.right or 1)) or 0.0
       end
     }
@@ -1170,7 +1171,7 @@ CAOS.commands = {
     ]],
     callback =
       function(self)
-        local bounds = self.vm.target:getVar("caos_bounds")
+        local bounds = self.vm.target:getBounds()
         return (self.vm.target:position()[2] + (bounds.top or 1)) or 0.0
       end
     }
@@ -1694,7 +1695,7 @@ CAOS.commands = {
     callback =
       function(self, checkAllCameras)
         local agent   = self.vm.owner
-        local bounds  = agent:getVar("caos_bounds")
+        local bounds  = agent:getBounds()
         local pos     = agent:position()
         
         return world.isVisibleToPlayer({
@@ -9474,7 +9475,7 @@ CAOS.commands = {
       callback =
         function(self, ticks )
           self.instant_execution = false
-          self.wait_time = ticks
+          self.wait_time = ticks/10
           self.leave = true
         end
     }

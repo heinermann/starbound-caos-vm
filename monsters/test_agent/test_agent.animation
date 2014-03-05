@@ -28,7 +28,7 @@
           "portrait" : {
             "portrait" : {
               "properties" : {
-                "image" : "<partImage>:<frameno>"
+                "image" : "atlas.png:<frameno>"
               }
             },
             "invisible" : {
