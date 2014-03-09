@@ -1,12 +1,13 @@
 Physics = {}
 Physics.__index = Physics
 
-function Physics.create(agent)
+function Physics.create(agent, vm)
   local o = {}
   setmetatable(o, Physics)
   
   -- store the agent
   o.agent = agent
+  o.vm = vm
   
   o.collide_left = false
   o.collide_up = false
@@ -70,6 +71,10 @@ function Physics.update(self)
     if ( self.used_collision_callback == false and has_collision ) then
       self.used_collision_callback = true
       -- TODO: call the collision event
+      self.vm.parser:run_script(self.agent:getVar("caos_family"), 
+                                self.agent:getVar("caos_genus"), 
+                                self.agent:getVar("caos_species"), 
+                                CAOS.EVENT.COLLIDE)
     elseif ( has_collision ~= true ) then
       self.used_collision_callback = false
     end

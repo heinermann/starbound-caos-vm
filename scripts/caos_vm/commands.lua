@@ -8113,7 +8113,7 @@ CAOS.commands = {
       ]],
       callback =
         function(self)
-          return 0
+          return self.vm.physics.last_collision
         end
     }
   },

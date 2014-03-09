@@ -17,8 +17,7 @@
     "actionOnReap" : [{
       "action" : "spawnmonster",
       "type" : "test_agent",
-      "arguments" : { 
-        
+      "arguments" : {
         "first_spawn" : "true",
 
         "agent" : {

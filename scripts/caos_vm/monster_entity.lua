@@ -118,4 +118,3 @@ function CAOS_set_var(name, value)
   end
   storage.caos_vars[name] = value
 end
-

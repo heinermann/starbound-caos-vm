@@ -77,7 +77,7 @@ function CAOS.Machine.create(agent, run_install_script)
   
   o.owner:setVar("caos_bounds", nil)
     
-  o.physics = Physics.create(o.owner)
+  o.physics = Physics.create(o.owner, o)
     
   -- variables
   o.caos_vars = {}
